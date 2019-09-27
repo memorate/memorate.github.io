@@ -1,6 +1,8 @@
 ---
 title: Emoji Test
+description: Test for disable publish
 tags:
+published: true
 ---
 
 This is an emoji test. :smile:
