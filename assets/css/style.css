@@ -953,7 +953,7 @@ article header.article-info > h1 {
 
 @media only screen and (min-width: 1024px) {
     article header.article-info > h1 {
-        font-size: 200%;
+        font-size: 175%;
         padding-top: .3em
     }
 }
@@ -986,7 +986,7 @@ article header.article-info > p.article-time:before {
 article .article-content {
     padding: 1.5em 4%;
     color: #413f3f;
-    font-size: 100%;
+    font-size: 105%;
 }
 
 article .article-content:before, article .article-content:after {
