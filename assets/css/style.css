@@ -511,7 +511,8 @@ header nav {
     header nav {
         float: right;
         width: auto;
-        max-height: none
+        max-height: none;
+        margin-right: 40px;
     }
 }
 
