@@ -996,7 +996,7 @@ article header.article-info > p.article-time {
 article header.article-info > p.article-time:before {
     font-family: "FontAwesome";
     font-size: 130%;
-    content: "\f017";
+    content: "\f073";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale
 }
