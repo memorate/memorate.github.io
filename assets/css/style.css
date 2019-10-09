@@ -974,17 +974,17 @@ article header.article-info > p.article-author {
 }
 
 article header.article-info > p.article-time {
-    padding-top: .5em;
     font-size: .8em;
     text-align: center;
     margin-bottom: -2.7em;
+    line-height: 62px;
 }
 
 @media only screen and (min-width: 768px) {
     article header.article-info > p.article-time {
         float: right;
         margin-right: 1em;
-        padding-top: .1em;
+        line-height: 62px;
         font-size: .9em
     }
 }
