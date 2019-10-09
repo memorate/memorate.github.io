@@ -5,6 +5,12 @@ tags: Linux
 categories: Linux
 description: 记录Linux更改文件权限
 ---
+### 简介
+
+用于记录Linux更改文件（文件夹）权限操作
+
+<!-- more -->
+
 ### 权限说明
 Linux系统中有三种权限：读、写、执行
 ```text
@@ -33,7 +39,11 @@ x 操作权限execute  1
 ```
 
 ### Linux命令
-更改aaa.text文件的权限为所有人具有读写和执行的权限：
+更改aaa.text**文件**的权限为所有人具有读写和执行的权限：
 ```bash
 chmod 777 aaa.txt
+```
+更改bbb**文件夹**的权限为所有人具有读写和执行的权限：
+```bash
+chmod -R 777 bbb
 ```
