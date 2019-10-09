@@ -1,5 +1,5 @@
 <header class="article-info clearfix">
-  <h1 itemprop="name">
+  <h1 itemprop="name" style="float:left">
     {% if item.link %}
       <a href="{{ item.link }}" target="_blank" title="{{ item.title }}">{{ item.title }}</a>{% else %}
       <a href="{{ site.baseurl }}{{ item.url }}" title="{{ item.title }}" itemprop="url">{{ item.title }}</a>{% endif %}
