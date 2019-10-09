@@ -362,7 +362,7 @@ body > header {
 
 @media only screen and (min-width: 1024px) {
     body > header {
-        padding: 1.8em 0 1.5em
+        padding: 1.8em 0 0.5em
     }
 }
 
@@ -448,19 +448,18 @@ body > header a {
 #textlogo h2.blog-motto {
     font-size: .7em;
     font-weight: normal;
+    font-family: STXinwei;
 }
 
 @media only screen and (min-width: 768px) {
     #textlogo h2.blog-motto {
-        font-size: 100%;
-        font-family: STXinwei;
+        font-size: 140%;
     }
 }
 
 @media only screen and (min-width: 1024px) {
     #textlogo h2.blog-motto {
-        font-size: 110%;
-        font-family: STXinwei;
+        font-size: 140%;
     }
 }
 
