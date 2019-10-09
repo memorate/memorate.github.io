@@ -701,7 +701,7 @@ header nav ul li a:hover {
     background: #ddd;
     color: #817c7c;
     text-decoration: none;
-    float: left;
+    float: right;
 }
 
 #main article.post-expand .article-more-link a:hover {
