@@ -963,12 +963,13 @@ article header.article-info > p.article-time {
     text-align: center;
     margin-bottom: -2.7em;
     line-height: 75px;
+    margin-right: 52px;
 }
 
 @media only screen and (min-width: 768px) {
     article header.article-info > p.article-time {
         float: right;
-        margin-right: 1em;
+        margin-right: 52px;
         line-height: 75px;
         font-size: .9em
     }
