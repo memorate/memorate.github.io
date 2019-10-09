@@ -34,8 +34,8 @@ assets: /assets
 url:
 baseurl:
 
-#### Language
-language: zh-CN    ## blog site languages: en, zh-CN, zh-TW, de
+#### Language  blog site languages: en, zh-CN, zh-TW, de
+language: zh-CN
 
 #### Menu
 menu:
