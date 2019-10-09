@@ -426,22 +426,22 @@ body > header a {
 
 #textlogo h1.site-name {
     width: 86%;
-    font-family: "covered_by_your_graceregular";
     font-size: 200%;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-family: STXinwei;
 }
 
 @media only screen and (min-width: 768px) {
     #textlogo h1.site-name {
-        font-size: 240%
+        font-size: 240%;
     }
 }
 
 @media only screen and (min-width: 1024px) {
     #textlogo h1.site-name {
-        font-size: 280%
+        font-size: 240%;
     }
 }
 
@@ -452,13 +452,15 @@ body > header a {
 
 @media only screen and (min-width: 768px) {
     #textlogo h2.blog-motto {
-        font-size: 100%
+        font-size: 100%;
+        font-family: STXinwei;
     }
 }
 
 @media only screen and (min-width: 1024px) {
     #textlogo h2.blog-motto {
-        font-size: 110%
+        font-size: 110%;
+        font-family: STXinwei;
     }
 }
 
