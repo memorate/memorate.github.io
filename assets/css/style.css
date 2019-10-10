@@ -69,8 +69,8 @@ a img {
 }
 
 body {
-    /*background: #ddd;*/
-    background: #9d9d9d;
+    background: #ddd;
+    /*background: #9d9d9d;*/
     font-family: "Helvetica Neue", "Helvetica", "Microsoft YaHei", "WenQuanYi Micro Hei", Arial, sans-serif;
     font-size: 100%;
     color: #817c7c;
@@ -514,6 +514,7 @@ header nav {
         width: auto;
         max-height: none;
         margin-right: 40px;
+        margin-top: -25px;
     }
 }
 
@@ -987,8 +988,8 @@ article header.article-info > p.article-time:before {
 
 article .article-content {
     padding: 1.5em 4%;
-    /*color: #413f3f;*/
-    color: #f8f8fd;
+    color: #413f3f;
+    /*color: #f8f8fd;*/
     font-size: 105%;
 }
 
