@@ -1,11 +1,11 @@
 ---
 layout: post
-title: Linux权限记录
+title: Linux权限组成说明
 tags: Linux
 categories: Linux
 description: 记录Linux更改文件权限
 ---
-用于记录Linux更改文件（文件夹）权限操作
+用于记录Linux权限组成说明及更改文件（文件夹）权限命令
 
 <!-- more -->
 
@@ -61,11 +61,11 @@ c  字符设备文件，即一些串行端口的接口文件，如键盘、鼠�
 
 ### 三、Linux命令使用
 **使用数字代表的权限组合进行权限更改**  
-1）更改aaa.text**文件**的权限为所有人具有读写和执行的权限：
+1）更改aaa.text```文件```的权限为所有人具有读写和执行的权限：
 ```bash
 chmod 777 aaa.txt
 ```
-2）更改bbb**文件夹**的权限为所有人具有读写和执行的权限：
+2）更改bbb```文件夹```的权限为所有人具有读写和执行的权限：
 ```bash
 chmod -R 777 bbb
 ```
