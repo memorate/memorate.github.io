@@ -461,6 +461,7 @@ body > header a {
 @media only screen and (min-width: 1024px) {
     #textlogo h2.blog-motto {
         font-size: 140%;
+        margin-left: 37px;
     }
 }
 
