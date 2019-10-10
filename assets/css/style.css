@@ -357,6 +357,8 @@ body > header {
     -webkit-box-shadow: 2px 4px 5px rgba(3, 3, 3, 0.2);
     box-shadow: 2px 4px 5px rgba(3, 3, 3, 0.2);
     background: url("../../") center #2ca6cb;
+    /*background: url("../../") center #2CA8AD;*/
+    /*background: url("../../") center #2CA7BE;*/
     color: #fff;
     padding: 1em 0 .8em;
 }
@@ -1831,7 +1833,7 @@ section.comment {
 .asidetitle {
     font-size: 1.1em;
     color: #2ca6cb;
-    padding: 0 0 .3125em 0;
+    padding: 30px 0 .3125em 0;
     border-bottom: .1875em solid #ccc;
 }
 
