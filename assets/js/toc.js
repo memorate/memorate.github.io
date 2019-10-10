@@ -107,7 +107,7 @@
         stack.inc_number();
         html += "<li class=\"toc-item toc-level-" + this_level + "\">";
         html += "<a class=\"toc-link\" href='#" + fixedEncodeURIComponent(header.id) + "'>";
-        html += "<span class='toc-number'>" + stack.toc_number() + "</span>"
+        // html += "<span class='toc-number'>" + stack.toc_number() + "</span>"
         html += "<span class='toc-text'>" + header.innerHTML + "</span>";
         html += "</a>";
         
@@ -118,7 +118,7 @@
         }
         stack.inc_number();
         html += "<li class='toc-item toc-level-" + this_level + "'><a href='#" + fixedEncodeURIComponent(header.id) + "'>";
-        html += "<span class='toc-number'>" + stack.toc_number() + "</span>"
+        // html += "<span class='toc-number'>" + stack.toc_number() + "</span>"
         html += "<span class='toc-text'>" + header.innerHTML + "</span>";
         html += "</a>";
       }
@@ -132,7 +132,7 @@
         }
         stack.inc_number();
         html += "<a href='#" + fixedEncodeURIComponent(header.id) + "'>";
-        html += "<span class='toc-number'>" + stack.toc_number() + "</span>"
+        // html += "<span class='toc-number'>" + stack.toc_number() + "</span>"
         html += "<span class='toc-text'>" + header.innerHTML + "</span>";
         html += "</a>";
       }
