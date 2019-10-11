@@ -1,7 +1,9 @@
 ---
 layout: post
 title: java-泛型的个人理解
-tags: java
+tags: 
+- java
+- 学习记录
 categories: java
 description: 关于泛型的个人学习及理解
 ---
@@ -14,7 +16,8 @@ description: 关于泛型的个人学习及理解
 　２）**泛型只在编译阶段有效，在编译过程中正确验证泛型结果后，会将泛型相关信息擦除，并且会在对象进入和离开方法的边界处添加类型检查和类型转换的方法。因此，泛型信息不会进入到运行阶段。**
 
 ### 一、泛型类
-#### 1.定义泛型类
+##### 1.定义泛型类
+在普通类的类名后加`<T>`来定义该类为泛型类，其中T也可是E、K、V等任意字母
 ```java
 public class Demo<T>{    //类名后接"<T>"，T也可是E、K、V等任意字母
     private T key;
@@ -28,7 +31,7 @@ public class Demo<T>{    //类名后接"<T>"，T也可是E、K、V等任意字�
     }
 }
 ```
-#### 2.使用泛型类
+##### 2.new泛型类
 **1）显式指定泛型类型：**  
 　　Demo&lt;Integer> demo = new Demo&lt;Integer>(1024);
     
