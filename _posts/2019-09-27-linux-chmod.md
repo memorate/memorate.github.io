@@ -5,7 +5,7 @@ tags: Linux
 categories: Linux
 description: 记录Linux更改文件权限
 ---
-用于记录Linux权限组成说明及更改文件（文件夹）权限命令
+#### 用于记录Linux权限组成说明及更改文件（文件夹）权限命令
 
 <!-- more -->
 
