@@ -1036,6 +1036,13 @@ article .article-content h4, article .article-content h5, article .article-conte
     font-size: 140%
 }
 
+article .article-content h1 {
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-top: 6px;
+}
+
 article .article-content h1, article .article-content h2, article .article-content h3, article .article-content h4, article .article-content h5, article .article-content h6 {
     color: #333;
     -webkit-font-smoothing: antialiased;
@@ -1131,7 +1138,7 @@ article .article-content p {
 
 @media only screen and (min-width: 1024px) {
     article .article-content p {
-        margin-top: 1em
+        margin-top: 6px
     }
 }
 
