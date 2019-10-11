@@ -75,7 +75,6 @@ Tips：1）接口可extends多个接口，例：public interface Demo extends A,
 		  
 ### 三、泛型方法
 ***
-##
 ```java
 public class Demo<T>{
 	
@@ -102,7 +101,6 @@ public class Demo<T>{
 
 ### 四、泛型通配符
 ***
-##
 ```java
 public void algorithm(List<?> value){                 //无边界泛型通配符"<?>"
     System.out.println(valus.toString());
