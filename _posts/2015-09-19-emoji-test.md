@@ -2,7 +2,7 @@
 title: Emoji Test
 description: Test for disable publish
 tags:
-published: true
+published: false
 ---
 
 This is an emoji test. :smile:
