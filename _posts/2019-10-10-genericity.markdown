@@ -18,7 +18,6 @@ description: 关于泛型的个人学习及理解
 　4）**泛型只在编译阶段有效，在编译过程中正确验证泛型结果后，会将泛型相关信息擦除，并且会在对象进入和离开方法的边界处添加类型检查和类型转换的方法。因此，泛型信息不会进入到运行阶段。**
 
 ### 一、泛型类
-***
 ##### 1.定义泛型类
 在普通类的类名后加`<T>`来定义该类为泛型类，其中T也可是E、K、V等任意字母
 ```java
@@ -45,7 +44,6 @@ public class Demo<T>{    //类名后接"<T>"，T也可是E、K、V等任意字�
 　　　２）不能对确切的泛型类型使用instanceof操作。（"example instanceof Demo<String>"是非法的）
 
 ### 二、泛型接口
-***
 ```java
 public interface Demo<T>{   //类名后接"<T>"，T也可是E、K、V等任意字母
     public T algorithm();
@@ -74,7 +72,6 @@ Tips：1）接口可extends多个接口，例：public interface Demo extends A,
 　　　2）类可implements多个接口，例：public class Demo implements A,B,C{....}
 		  
 ### 三、泛型方法
-***
 ```java
 public class Demo<T>{
 	
@@ -100,7 +97,6 @@ public class Demo<T>{
 　　　2）泛型类，是在实例化类的时候指明泛型的具体类型；泛型方法，是在调用方法的时候指明泛型的具体类型。
 
 ### 四、泛型通配符
-***
 ```java
 public void algorithm(List<?> value){                 //无边界泛型通配符"<?>"
     System.out.println(valus.toString());
