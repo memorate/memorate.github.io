@@ -9,11 +9,11 @@ description: 关于泛型的个人学习及理解
 
 <!-- more -->
 
-##泛型：
+## 泛型：
 　　１）**参数化类型，可用于类、接口、方法中，为泛型类、泛型接口、泛型方法。**  
 　　２）**泛型只在编译阶段有效，在编译过程中正确验证泛型结果后，会将泛型相关信息擦除，并且会在对象进入和离开方法的边界处添加类型检查和类型转换的方法。因此，泛型信息不会进入到运行阶段。**
 
-##1.泛型类
+### 1.泛型类
 ```java
 public class Demo<T>{    //类名后接"<T>"，T也可是E、K、V等任意字母
     private T key;
@@ -33,7 +33,7 @@ public class Demo<T>{    //类名后接"<T>"，T也可是E、K、V等任意字�
 注意：１）泛型的类型参数只能是类类型，不能是简单类型。（如：只能是Integer，不能是int）  
 　　　２）不能对确切的泛型类型使用instanceof操作。（"example instanceof Demo<String>"是非法的）
 
-##2.泛型接口
+### 2.泛型接口
 ```java
 public interface Demo<T>{   //类名后接"<T>"，T也可是E、K、V等任意字母
     public T algorithm();
@@ -61,7 +61,7 @@ class AnotherDemo implements Demo<String>{   //确定泛型类型后，类名后
 Tips：1）接口可extends多个接口，例：public interface Demo extends A,B,C{....}  
 　　　2）类可implements多个接口，例：public class Demo implements A,B,C{....}
 		  
-##3.泛型方法
+### 3.泛型方法
 ```java
 public class Demo<T>{
 	
@@ -86,7 +86,7 @@ public class Demo<T>{
 注意：1）只有方法的public与返回值之间有<T\>时该方法才是泛型方法（T可为E、K、V等）  
 　　　2）泛型类，是在实例化类的时候指明泛型的具体类型；泛型方法，是在调用方法的时候指明泛型的具体类型。
 
-##4.泛型通配符
+### 4.泛型通配符
 ```java
 public void algorithm(List<?> value){                 //无边界泛型通配符"<?>"
     System.out.println(valus.toString());
