@@ -35,7 +35,8 @@ public class Demo<T>{    //类名后接"<T>"，T也可是E、K、V等任意字�
 ```
 ##### 2.new泛型类
 **1）显式指定泛型类型：**  
-　　Demo&lt;Integer> demo = new Demo&lt;Integer>(1024);
+　　Demo&lt;Integer> integerDemo = new Demo&lt;Integer>(1024);  
+　　Demo&lt;String> stringDemo = new Demo&lt;String>(1024);
     
 **2）由编译器推断泛型类型：**  
 　　Demo demo = new Demo(1024);   

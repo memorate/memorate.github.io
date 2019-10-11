@@ -166,5 +166,6 @@ simple_jekyll_search:
   enable: true
   fulltext: false
 
-gems:
+plugins:
  - jemoji
+ - jekyll-paginate
