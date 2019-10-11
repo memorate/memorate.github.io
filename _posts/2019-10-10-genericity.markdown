@@ -14,6 +14,7 @@ description: 关于泛型的个人学习及理解
 　２）**泛型只在编译阶段有效，在编译过程中正确验证泛型结果后，会将泛型相关信息擦除，并且会在对象进入和离开方法的边界处添加类型检查和类型转换的方法。因此，泛型信息不会进入到运行阶段。**
 
 ### 一、泛型类
+#### 1.定义泛型类
 ```java
 public class Demo<T>{    //类名后接"<T>"，T也可是E、K、V等任意字母
     private T key;
@@ -27,10 +28,14 @@ public class Demo<T>{    //类名后接"<T>"，T也可是E、K、V等任意字�
     }
 }
 ```
- 使用：Demo&lt;Integer> demo = new Demo&lt;Integer>(1024);  
-　　　或Demo demo = new Demo(1024);   
+#### 2.使用泛型类
+**1）显式指定泛型类型：**  
+　　Demo&lt;Integer> demo = new Demo&lt;Integer>(1024);
+    
+**2）由编译器推断泛型类型：**  
+　　Demo demo = new Demo(1024);   
 
-注意：１）泛型的类型参数只能是类类型，不能是简单类型。（如：只能是Integer，不能是int）  
+**注意：** １）泛型的类型参数只能是类类型，不能是简单类型。（如：只能是Integer，不能是int）  
 　　　２）不能对确切的泛型类型使用instanceof操作。（"example instanceof Demo<String>"是非法的）
 
 ### 二、泛型接口
