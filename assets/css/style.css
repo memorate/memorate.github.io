@@ -1034,7 +1034,7 @@ article .article-content h3 {
 
 article .article-content h4, article .article-content h5, article .article-content h6 {
     font-size: 140%;
-    margin-top: 13px
+    margin-top: 8px
 }
 
 article .article-content h1, article .article-content h2, article .article-content h3, article .article-content h4, article .article-content h5, article .article-content h6 {
@@ -1132,7 +1132,7 @@ article .article-content p {
 
 @media only screen and (min-width: 1024px) {
     article .article-content p {
-        margin-top: 6px
+        margin-top: 2px
     }
 }
 
