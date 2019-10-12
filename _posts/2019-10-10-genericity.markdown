@@ -12,33 +12,39 @@ description: 关于泛型的个人学习及理解
 <!-- more -->
 
 ### 泛型：
-　1）**泛型是一种语法糖**  
-　2）**泛型的本质是一种参数化类型，将所操作的数据类型指定为一个参数，在调用时再传入具体的类型**  
-　3）**泛型可用于类、接口、方法中，分别被称为泛型类、泛型接口、泛型方法。**  
+　1）**泛型是一种语法糖；**  
+　2）**泛型的本质是一种参数化类型，将所操作的数据类型（简单类型、类类型等）指定为一个参数，在调用时再传入具体的类型；**  
+　3）**泛型可用于类、接口、方法中，分别被称为泛型类、泛型接口、泛型方法；**  
 　4）**泛型只在编译阶段有效，在编译过程中正确验证泛型结果后，会将泛型相关信息擦除，并且会在对象进入和离开方法的边界处添加类型检查和类型转换的方法。因此，泛型信息不会进入到运行阶段。**
 
 ### 一、泛型类
 ##### 1.定义泛型类
-在普通类的类名后加`<T>`来定义该类为泛型类，其中T也可是E、K、V等任意字母
+　1）在普通类的类名后加`<T>`来定义该类为泛型类，其中T也可是E、K、V等任意字母。  
+　2）T可在该泛型类中作为成员变量的类型、成员函数的入参类型、成员函数的返回值类型。
 ```java
-public class Demo<T>{    //类名后接"<T>"，T也可是E、K、V等任意字母
-    private T name;
+public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任意字母
+
+    private T name;             //参数化类型作为成员变量的类型
      
-    public Demo(T name){
+    public Demo(T name){        //参数化类型作为成员函数的入参类型
        this.name = name;
     }
      
-    public T getName(){
+    public T getName(){         //参数化类型作为成员函数的返回值类型
        return name;
     }
+
 }
 ```
-##### 2.new泛型类
-**1）显式指定泛型类型：**  
-　　Demo&lt;Integer> integerDemo = new Demo&lt;Integer>(1024);  
-　　Demo&lt;String> stringDemo = new Demo&lt;String>(1024);
+##### 2.实例化泛型类
+**1）显式指定泛型类的类型：**  
+```java
+　　Demo<Integer> integerDemo = new Demo<Integer>(1024);　　　　　//显示指定泛型类Demo的参数化类型为Integer  
+　　Demo<String> stringDemo = new Demo<String>("famous");　　  　//显示指定泛型类Demo的参数化类型为String  
+　　Demo<int> intDemo = new Demo<int>(1024);　　　　　　　　　　 　//编译错误，泛型不能是简单类型  
+```
     
-**2）由编译器推断泛型类型：**  
+**2）由编译器推断泛型类的类型：**  
 　　Demo demo = new Demo(1024);   
 
 **注意：** １）泛型的类型参数只能是类类型，不能是简单类型。（如：只能是Integer，不能是int）  
