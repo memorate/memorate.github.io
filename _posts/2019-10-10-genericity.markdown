@@ -46,6 +46,7 @@ public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任�
     
 **2）由编译器推断泛型类的类型：**  
 　　Demo demo = new Demo(1024);   
+　　Demo demo = new Demo(""");   
 
 **注意：** １）泛型的类型参数只能是类类型，不能是简单类型。（如：只能是Integer，不能是int）  
 　　　２）不能对确切的泛型类型使用instanceof操作。（"example instanceof Demo<String>"是非法的）
