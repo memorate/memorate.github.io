@@ -84,7 +84,7 @@ share_to: false #enable share-to buttons if true
 
 #### Author information
 author:
-  name: Anchor      ## e.g. wuchong Author name
+  name: Anchor
   intro_line1:  "Hi ,I'm Anchor, 一只毛发浓密的攻城狮"    ## your introduction on the bottom of the page
   intro_line2:  "这是我的博客，用来记录日常所见所得"  ## the 2nd line
   #weibo:      ## e.g. wuchong1014 or 2176287895 for http://weibo.com/2176287895

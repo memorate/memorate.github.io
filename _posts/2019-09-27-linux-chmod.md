@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Linux权限组成说明
+title: Linux-权限777原来是这样
 tags: Linux
 categories: Linux
 description: 记录Linux更改文件权限

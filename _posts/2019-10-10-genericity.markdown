@@ -1,10 +1,11 @@
 ---
-layout: post
-title: java-泛型的个人理解
+layout: post  
+title: java-泛型原来是这么回事  
 tags: 
-- java
-- 学习记录
-categories: java
+- Java
+- StudyRecord
+- 学习记录  
+categories: Java  
 description: 关于泛型的个人学习及理解
 ---
 #### 用于记录关于泛型的自我学习及理解成果
@@ -39,17 +40,23 @@ public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任�
 ##### 2.实例化泛型类
 **1）显式指定泛型类的类型：**  
 ```java
-　　Demo<Integer> integerDemo = new Demo<Integer>(1024);　　　　　//显示指定泛型类Demo的参数化类型为Integer  
-　　Demo<String> stringDemo = new Demo<String>("famous");　　  　//显示指定泛型类Demo的参数化类型为String  
+　　Demo<Integer> integerDemo = new Demo<Integer>(1024);　　　　　//显示指定泛型类integerDemo的参数化类型为Integer  
+
+　　Demo<String> stringDemo = new Demo<String>("string");　　  　//显示指定stringDemo类的参数化类型为String  
+
 　　Demo<int> intDemo = new Demo<int>(1024);　　　　　　　　　　 　//编译错误，泛型不能是简单类型  
 ```
     
 **2）由编译器推断泛型类的类型：**  
-　　Demo demo = new Demo(1024);   
-　　Demo demo = new Demo(""");   
+```java
+　　Demo integerDemo = new Demo(1024);            //编译器会推断出integerDemo的参数化类型是Integer  
 
-**注意：** １）泛型的类型参数只能是类类型，不能是简单类型。（如：只能是Integer，不能是int）  
-　　　２）不能对确切的泛型类型使用instanceof操作。（"example instanceof Demo<String>"是非法的）
+　　Demo stringDemo = new Demo("string");        //隐式指定stringDemo类的参数化类型为String
+```
+
+**3）注意：**  
+　　１）泛型的类型参数只能是***类类型***，不能是简单类型。（如：只能是Integer，不能是int）  
+　　２）不能对确切的泛型类型使用instanceof操作。（"example instanceof Demo<String>"是非法的）
 
 ### 二、泛型接口
 ```java
