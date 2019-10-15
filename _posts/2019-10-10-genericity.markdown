@@ -43,22 +43,27 @@ public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任�
 Demo<Integer> integerDemo = new Demo<Integer>(1024);　　　　　//显示指定泛型类integerDemo的参数化类型为Integer  
 
 Demo<String> stringDemo = new Demo<String>("string");　　  　//显示指定stringDemo类的参数化类型为String  
-
-Demo<int> intDemo = new Demo<int>(1024);　　　　　　　　　　 　//编译错误！！！，泛型不能是简单类型  
 ```
     
-**2）由编译器推断泛型类的类型（测试代码及结果）：**  
+**2）由编译器推断泛型类的类型：**  
 ```java
-Demo integerDemo = new Demo(1024);            //编译器会推断出integerDemo的参数化类型是Integer  
+Demo integerDemo = new Demo(1024);            //编译器会推断出integerDemo的参数化类型是Integer
+  
 Demo stringDemo = new Demo("string");        //隐式指定stringDemo类的参数化类型为String
-
+```
+*获取泛型类中T的实际类型：*
+```java
 System.out.println("integerDemo 中value的类型为：" + integerDemo.getValue().getClass().getTypeName());
+
 System.out.println("stringDemo 中value的类型为：" + stringDemo.getValue().getClass().getTypeName());
 ```
 ![]({{ "/assets/img/demoTest.jpg" | absolute_url }})
 
 **3）注意：**  
 　　１）泛型的类型参数只能是***类类型***，不能是简单类型。（如：只能是Integer，不能是int）  
+```java
+       Demo<int> intDemo = new Demo<int>(1024);　　　　　　　　　　 　//编译错误！！！，泛型不能是简单类型  
+```
 　　２）不能对***确切的泛型类***使用instanceof操作:  
 　　　　`stringDemo instanceof Demo<String>`是非法的，但`stringDemo instanceof Demo`是合法的。
 
