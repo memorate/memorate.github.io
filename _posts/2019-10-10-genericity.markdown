@@ -25,14 +25,14 @@ description: 关于泛型的个人学习及理解
 ```java
 public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任意字母
 
-    private T name;             //参数化类型作为成员变量的类型
+    private T value;             //参数化类型作为成员变量的类型
      
-    public Demo(T name){        //参数化类型作为成员函数的入参类型
-       this.name = name;
+    public Demo(T value){        //参数化类型作为成员函数的入参类型
+       this.value = value;
     }
      
-    public T getName(){         //参数化类型作为成员函数的返回值类型
-       return name;
+    public T getValue(){         //参数化类型作为成员函数的返回值类型
+       return value;
     }
 
 }
@@ -40,23 +40,27 @@ public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任�
 ##### 2.实例化泛型类
 **1）显式指定泛型类的类型：**  
 ```java
-　　Demo<Integer> integerDemo = new Demo<Integer>(1024);　　　　　//显示指定泛型类integerDemo的参数化类型为Integer  
+Demo<Integer> integerDemo = new Demo<Integer>(1024);　　　　　//显示指定泛型类integerDemo的参数化类型为Integer  
 
-　　Demo<String> stringDemo = new Demo<String>("string");　　  　//显示指定stringDemo类的参数化类型为String  
+Demo<String> stringDemo = new Demo<String>("string");　　  　//显示指定stringDemo类的参数化类型为String  
 
-　　Demo<int> intDemo = new Demo<int>(1024);　　　　　　　　　　 　//编译错误，泛型不能是简单类型  
+Demo<int> intDemo = new Demo<int>(1024);　　　　　　　　　　 　//编译错误！！！，泛型不能是简单类型  
 ```
     
-**2）由编译器推断泛型类的类型：**  
+**2）由编译器推断泛型类的类型（测试代码及结果）：**  
 ```java
-　　Demo integerDemo = new Demo(1024);            //编译器会推断出integerDemo的参数化类型是Integer  
+Demo integerDemo = new Demo(1024);            //编译器会推断出integerDemo的参数化类型是Integer  
+Demo stringDemo = new Demo("string");        //隐式指定stringDemo类的参数化类型为String
 
-　　Demo stringDemo = new Demo("string");        //隐式指定stringDemo类的参数化类型为String
+System.out.println("integerDemo 中value的类型为：" + integerDemo.getValue().getClass().getTypeName());
+System.out.println("stringDemo 中value的类型为：" + stringDemo.getValue().getClass().getTypeName());
 ```
+![]({{ "/assets/img/demoTest.jpg" | absolute_url }})
 
 **3）注意：**  
 　　１）泛型的类型参数只能是***类类型***，不能是简单类型。（如：只能是Integer，不能是int）  
-　　２）不能对确切的泛型类型使用instanceof操作。（"example instanceof Demo<String>"是非法的）
+　　２）不能对***确切的泛型类***使用instanceof操作:  
+　　　　`stringDemo instanceof Demo<String>`是非法的，但`stringDemo instanceof Demo`是合法的。
 
 ### 二、泛型接口
 ```java

@@ -1145,7 +1145,7 @@ article .article-content img, article .article-content video, article .article-c
 
 @media only screen and (min-width: 1024px) {
     article .article-content img, article .article-content video, article .article-content figure img {
-        padding-top: .7em
+        padding-top: 0px
     }
 }
 
