@@ -12,26 +12,48 @@ description: 关于泛型的个人学习及理解
 
 <!-- more -->
 
-### 泛型：
+### *什么是泛型*
 　1）**泛型是一种语法糖；**  
-　2）**泛型的本质是一种参数化类型，将所操作的数据类型（简单类型、类类型等）指定为一个参数，在调用时再传入具体的类型；**  
+　2）**泛型的本质是一种参数化类型，将所操作的数据类型（类类型/引用类型）指定为一个参数，在调用时再传入具体的类型；**  
 　3）**泛型可用于类、接口、方法中，分别被称为泛型类、泛型接口、泛型方法；**  
 　4）**泛型只在编译阶段有效，在编译过程中正确验证泛型结果后，会将泛型相关信息擦除，并且会在对象进入和离开方法的边界处添加类型检查和类型转换的方法。因此，泛型信息不会进入到运行阶段。**
+
+### *为什么使用泛型*
+　1）**类型安全，在编译时进行类型检测，只有指定类型才可添加到集合/类中；**   
+　2）**泛型将运行时的类型转换问题提前到了编译期，避免了强制类型转换；**   
+```java
+   List list = new ArrayList();
+   list.add("hello");
+   String s = (String) list.get(0);   //强制类型转换
+   -------------------------------------------------
+   List<String> list = new ArrayList<String>();
+   list.add("hello");
+   String s = list.get(0);         //无需类型转换
+```
+　3）**提高代码的可读性和重用率，降低程序的复杂度** 
 
 ### 一、泛型类
 ##### 1.定义泛型类
 　1）在普通类的类名后加`<T>`来定义该类为泛型类，其中T也可是E、K、V等任意字母。  
+```text
+  一般通用命名方式：
+  T : Type
+  E : Element, 元素，Java 集合框架中广泛使用
+  K ：Key
+  V : Value
+  N : Number
+```
 　2）T可在该泛型类中作为成员变量的类型、成员函数的入参类型、成员函数的返回值类型。
 ```java
 public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任意字母
 
-    private T value;             //参数化类型作为成员变量的类型
+    private T value;             //泛型作为成员变量的类型
      
-    public Demo(T value){        //参数化类型作为成员函数的入参类型
+    public Demo(T value){        //泛型作为成员函数的入参类型
        this.value = value;
     }
      
-    public T getValue(){         //参数化类型作为成员函数的返回值类型
+    public T getValue(){         //泛型作为成员函数的返回值类型
        return value;
     }
 
@@ -60,7 +82,7 @@ System.out.println("stringDemo 中value的类型为：" + stringDemo.getValue().
 ![]({{ "/assets/img/demoTest.jpg" | absolute_url }})
 
 **3）注意：**  
-　　１）泛型的类型参数只能是***类类型***，不能是简单类型。（如：只能是Integer，不能是int）  
+　　１）泛型的类型参数只能是***类类型（引用类型）***，不能是简单类型。（如：只能是Integer，不能是int）  
 ```java
        Demo<int> intDemo = new Demo<int>(1024);　　　　　　　　　　 　//编译错误！！！，泛型不能是简单类型  
 ```
@@ -68,24 +90,25 @@ System.out.println("stringDemo 中value的类型为：" + stringDemo.getValue().
 　　　　`stringDemo instanceof Demo<String>`是非法的，但`stringDemo instanceof Demo`是合法的。
 
 ### 二、泛型接口
+##### 1.定义泛型接口
 ```java
 public interface Demo<T>{   //类名后接"<T>"，T也可是E、K、V等任意字母
     public T algorithm();
 }
  ```
- **使用:**  
- 1）未传入泛型实参时
+##### 2.使用泛型接口
+ **1）引用的泛型接口未传入实参时**
 ```java
-class SimpleDemo<T> implements Demo<T>{     //类名和接口名后必须有"<T>"
+class SimpleDemo<T> implements Demo<T>{     //类名和接口名后必须有泛型标识"<T>"
      @override
      public T algorithm(){
          return null;
      }
 }
 ```
-2）传入泛型实参时
+**2）引用的泛型接口传入实参时**
 ```java
-class AnotherDemo implements Demo<String>{   //确定泛型类型后，类名后可不接<String>
+class AnotherDemo implements Demo<String>{     //泛型接口确定类型后，引用的该接口的类名后可不接泛型标识符"<String>"
      @override
      public String algorithm(){
          return null;
