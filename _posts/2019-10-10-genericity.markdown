@@ -35,15 +35,7 @@ description: 关于泛型的个人学习及理解
 ### 一、泛型类
 ##### 1.定义泛型类
 　1）在普通类的类名后加`<T>`来定义该类为泛型类，其中T也可是E、K、V等任意字母。  
-```text
-  一般通用命名方式：
-  T : Type
-  E : Element, 元素，Java 集合框架中广泛使用
-  K ：Key
-  V : Value
-  N : Number
-```
-　2）T可在该泛型类中作为成员变量的类型、成员函数的入参类型、成员函数的返回值类型。
+　2）T可在该泛型类中作为成员变量的类型、成员函数的入参类型、成员函数的返回值类型。  
 ```java
 public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任意字母
 
@@ -58,6 +50,14 @@ public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任�
     }
 
 }
+```
+```text
+  一般通用命名方式：
+  T : Type
+  E : Element, 元素，Java 集合框架中广泛使用
+  K ：Key
+  V : Value
+  N : Number
 ```
 ##### 2.实例化泛型类
 **1）显式指定泛型类的类型：**  
@@ -92,31 +92,38 @@ System.out.println("stringDemo 中value的类型为：" + stringDemo.getValue().
 ### 二、泛型接口
 ##### 1.定义泛型接口
 ```java
-public interface Demo<T>{   //类名后接"<T>"，T也可是E、K、V等任意字母
-    public T algorithm();
+public interface IDemo<T>{   //接口名后接"<T>"，T也可是E、K、V等任意字母
+
+    public T algorithm(T value);
+
 }
  ```
 ##### 2.使用泛型接口
- **1）引用的泛型接口未传入实参时**
+ **1）引用的泛型接口未传入实参时**  
+ 　*引用泛型接口类的`类名`、泛型`接口名`后必须都有泛型标识符`<T>`*  
 ```java
-class SimpleDemo<T> implements Demo<T>{     //类名和接口名后必须有泛型标识"<T>"
+class SimpleDemo<T> implements IDemo<T>{     //此时的SimpleDemo为泛型类，类名和接口名后必须有泛型标识"<T>"
+
      @override
-     public T algorithm(){
-         return null;
+     public T algorithm(T value){             //此段代码中出现的四个泛型标识符必须相同（都是T）
+         return value;
      }
 }
 ```
-**2）引用的泛型接口传入实参时**
+**2）引用的泛型接口传入实参时**  
+　*在使用泛型接口的类中，需将所有使用到泛型的地方替换成传入的实参类型*
 ```java
-class AnotherDemo implements Demo<String>{     //泛型接口确定类型后，引用的该接口的类名后可不接泛型标识符"<String>"
+class AnotherDemo implements IDemo<String>{     //实参类型为String
+
      @override
-     public String algorithm(){
-         return null;
+     public String algorithm(String value){       //实参类型为String
+         return value;
      }
 }
 ```
-Tips：1）接口可extends多个接口，例：public interface Demo extends A,B,C{....}  
-　　　2）类可implements多个接口，例：public class Demo implements A,B,C{....}
+**Tips：**  
+　　1）接口可extends多个接口，例：public interface IDemo extends A,B,C{....}  
+　　2）类可implements多个接口，例：public class Demo implements A,B,C{....}
 		  
 ### 三、泛型方法
 ```java
