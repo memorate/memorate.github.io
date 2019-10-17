@@ -1056,7 +1056,9 @@ article .article-content strong {
 }
 
 article .article-content em {
-    font-style: italic
+    font-style: italic;
+    margin-left: 2px;
+    margin-right: 6px;
 }
 
 article .article-content acronym, article .article-content abbr {
@@ -1115,9 +1117,10 @@ article .article-content ul li > code, article .article-content ol li > code, ar
     background: #eee;
     color: #d14;
     border: 1px solid #d6d6d6;
-    padding: 0 5px;
-    margin: 0 2px;
+    padding: 1px 1px;
+    margin: 0 5px;
     font-size: 90%;
+    font-weight: 600;
     white-space: nowrap;
     text-shadow: 0 1px #fff;
     -webkit-border-radius: .25em;

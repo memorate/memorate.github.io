@@ -33,7 +33,7 @@ description: 关于泛型的个人学习及理解
 　3）**提高代码的可读性和重用率，降低程序的复杂度** 
 
 ### 一、泛型类
-##### 1.定义泛型类
+##### 1.*定义泛型类*
 　1）在普通类的类名后加`<T>`来定义该类为泛型类，其中T也可是E、K、V等任意字母。  
 　2）T可在该泛型类中作为成员变量的类型、成员函数的入参类型、成员函数的返回值类型。  
 ```java
@@ -59,7 +59,7 @@ public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任�
   V : Value
   N : Number
 ```
-##### 2.实例化泛型类
+##### 2.*实例化泛型类*
 **1）显式指定泛型类的类型：**  
 ```java
 Demo<Integer> integerDemo = new Demo<Integer>(1024);　　　　　//显示指定泛型类integerDemo的参数化类型为Integer  
@@ -87,10 +87,10 @@ System.out.println("stringDemo 中value的类型为：" + stringDemo.getValue().
        Demo<int> intDemo = new Demo<int>(1024);　　　　　　　　　　 　//编译错误！！！，泛型不能是简单类型  
 ```
 　　２）不能对***确切的泛型类***使用instanceof操作:  
-　　　　`stringDemo instanceof Demo<String>`是非法的，但`stringDemo instanceof Demo`是合法的。
+　　　　`stringDemo instanceof Demo<String>`是***非法***的，但`stringDemo instanceof Demo`是***合法***的。
 
 ### 二、泛型接口
-##### 1.定义泛型接口
+##### 1.*定义泛型接口*
 ```java
 public interface IDemo<T>{   //接口名后接"<T>"，T也可是E、K、V等任意字母
 
@@ -98,9 +98,9 @@ public interface IDemo<T>{   //接口名后接"<T>"，T也可是E、K、V等任�
 
 }
  ```
-##### 2.使用泛型接口
+##### 2.*使用泛型接口*
  **1）引用的泛型接口未传入实参时**  
- 　*引用泛型接口类的`类名`、泛型`接口名`后必须都有泛型标识符`<T>`*  
+ 　*需要将泛型的申明也加到类中。`类名`和`接口名`后必须都有泛型标识符`<T>`*  
 ```java
 class SimpleDemo<T> implements IDemo<T>{     //此时的SimpleDemo为泛型类，类名和接口名后必须有泛型标识"<T>"
 
