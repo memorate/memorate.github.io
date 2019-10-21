@@ -58,6 +58,15 @@ public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任�
   V : Value
   N : Number
 ```
+`注意：`字符串也可用于定义泛型(极度不推荐使用)
+```java
+public class NotRecommend<String>{          //此处"String"与"T"的作用等同，代表一个参数化类型。然而容易造成误解
+
+    private String value1;                 //此处的"String"代表参数化类型，而不是！而不是！而不是！"java.lang.String"类
+
+    private java.lang.String value2;       //若要使用字符串类只能这样写。此处的"java.lang.String"代表字符串类
+}
+```
 　***3）泛型可声明多个***
 ```java
 public class Demo<T,K,V>{          //一个类中声明多个泛型。类名Demo后接"<T,K,V>"，个数不限
@@ -100,7 +109,7 @@ System.out.println("stringDemo 中value的类型为：" + stringDemo.getValue().
 ```
 ![]({{ "/assets/img/demoTest.jpg" | absolute_url }})
 
-**3）注意：**  
+`注意：`  
 　　１）泛型的类型参数只能是***类类型（引用类型）***，不能是简单类型。（如：只能是Integer，不能是int）  
 ```java
        Demo<int> intDemo = new Demo<int>(1024);　　　　　　　　　　 　//编译错误！！！，泛型不能是简单类型  
@@ -204,7 +213,7 @@ public class genericDemo<T>{
     }
 }
 ```
-**注意：**  
+`注意：`  
 　1）只有方法的访问修饰符（public等）与返回值之间有泛型类标识符<T\>时该方法才是泛型方法（T可为E、K、V等），否则只是个普通方法。  
 　2）泛型类，是在实例化类的时候指明泛型的具体类型；泛型方法，是在调用方法的时候指明泛型的具体类型。  
 　3）泛型类标识符<T\>中的参数化类型T的作用域是整个类（类中任意地方可用T），泛型方法标识符<E\>中的类型E仅能用于这个方法。  
