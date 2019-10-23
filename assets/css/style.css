@@ -1718,6 +1718,7 @@ section.comment {
     top: 320px;
     overflow: hidden;
     line-height: 1.5em;
+    margin-right: 12px;
     font-size: 1em;
     color: #333;
     opacity: .6;
@@ -1736,7 +1737,7 @@ section.comment {
     font-weight: 900;
     font-family: Microsoft Yahei;
     font-size: 120%;
-    margin-left: 86px;
+    margin-left: 80px;
 }
 
 #toc.toc-aside:hover {
@@ -1786,6 +1787,7 @@ section.comment {
     border-radius: 5px;
     background: #2ca6cb;
     padding: .2em .55em;
+    margin-right: 20px;
 }
 
 .openaside a::before {

@@ -30,8 +30,7 @@ description: 关于泛型的个人学习及理解
    list.add("hello");
    String s = list.get(0);         //无需类型转换
 ```
-　3）**提高代码的可读性和重用率，降低程序的复杂度** 
-
+　3）**提高代码的可读性和重用率，降低程序的复杂度**  
 ### 一、泛型类
 ##### 1.*定义泛型类*
 　1）在普通类的类名后加`<T>`来定义该类为泛型类，其中T也可是E、K、V等任意字母。  
@@ -67,9 +66,9 @@ public class NotRecommend<String>{          //此处"String"与"T"的作用等�
     private java.lang.String value2;       //若要使用字符串类只能这样写。此处的"java.lang.String"代表字符串类
 }
 ```
-　***3）泛型可声明多个***
+　***3）泛型可定义多个***
 ```java
-public class Demo<T,K,V>{          //一个类中声明多个泛型。类名Demo后接"<T,K,V>"，个数不限
+public class Demo<T,K,V>{          //一个类中定义多个泛型。类名Demo后接"<T,K,V>"，个数不限
 
     private T value;
     private K key;
@@ -219,7 +218,37 @@ public class genericDemo<T>{
 　3）泛型类标识符<T\>中的参数化类型T的作用域是整个类（类中任意地方可用T），泛型方法标识符<E\>中的类型E仅能用于这个方法。  
 　**例：**`public class genericDemo<T>{}`，T可用于整个genericDemo类；`public <T> T genericMethod1(){}`，T只能用于genericMethod1方法。
 
-### 四、泛型通配符
+### 四、泛型范围限定
+<br/>
+　**在定义泛型类、泛型接口、泛型方法时，可以使用关键字`extends`和`super`来限定泛型的范围。**  
+<br/>
+　1）无范围限定  
+```java
+public class Demo<T>{}                 //无范围限定的泛型类
+
+public interface IDemo<T>{}            //无范围限定的泛型接口
+
+public <T> T method(){}               //无范围限定的泛型方法
+```
+　2）限定泛型的**上界**，使用`extends`  
+　　此处的"extends"并不代表继承，而是限定泛型的上界；  
+　　下例中T只能是Number或Number的子类
+```java
+public class Demo<T extends Number>{}                 //限定的泛型类中泛型的上界为Number
+
+public interface IDemo<T extends Number>{}            //限定的泛型接口中泛型的上界为Number
+
+public <T extends Number> T method(){}               //限定的泛型方法中泛型的上界为Number
+```
+　3）限定泛型的**下界**，使用`super`    
+```java
+public class Demo<T super Integer>{}                 //无范围限定的泛型类
+
+public interface IDemo<T super Integer>{}            //无范围限定的泛型接口
+
+public <T super Integer> T method(){}               //无范围限定的泛型方法
+```
+### 五、泛型通配符
 ```java
 public void algorithm(List<?> value){                 //无边界泛型通配符"<?>"
     System.out.println(valus.toString());
