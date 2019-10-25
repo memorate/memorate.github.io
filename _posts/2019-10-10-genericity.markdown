@@ -68,17 +68,22 @@ public class NotRecommend<String>{          //此处"String"与"T"的作用等�
 ```
 　***3）泛型可定义多个***
 ```java
-public class Demo<T,K,V>{          //一个类中定义多个泛型。类名Demo后接"<T,K,V>"，个数不限
+public class MultiDemo<T,K,V>{          //类型参数可定义多个。类名后接"<T,K,V>"，个数不限
 
     private T value;
     private K key;
 
-    public Demo(T value){       
+    public MultiDemo(T value, K key){       
         this.value = value;
+        this.key = key;
     }
 
     public T getValue(){
         return value;
+    }
+
+    public K getKey(){
+        return key;
     }
 
     public V transfer(){
@@ -90,8 +95,11 @@ public class Demo<T,K,V>{          //一个类中定义多个泛型。类名Demo
 **1）显式指定泛型类的类型：**  
 ```java
 Demo<Integer> integerDemo = new Demo<Integer>(1024);　　　　　//显示指定泛型类integerDemo的参数化类型为Integer  
+Demo<Integer> integerDemo = new Demo<>(1024);　　　　       　//Java7以后，支持省略后面的参数类型  
 
-Demo<String> stringDemo = new Demo<String>("string");　　  　//显示指定stringDemo类的参数化类型为String  
+Demo<String> stringDemo = new Demo<>("string");　　        　//显示指定stringDemo类的参数化类型为String  
+
+MultiDemo<Integer,Double,Number> multiDemo = new MultiDemo<>(108, 45.6);　　     //实例化多个类型参数的泛型类
 ```
     
 **2）由编译器推断泛型类的类型：**  
@@ -111,7 +119,7 @@ System.out.println("stringDemo 中value的类型为：" + stringDemo.getValue().
 `注意：`  
 　　１）泛型的类型参数只能是***类类型（引用类型）***，不能是简单类型。（如：只能是Integer，不能是int）  
 ```java
-       Demo<int> intDemo = new Demo<int>(1024);　　　　　　　　　　 　//编译错误！！！，泛型不能是简单类型  
+       Demo<int> intDemo = new Demo<>(1024);　　　　　　　　　　 　//编译错误！！！，泛型不能是简单类型  
 ```
 　　２）不能对***确切的泛型类***使用instanceof操作:  
 　　　　`stringDemo instanceof Demo<String>`是***非法***的，但`stringDemo instanceof Demo`是***合法***的。
@@ -128,9 +136,9 @@ public interface IDemo<T>{       //申明IDemo为泛型接口。接口名后接"
  ```
 　***3）泛型可声明多个***
 ```java
-public interface IDemo<T,E>{     //一个接口中声明多个泛型，接口名IDemo后接"<T,E>"，个数不限
+public interface IMultiDemo<T,E>{     //类型参数可以有多个，接口名后接"<T,E>"，个数不限
 
-    public T algorithm(E value);
+    public E algorithm(T value);
 }
  ```
 ##### 2.*使用泛型接口*
@@ -163,6 +171,7 @@ class AnotherDemo implements IDemo<String>{     //实参类型为String
 ### 三、泛型方法
 <br/>
 　**在方法的权限修饰符和返回值之间使用标识符`<T>`来定义泛型方法。**  
+　**`强调：`一个方法是不是泛型的，与它所在的类是不是泛型类没有关系。**  
 <br/>
 **1）在*普通类*中定义泛型方法**  
 ```java
