@@ -12,15 +12,15 @@ description: 关于泛型的个人学习及理解
 
 <!-- more -->
 
-### *什么是泛型*
-　1）**泛型是一种语法糖；**  
-　2）**泛型的本质是一种参数化类型，将所操作的数据类型（类类型/引用类型）指定为一个参数，在调用时再传入具体的类型；**  
-　3）**泛型可用于类、接口、方法中，分别被称为泛型类、泛型接口、泛型方法；**  
-　4）**泛型只在编译阶段有效，在编译过程中正确验证泛型结果后，会将泛型相关信息擦除，并且会在对象进入和离开方法的边界处添加类型检查和类型转换的方法。因此，泛型信息不会进入到运行阶段。**
+### 什么是泛型
+　1）泛型是一种**语法糖**；  
+　2）泛型的**本质是一种参数化类型**，将所操作的数据类型（类类型/引用类型）指定为一个参数，在调用时再传入具体的类型；  
+　3）泛型可用于类、接口、方法中，分别被称为**泛型类、泛型接口、泛型方法**；  
+　4）泛型只在**编译阶段**有效，在编译过程中正确验证泛型结果后，会将泛型相关信息擦除，并且会在对象进入和离开方法的边界处添加类型检查和类型转换的方法。因此，泛型信息不会进入到运行阶段。
 
-### *为什么使用泛型*
-　1）**类型安全，在编译时进行类型检测，只有指定类型才可添加到集合/类中；**   
-　2）**泛型将运行时的类型转换问题提前到了编译期，避免了强制类型转换；**   
+### 为什么使用泛型
+　1）**类型安全**，在编译时进行类型检测，只有指定类型才可添加到集合/类中；   
+　2）泛型将运行时的类型转换问题提前到了编译期，**避免了强制类型转换**；   
 ```java
    List list = new ArrayList();
    list.add("hello");
@@ -30,13 +30,13 @@ description: 关于泛型的个人学习及理解
    list.add("hello");
    String s = list.get(0);         //无需类型转换
 ```
-　3）**提高代码的可读性和重用率，降低程序的复杂度**  
+　3）提高代码的**可读性**和**重用率**，降低程序的复杂度  
 ### 一、泛型类
 ##### 1.*定义泛型类*
-　1）在普通类的类名后加`<T>`来定义该类为泛型类，其中T也可是E、K、V等任意字母。  
+　1）在普通类的类名后加`<T>`来定义该类为泛型类，其中T也可是E、K、V等任意字母。(本文中将\<T>称为**泛型标识符**)   
 　2）T在该泛型类中可作为**属性的类型**、**方法的入参类型**、**方法的返回值类型**。  
 ```java
-public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任意字母
+public class Demo<T>{           //类名后接泛型标识符"<T>"，T也可是E、K、V等任意字母
 
     private T value;             //泛型作为属性的类型
      
@@ -57,16 +57,16 @@ public class Demo<T>{           //类名后接"<T>"，T也可是E、K、V等任�
   V : Value
   N : Number
 ```
-`注意：`字符串也可用于定义泛型(极度不推荐使用)
+`注意：`字符串也可用于定义泛型(不推荐使用！！！)
 ```java
 public class NotRecommend<String>{          //此处"String"与"T"的作用等同，代表一个参数化类型。然而容易造成误解
 
-    private String value1;                 //此处的"String"代表参数化类型，而不是！而不是！而不是！"java.lang.String"类
+    private String value1;                 //此处的"String"代表参数化类型，而不是！不是！不是！"java.lang.String"类
 
     private java.lang.String value2;       //若要使用字符串类只能这样写。此处的"java.lang.String"代表字符串类
 }
 ```
-　***3）泛型可定义多个***
+　3）泛型可定义多个
 ```java
 public class MultiDemo<T,K,V>{          //类型参数可定义多个。类名后接"<T,K,V>"，个数不限
 
@@ -94,10 +94,10 @@ public class MultiDemo<T,K,V>{          //类型参数可定义多个。类名�
 ##### 2.*实例化泛型类*
 **1）显式指定泛型类的类型：**  
 ```java
-Demo<Integer> integerDemo = new Demo<Integer>(1024);　　　　　//显示指定泛型类integerDemo的参数化类型为Integer  
-Demo<Integer> integerDemo = new Demo<>(1024);　　　　       　//Java7以后，支持省略后面的参数类型  
+Demo<Integer> integerDemo1 = new Demo<Integer>(1024);　　　　　//显示指定泛型类integerDemo的参数化类型为Integer  
+Demo<Integer> integerDemo2 = new Demo<>(1024);　　　　       　//Java7以后，支持省略后面的参数类型  
 
-Demo<String> stringDemo = new Demo<>("string");　　        　//显示指定stringDemo类的参数化类型为String  
+Demo<String> stringDemo1 = new Demo<>("string");　　        　//显示指定stringDemo类的参数化类型为String  
 
 MultiDemo<Integer,Double,Number> multiDemo = new MultiDemo<>(108, 45.6);　　     //实例化多个类型参数的泛型类
 ```
@@ -117,24 +117,24 @@ System.out.println("stringDemo 中value的类型为：" + stringDemo.getValue().
 ![]({{ "/assets/img/demoTest.jpg" | absolute_url }})
 
 `注意：`  
-　　１）泛型的类型参数只能是***类类型（引用类型）***，不能是简单类型。（如：只能是Integer，不能是int）  
+　　1）泛型的类型参数只能是**类类型（引用类型）**，不能是简单类型。（如：只能是Integer，不能是int）  
 ```java
        Demo<int> intDemo = new Demo<>(1024);　　　　　　　　　　 　//编译错误！！！，泛型不能是简单类型  
 ```
-　　２）不能对***确切的泛型类***使用instanceof操作:  
-　　　　`stringDemo instanceof Demo<String>`是***非法***的，但`stringDemo instanceof Demo`是***合法***的。
+　　1）不能对**确切的泛型类**使用instanceof操作:  
+　　　　`stringDemo instanceof Demo<String>`是**非法**的，但`stringDemo instanceof Demo`是**合法**的。
 
 ### 二、泛型接口
 ##### 1.*定义泛型接口*
-　*1）接口名后接泛型标识符`<T>`*  
-　*2）T可用于接口中方法的返回值和方法的入参类型*
+　1）接口名后接泛型标识符`<T>`  
+　2）T可用于接口中方法的返回值和方法的入参类型
 ```java
-public interface IDemo<T>{       //申明IDemo为泛型接口。接口名后接"<T>"，T也可是E、K、V等任意字母
+public interface IDemo<T>{       //申明IDemo为泛型接口。接口名后接泛型标识符"<T>"，T也可是E、K、V等任意字母
 
     public T algorithm(T value);
 }
  ```
-　***3）泛型可声明多个***
+　3）泛型可定义多个
 ```java
 public interface IMultiDemo<T,E>{     //类型参数可以有多个，接口名后接"<T,E>"，个数不限
 
@@ -142,10 +142,10 @@ public interface IMultiDemo<T,E>{     //类型参数可以有多个，接口名�
 }
  ```
 ##### 2.*使用泛型接口*
- **1）引用的泛型接口未传入实参时**  
- 　*需要将泛型的申明也加到类中。`类名`和`接口名`后必须都有泛型标识符`<T>`*  
+ **1）引用的泛型接口未传入类型实参时**  
+ 　需要将泛型标识符也加在类名后。**类名**和**接口名**后必须都有泛型标识符`<T>`  
 ```java
-class SimpleDemo<T> implements IDemo<T>{     //此时的SimpleDemo为泛型类，类名和接口名后必须有泛型标识"<T>"
+class SimpleDemo<T> implements IDemo<T>{      //此时的SimpleDemo为泛型类，类名和接口名后必须都有泛型标识"<T>"
 
      @override
      public T algorithm(T value){             //此段代码中出现的四个泛型标识符必须相同（都是T）
@@ -153,13 +153,13 @@ class SimpleDemo<T> implements IDemo<T>{     //此时的SimpleDemo为泛型类�
      }
 }
 ```
-**2）引用的泛型接口传入实参时**  
-　*在使用泛型接口的类中，需将所有使用到泛型的地方替换成传入的实参类型*
+**2）引用的泛型接口传入类型实参时**  
+　在使用泛型接口的类中，需将所有使用到泛型的地方替换成传入的实参类型
 ```java
-class AnotherDemo implements IDemo<String>{     //实参类型为String
+class AnotherDemo implements IDemo<String>{       //T替换为String
 
      @override
-     public String algorithm(String value){       //实参类型为String
+     public String algorithm(String value){       //T替换为String
          return value;
      }
 }
@@ -170,44 +170,48 @@ class AnotherDemo implements IDemo<String>{     //实参类型为String
 		  
 ### 三、泛型方法
 <br/>
-　**在方法的权限修饰符和返回值之间使用标识符`<T>`来定义泛型方法。**  
+　在方法的**权限修饰符**和**返回值**之间使用标识符`<T>`来定义泛型方法。  
 <br/>
-**1）在*普通类*中定义泛型方法**  
+1）在**普通类**中定义泛型方法  
 ```java
 public class normalDemo{
-    public String normalMethod(String value){                         //普通方法
+    public String normalMethod(String value){                       //普通方法
+        return value;
+    }
+    
+    public <T> String genericMethod(T value){                       //泛型方法，public和String之间有"<T>"
+        return value.toString();
+    }
+    
+    public T illegalMethod(T value){                                //编译错误！！！，无法识别类型T
         return value;
     }
 
-    public <T> T genericMethod1(T value){                             //泛型方法，public和String之间有"<T>"
-        return value;
-    }
-
-    protected <E,K> void genericMethod2(E param, K value){            //泛型方法，泛型可声明多个
+    protected <E,K> void mutilGenericMethod(E param, K value){      //泛型方法，泛型可声明多个
         System.out.println(param.toString() + value.toString());
     }
 
-    public static String normalGenericMethod(String value){            //普通静态方法
+    public static String staticMethod(String value){                //普通静态方法
         return value;
     }
 
-    public static <T> T staticGenericMethod(T value){                 //泛型静态方法，静态方法若要使用泛型，必须将静态方法申明为泛型方法
+    public static <T> T genericStaticMethod(T value){               //泛型静态方法，静态方法若要使用泛型，必须将静态方法申明为泛型方法
         return value;
     }
 }
 ```
-**2）在*泛型类*中定义泛型方法**  
+2）在**泛型类**中定义泛型方法  
 ```java
 public class genericDemo<T>{
     public T normalMethod(T value){                 //普通方法，两个T与泛型类中的T相同
-        return value;                               //这个方法可以理解为是具有泛型特性（类型参数化）的普通方法，因为它可以使用泛型类的参数化类型
+        return value;                               //此方法可以理解为是具有泛型特性（类型参数化）的普通方法，因为它可以使用泛型类的参数化类型
     }
 
-    public <T> T genericMethod1(T value){           //泛型方法，此处T是一种全新的类型，可以与泛型类中的T相同，也可不同。
+    public <T> T genericMethod(T value){            //泛型方法，此处T是一种全新的类型，可以与泛型类中的T相同，也可不同。
         return value;                               //不建议在这里使用已使用的字母T，应换一个字母来声明
     }
 
-    public <E,K> void genericMethod2(E param, K value){             //泛型方法，泛型可声明多个;E、K可与T相同，也可不同
+    public <E,K> void gmutilGenericMethod(E param, K value){          //泛型方法，泛型可声明多个;E、K可与T相同，也可不同
         System.out.println(param.toString() + value.toString());
     }
 
@@ -221,41 +225,21 @@ public class genericDemo<T>{
 }
 ```
 `注意：`  
-　1）**一个方法是不是泛型的，与它所在的类（或接口）是不是泛型类没有关系。**  
+　1）**一个方法是不是泛型的，与它所在的类（或接口）是不是泛型的没有关系。**  
 　2）只有方法的访问修饰符（public等）与返回值之间有泛型类标识符<T\>时该方法才是泛型方法（T可为E、K、V等），否则只是个普通方法。  
 　3）泛型类，是在实例化类的时候指明泛型的具体类型；泛型方法，是在调用方法的时候指明泛型的具体类型。  
 　4）泛型类标识符<T\>中的参数化类型T的作用域是整个类（类中任意地方可用T），泛型方法标识符<E\>中的类型E仅能用于这个方法。  
-　**例：**`public class genericDemo<T>{}`，T可用于整个genericDemo类；`public <T> T genericMethod1(){}`，T只能用于genericMethod1方法。
+　**例：**`public class genericDemo<T>{}`，T可用于整个genericDemo类；`public <T> T genericMethod(){}`，T只能用于genericMethod方法。
 
 ### 四、泛型范围限定
-<br/>
-　**在定义泛型类、泛型接口、泛型方法时，可以使用关键字`extends`和`super`来限定泛型的范围。**  
-<br/>
-　1）无范围限定  
-```java
-public class Demo<T>{}                 //无范围限定的泛型类
-
-public interface IDemo<T>{}            //无范围限定的泛型接口
-
-public <T> T method(){}               //无范围限定的泛型方法
-```
-　2）限定泛型的**上界**，使用`extends`  
-　　此处的"extends"并不代表继承，而是限定泛型的上界；  
-　　下例中T只能是Number或Number的子类
+　在定义泛型类、泛型接口、泛型方法时，可以使用关键字`extends`来限定参数化类型T的范围。  
+　使用方法：`<T extends ClassName>`，这里extends代表T只能是ClassName类或其子类。
 ```java
 public class Demo<T extends Number>{}                 //限定的泛型类中泛型的上界为Number
 
 public interface IDemo<T extends Number>{}            //限定的泛型接口中泛型的上界为Number
 
 public <T extends Number> T method(){}               //限定的泛型方法中泛型的上界为Number
-```
-　3）限定泛型的**下界**，使用`super`    
-```java
-public class Demo<T super Integer>{}                 //无范围限定的泛型类
-
-public interface IDemo<T super Integer>{}            //无范围限定的泛型接口
-
-public <T super Integer> T method(){}               //无范围限定的泛型方法
 ```
 ### 五、泛型通配符
 ```java

@@ -33,7 +33,9 @@ caption, th, td {
 }
 
 a img {
-    border: none
+    border: none;
+    margin-right: 62px;
+    margin-bottom: -6px;
 }
 
 /* custom Font*/
@@ -1052,7 +1054,8 @@ article .article-content hr {
 }
 
 article .article-content strong {
-    font-weight: bold
+    font-weight: bold;
+    margin: 0 1px;
 }
 
 article .article-content em {
@@ -1118,7 +1121,7 @@ article .article-content ul li > code, article .article-content ol li > code, ar
     color: #d14;
     border: 1px solid #d6d6d6;
     padding: 1px 1px;
-    margin: 0 5px;
+    margin: 0 2px;
     font-size: 90%;
     font-weight: 600;
     white-space: nowrap;
@@ -1148,7 +1151,8 @@ article .article-content img, article .article-content video, article .article-c
 
 @media only screen and (min-width: 1024px) {
     article .article-content img, article .article-content video, article .article-content figure img {
-        padding-top: 0px
+        padding-top: 0px;
+        padding-bottom: 8px;
     }
 }
 
