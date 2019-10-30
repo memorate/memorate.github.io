@@ -232,15 +232,38 @@ public class genericDemo<T>{
 　**例：**`public class genericDemo<T>{}`，T可用于整个genericDemo类；`public <T> T genericMethod(){}`，T只能用于genericMethod方法。
 
 ### 四、泛型范围限定
-　在定义泛型类、泛型接口、泛型方法时，可以使用关键字`extends`来限定参数化类型T的范围。  
-　使用方法：`<T extends ClassName>`，这里extends代表T只能是ClassName类或其子类。
+<br/>
+　在定义泛型类、泛型接口、泛型方法时，可以使用关键字`extends`来限定参数化类型T的上界。  
+　**使用方法：**`<T extends ClassName>`，ClassName可以是一个类或是一个接口，也可是其他参数化类型。  
+<br/>
+1）上界为某个**具体类**  
+　当ClassName为一个具体类时，代表T只能是该类或其子类
 ```java
-public class Demo<T extends Number>{}                 //限定的泛型类中泛型的上界为Number
+public class ClassDemo<T extends Number>{          //限定T的上界为Number类，T只能是Number或者Number的子类
+    private T value;
 
-public interface IDemo<T extends Number>{}            //限定的泛型接口中泛型的上界为Number
-
-public <T extends Number> T method(){}               //限定的泛型方法中泛型的上界为Number
+    public double transform(){
+        return value.doubleValue();                //因为限定了T的类型，所以可以使用Number类里的方法
+    }
+}
 ```
+```java
+ClassDemo<Integer> demo = new ClassDemo<>();       //Integer是Number的子类，编译ok
+
+ClassDemo<String> illegal = new ClassDemo<>();     //String不是Number的子类，编译不通过！！！
+```
+2）上界为某个**接口**  
+　当ClassName为一个接口时，代表T必须实现了ClassName接口
+```java
+public class InterfaceDemo<T extends Serializable>{          //限定T的上界为Serializable接口，T必须是实现了Serializable的类或接口
+    private T value;
+
+    public T getValue(){
+        return value;                //因为限定了T的类型，所以可以使用Number类里的方法
+    }
+}
+```
+3）上界为其他**类型参数**
 ### 五、泛型通配符
 ```java
 public void algorithm(List<?> value){                 //无边界泛型通配符"<?>"
