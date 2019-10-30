@@ -15,8 +15,10 @@ description: 关于泛型的个人学习及理解
 ### 什么是泛型
 　1）泛型是一种**语法糖**；  
 　2）泛型的**本质是一种参数化类型**，将所操作的数据类型（类类型/引用类型）指定为一个参数，在调用时再传入具体的类型；  
-　3）泛型可用于类、接口、方法中，分别被称为**泛型类、泛型接口、泛型方法**；  
-　4）泛型只在**编译阶段**有效，在编译过程中正确验证泛型结果后，会将泛型相关信息擦除，并且会在对象进入和离开方法的边界处添加类型检查和类型转换的方法。因此，泛型信息不会进入到运行阶段。
+　3）泛型的**原理**是在编译时Java编译器将泛型代码转换为普通代码，将类型T擦除，替换为Object类，并加入必要的强制类型转换；Java虚拟机在加载运行.class文件时并不知道存在泛型，只会接收到普通类及代码。   
+　4）泛型只在**编译阶段**有效，在编译过程中正确验证泛型结果后，会将泛型相关信息擦除，并且会在对象进入和离开方法的边界处添加类型检查和类型转换的方法。因此，泛型信息不会进入到运行阶段。  
+　5）泛型可用于类、接口、方法中，分别被称为**泛型类、泛型接口、泛型方法**；  
+
 
 ### 为什么使用泛型
 　1）**类型安全**，在编译时进行类型检测，只有指定类型才可添加到集合/类中；   
@@ -59,7 +61,7 @@ public class Demo<T>{           //类名后接泛型标识符"<T>"，T也可是E
 ```
 `注意：`字符串也可用于定义泛型(不推荐使用！！！)
 ```java
-public class NotRecommend<String>{          //此处"String"与"T"的作用等同，代表一个参数化类型。然而容易造成误解
+public class NotRecommend<String>{         //此处"String"与"T"的作用等同，代表一个参数化类型。然而容易造成误解
 
     private String value1;                 //此处的"String"代表参数化类型，而不是！不是！不是！"java.lang.String"类
 
@@ -117,12 +119,20 @@ System.out.println("stringDemo 中value的类型为：" + stringDemo.getValue().
 ![]({{ "/assets/img/demoTest.jpg" | absolute_url }})
 
 `注意：`  
-　　1）泛型的类型参数只能是**类类型（引用类型）**，不能是简单类型。（如：只能是Integer，不能是int）  
+　1）泛型的类型参数只能是**类类型（引用类型）**，不能是简单类型。（如：只能是Integer，不能是int）  
 ```java
-       Demo<int> intDemo = new Demo<>(1024);　　　　　　　　　　 　//编译错误！！！，泛型不能是简单类型  
+   Demo<int> intDemo = new Demo<>(1024);　　　　　　　　　　 　//编译错误！！！，泛型不能是简单类型  
 ```
-　　1）不能对**确切的泛型类**使用instanceof操作:  
-　　　　`stringDemo instanceof Demo<String>`是**非法**的，但`stringDemo instanceof Demo`是**合法**的。
+　2）不能对**确切的泛型类**使用instanceof操作:  
+　　`stringDemo instanceof Demo<String>`是**非法**的，但`stringDemo instanceof Demo`是**合法**的。  
+　3）Integer是Number的子类，但List<Integer\>**并不是**List<Number\>的子类！  
+　4）泛型**不能**用于声明类中**静态变量**的类型  
+　　
+```java
+   public class Demo<M>{
+       private static M key;    //编译不通过！！！
+   }
+```  
 
 ### 二、泛型接口
 ##### 1.*定义泛型接口*
@@ -226,24 +236,25 @@ public class genericDemo<T>{
 ```
 `注意：`  
 　1）**一个方法是不是泛型的，与它所在的类（或接口）是不是泛型的没有关系。**  
-　2）只有方法的访问修饰符（public等）与返回值之间有泛型类标识符<T\>时该方法才是泛型方法（T可为E、K、V等），否则只是个普通方法。  
+　2）只有方法的访问修饰符（public等）与返回值之间有泛型标识符<T\>时该方法才是泛型方法（T可为E、K、V等），否则只是个普通方法。  
 　3）泛型类，是在实例化类的时候指明泛型的具体类型；泛型方法，是在调用方法的时候指明泛型的具体类型。  
-　4）泛型类标识符<T\>中的参数化类型T的作用域是整个类（类中任意地方可用T），泛型方法标识符<E\>中的类型E仅能用于这个方法。  
+　4）泛型类中的参数化类型T的作用域是整个类（类中任意地方可用T），泛型方法中的类型E仅能用于这个方法。  
 　**例：**`public class genericDemo<T>{}`，T可用于整个genericDemo类；`public <T> T genericMethod(){}`，T只能用于genericMethod方法。
 
 ### 四、泛型范围限定
 <br/>
 　在定义泛型类、泛型接口、泛型方法时，可以使用关键字`extends`来限定参数化类型T的上界。  
-　**使用方法：**`<T extends ClassName>`，ClassName可以是一个类或是一个接口，也可是其他参数化类型。  
+　**使用方法：**`<T extends ClassName>`，ClassName可以是一个类或是一个接口，也可是其他参数化类型（泛型）。  
 <br/>
 1）上界为某个**具体类**  
-　当ClassName为一个具体类时，代表T只能是该类或其子类
+　当ClassName为一个具体类时，代表T只能是该类或其子类。  
+　指定边界后，泛型擦除时就不会转换成Object类，而是会转换成边界类型。  
 ```java
-public class ClassDemo<T extends Number>{          //限定T的上界为Number类，T只能是Number或者Number的子类
+public class ClassDemo<T extends Number>{          //限定T的上界为Number类，T只能是Number类或者Number的子类
     private T value;
 
     public double transform(){
-        return value.doubleValue();                //因为限定了T的类型，所以可以使用Number类里的方法
+        return value.doubleValue();                //因为限定了T的类型，所以可以使用Number类里的方法（子类也可调用父类中的方法）
     }
 }
 ```
@@ -253,17 +264,24 @@ ClassDemo<Integer> demo = new ClassDemo<>();       //Integer是Number的子类�
 ClassDemo<String> illegal = new ClassDemo<>();     //String不是Number的子类，编译不通过！！！
 ```
 2）上界为某个**接口**  
-　当ClassName为一个接口时，代表T必须实现了ClassName接口
+　当ClassName为一个接口时，代表T必须实现了ClassName接口。  
 ```java
-public class InterfaceDemo<T extends Serializable>{          //限定T的上界为Serializable接口，T必须是实现了Serializable的类或接口
+public class InterfaceDemo<T extends Serializable>{      //限定T的上界为Serializable接口，T必须是实现了Serializable的类或接口
     private T value;
 
     public T getValue(){
-        return value;                //因为限定了T的类型，所以可以使用Number类里的方法
+        return value;  
     }
 }
 ```
-3）上界为其他**类型参数**
+3）上界为其他**类型参数**  
+　泛型的上界可限定为其他泛型。
+```java
+public class AdvancedDemo<T extends E>{}     //限定T的上界为其他类型参数，当E是类时，T必须是E或E的子类；当E为接口时，T必须实现了E
+```
+`注意：`  
+　1）泛型范围限定`<T extends ClassName>`可用在泛型类、泛型接口、泛型方法的**定义**中。可理解为`<T>`是普通泛型标识符，`<T extends ClassName>`是高级泛型标识符。  
+　2）不存在泛型的下界！！！`<T super ClassName>`是**不存在**的。
 ### 五、泛型通配符
 ```java
 public void algorithm(List<?> value){                 //无边界泛型通配符"<?>"
