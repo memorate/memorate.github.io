@@ -13,7 +13,7 @@ description: 关于泛型的个人学习及理解
 <!-- more -->
 
 ### 什么是泛型
-　1）泛型是一种**语法糖**；  
+　1）泛型是一种**语法糖**，方便程序员编程；  
 　2）泛型的**本质是一种参数化类型**，将所操作的数据类型（类类型/引用类型）指定为一个参数，在调用时再传入具体的类型；  
 　3）泛型的**原理**是在编译时Java编译器将泛型代码转换为普通代码，将类型T擦除，替换为Object类，并加入必要的强制类型转换；Java虚拟机在加载运行.class文件时并不知道存在泛型，只会接收到普通类及代码。   
 　4）泛型只在**编译阶段**有效，在编译过程中正确验证泛型结果后，会将泛型相关信息擦除，并且会在对象进入和离开方法的边界处添加类型检查和类型转换的方法。因此，泛型信息不会进入到运行阶段。  
@@ -127,13 +127,18 @@ System.out.println("stringDemo 中value的类型为：" + stringDemo.getValue().
 　　`stringDemo instanceof Demo<String>`是**非法**的，但`stringDemo instanceof Demo`是**合法**的。  
 　3）Integer是Number的子类，但List<Integer\>**并不是**List<Number\>的子类！  
 　4）泛型**不能**用于声明类中**静态变量**的类型  
-　　
+　　原因：①理念不合。static的理念是确定、唯一，泛型的理念是可变、多用；  
+　　　　　②当实例化多个类型不同的泛型类时，静态变量的类型无法确定。  
 ```java
-   public class Demo<M>{
+   public class IllegalDemo<M>{
        private static M key;    //编译不通过！！！
    }
 ```  
-
+```java
+   IllegalDemo<Integer> integerDemo = new IllegalDemo<>(1024);      //不论实例化多少个IllegalDemo类，static变量key只会在内存中存在一份；
+   IllegalDemo<String> stringDemo = new IllegalDemo<>("String");    //而key的类型却有三种Integer、String、Double，因此编译器无法确定
+   IllegalDemo<Double> doubleDemo = new IllegalDemo<>(9.99);        //key的类型到底是哪个
+```
 ### 二、泛型接口
 ##### 1.*定义泛型接口*
 　1）接口名后接泛型标识符`<T>`  
@@ -236,14 +241,14 @@ public class genericDemo<T>{
 ```
 `注意：`  
 　1）**一个方法是不是泛型的，与它所在的类（或接口）是不是泛型的没有关系。**  
-　2）只有方法的访问修饰符（public等）与返回值之间有泛型标识符<T\>时该方法才是泛型方法（T可为E、K、V等），否则只是个普通方法。  
+　2）只有方法的访问修饰符（public等）与返回值之间有泛型标识符<T\>时该方法才是泛型方法（T可为E、K、V等），否则它只是个普通方法。  
 　3）泛型类，是在实例化类的时候指明泛型的具体类型；泛型方法，是在调用方法的时候指明泛型的具体类型。  
 　4）泛型类中的参数化类型T的作用域是整个类（类中任意地方可用T），泛型方法中的类型E仅能用于这个方法。  
 　**例：**`public class genericDemo<T>{}`，T可用于整个genericDemo类；`public <T> T genericMethod(){}`，T只能用于genericMethod方法。
 
 ### 四、泛型范围限定
 <br/>
-　在定义泛型类、泛型接口、泛型方法时，可以使用关键字`extends`来限定参数化类型T的上界。  
+　在**定义**泛型类、泛型接口、泛型方法时，可以使用关键字`extends`来限定参数化类型T的上界。  
 　**使用方法：**`<T extends ClassName>`，ClassName可以是一个类或是一个接口，也可是其他参数化类型（泛型）。  
 <br/>
 1）上界为某个**具体类**  
@@ -254,7 +259,7 @@ public class ClassDemo<T extends Number>{          //限定T的上界为Number�
     private T value;
 
     public double transform(){
-        return value.doubleValue();                //因为限定了T的类型，所以可以使用Number类里的方法（子类也可调用父类中的方法）
+        return value.doubleValue();                //因为限定了T的类型，所以可以使用Number类里的方法（子类可调用父类中的方法）
     }
 }
 ```
