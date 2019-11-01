@@ -269,7 +269,7 @@ ClassDemo<Integer> demo = new ClassDemo<>();       //Integer是Number的子类�
 ClassDemo<String> illegal = new ClassDemo<>();     //String不是Number的子类，编译不通过！！！
 ```
 2）上界为某个**接口**  
-　当ClassName为一个接口时，代表T必须实现了ClassName接口。  
+　当ClassName为一个接口时，代表T必须实现了ClassName接口。（**接口可限定多个**）  
 ```java
 public class InterfaceDemo<T extends Serializable>{      //限定T的上界为Serializable接口，T必须是实现了Serializable的类或接口
     private T value;
@@ -277,6 +277,16 @@ public class InterfaceDemo<T extends Serializable>{      //限定T的上界为Se
     public T getValue(){
         return value;  
     }
+}
+```
+```java
+public class Mutile<T extends SomeClass & Interface1 & Interface2>{     //上界可同时为类和接口，类只能有一个，接口可有多个，
+     private T variable                                                 //类需放在extends之后第一位，中间用"&"连接。
+}                                                                       //表示T必须是SomeClass或其子类，且需实现Interface1、Interface1接口。
+```
+```java
+public <T extends Compatable<T>> T method(T param){      //递归类型限制，表示T必须实现了Comparable接口且可与同类型的元素进行比较
+    return param;
 }
 ```
 3）上界为其他**类型参数**  
@@ -288,6 +298,9 @@ public class AdvancedDemo<T extends E>{}     //限定T的上界为其他类型�
 　1）泛型范围限定`<T extends ClassName>`可用在泛型类、泛型接口、泛型方法的**定义**中。可理解为`<T>`是普通泛型标识符，`<T extends ClassName>`是高级泛型标识符。  
 　2）不存在泛型的下界！！！`<T super ClassName>`是**不存在**的。
 ### 五、泛型通配符
+<br/>
+**1.无边界泛型通配符**  
+　写法：`<?>`，代表任意（未知）类型
 ```java
 public void algorithm(List<?> value){                 //无边界泛型通配符"<?>"
     System.out.println(valus.toString());
@@ -301,6 +314,8 @@ public void algorithm(List<? super Demo> value){      //固定下边界泛型通
     System.out.println(valus.toString());
 }
 ```
+**1.固定上边界泛型通配符**  
+**1.固定下边界泛型通配符**  
 Tips：一般用于方法的入参，当具体类型不确定时，可使用泛型通配符"?"；使用泛型通配符后无法使用类的具体功能，只能使用Object类中的功能。
  
 注意：1）无边界泛型通配符"?"是类型实参，是一种真实的类型，可以看做所有类的父类，而不是类型形参。  
