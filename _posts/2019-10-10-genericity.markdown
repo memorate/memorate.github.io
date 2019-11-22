@@ -3,8 +3,7 @@ layout: post
 title: java-泛型原来是这么回事  
 tags: 
 - Java
-- StudyRecord
-- 学习记录  
+- Study
 categories: Java  
 description: 关于泛型的个人学习及理解
 ---
