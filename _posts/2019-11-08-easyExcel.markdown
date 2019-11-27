@@ -118,7 +118,7 @@ sheet()有三个重载方法：
 　2）sheet(String sheetName)　　　　　　　　　//指定sheet的**名称**来读，区分大小写  
 　3）sheet(int sheetNo, String sheetName)　　　//同时使用，一般只使用sheetName  
 **1）一次读取单个sheet**  
-之前读取的写法默认是读取Excel中第一个sheet,使用sheet()来读取指定sheet。  
+之前所有的读取默认是读Excel中第一个sheet,现在使用sheet()来指定sheet读。  
 **读取指定sheet**
 ```java
 SheetListener listener = new SheetListener();
@@ -127,7 +127,6 @@ EasyExcel.read("D:\\MyData\\Administrator\\Desktop\\sample.xlsx", listener)
 System.out.println(listener.getData());
 ```
 **2）一次读取多个sheet**    
-实际情况中每个sheet对应的Java类可能是不同的（`head()`中class类型不同，`registerReadListener()`中listener也不同）。  
 ```java
 SheetListener listener = new SheetListener();
 //打开Excel
@@ -140,6 +139,7 @@ reader.read(sheet1, sheet2);                //真实去读
 reader.finish();                            //必须关闭
 System.out.println(listener.getData());     //取出两个sheet的总数据并打印
 ```
+实际情况中每个sheet对应的Java类可能是不同的（`head()`中class类型不同，相应的`registerReadListener()`中listener也不同）。  
 ### 三、EasyExcel写入    
 ##### *1.写入一个sheet*   
 写入时会根据`@ExcelProperty(value = "列名", index = n)`注解中的value值来生成表头，若未使用value则会将该注解所在的属性名当做表头。  

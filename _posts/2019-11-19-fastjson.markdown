@@ -22,7 +22,7 @@ description: 阿里团队FastJson使用记录
 </dependency>
 ```
 ### 二、Json解析
-**模板数据：**
+<span id="sample">**模板数据：**</span>  
 ```json
 {
   "status": 0,
@@ -70,12 +70,19 @@ description: 阿里团队FastJson使用记录
   }
 }
 ```
-### 1.简单的读
-`核心点`是，将Json字符串转换成**JSONObject**，然后根据**元素名**从JSONObject中**get数据**。  
+### 1.介绍三个类
+**1）JSON类**  
+　　Json转换器（解析器），将Json文本转换成Json对象（JSONObject和JSONArray等）或Java对象，也可将Json、Java对象转换成Json文本。  
+**2）JSONObject类**  
+　　由Json文本转换成的Json对象，可从中读取Json文本中的数据。  
+**3）JSONArray类**  
+　　由Json文本转换成的Json对象，与JSONObject不同的是JSONArray是个数组。遍历时将JSONArray中的每个元素转换成JSONObject，然后读取数据。  
+### 2.简单的读
+`核心点`是，将Json文本转换成**JSONObject**，然后根据**元素名**从JSONObject中**get数据**。  
 `常用的get方法`，注意getXXX()一般返回**引用类型**，而对应的getXXXValue()一般返回**基本类型**，XXX为也可为Short、Float等，下表只是常用的一部分。    
 　　　　![]({{ "/assets/img/fastjson1.jpg"}})  
 **1）读取单层元素**  
-下例为简单读取sample中的status、message、deploy、date四个元素。  
+下例为简单读取[sample](#sample)中的status、message、deploy、date四个元素。  
 ```java
 JSONObject jsonObject = JSON.parseObject(sample);      //sample为存储模板数据的String
 
@@ -88,8 +95,8 @@ Boolean deploy = jsonObject.getBoolean("deploy");      //getXXX()获取到引用
 Date date = jsonObject.getDate("date");                //可直接取出Date类型的时间
 ```  
 **2）读取多层元素**  
-　多层实际上和单层一样，都是从JSONObject中获取数据，先一步一步将要获取的元素的上层转换成JSONObject，然后直接读就可以了。
-例如下例中先将data这个节点转换成JSONObject，再去读取archived、creator、time中的数据，三层、四层等依次类推。
+　多层实际上和单层一样，都是从JSONObject中获取数据，先一步一步将要获取的元素的上层转换成JSONObject，然后直接读就可以了。  
+　例如下例中先将data这个节点转换成JSONObject，再去读取archived、creator、time中的数据。若Json有三层、四层等依次类推即可。
 ```java
 JSONObject jsonObject = JSON.parseObject(sample);         //第一步，将Json转换成JSONObject
 
@@ -104,7 +111,7 @@ Date time = data.getDate("time");
 **3）读取数组**  
 　先使用**getJSONArray()**取到待解析的数组，然后**遍历**该JSONArray，将其中的每个元素转换成JSONObject，然后从JSONObject中读取相应数据。
 若此时的JSONObject还是一个数组，继续将其中的元素转换成JSONObject。  
-　下例展示了如何获取模板数据中所有的subsidiary（数组中嵌套着数组）。    
+　下例展示了如何获取[模板数据](#sample)中所有的subsidiary（数组中嵌套着数组）。    
 ```java
 JSONObject jsonObject = JSON.parseObject(sample);                 //第一步，将Json转换成JSONObject
 
@@ -126,4 +133,55 @@ for (int i = 0; i < brands.size(); i++) {                         //遍历brands
 }
 System.out.println(allSubsidiary);        //运行结果：[smart, GLC, GLA, Passenger, SUV, MPV]
 ```  
-### 2.解析为Java类  
+### 3.解析为Java类  
+分为两类，一类是将**JSONObject**转换成Java类，另一类是将**JSONArray**转换成Java类。  
+分别调用`JSON.parseObject(String text, Class<T> clazz)`和`JSON.parseArray(String text, Class<T> clazz)`方法。  
+下例展示如何将[模板数据](#sample)中的**brands元素**转换成Java类：  
+```java
+JSONObject jsonObject = JSON.parseObject(sample);
+JSONObject data = jsonObject.getJSONObject("data");
+JSONArray brands = data.getJSONArray("brands");                             //照例先获取到brands，注意它是JSONArray
+
+List<Brand> brandList = JSON.parseArray(brands.toString(), Brand.class);    //指定解析的String和Class
+```
+**·Brand类**
+```java
+public class Brand {
+    private Integer id;
+    private String type;
+    private String nameZh;                //支持驼峰命名，也支持下划线命名
+    private String name_en;               //nameEn也可解析成功
+    private Date createDate;
+    private List<String> subsidiary;
+    private List<Popular> popular;
+}       //get、set方法省略
+```
+**·Popular类**
+```java
+public class Popular {
+    private String model;
+    private String color;
+}      //get、set方法省略
+```
+`注意：`  
+　　1）若Java类中某个属性无setter方法，则最终无法将json中对应的元素解析为该属性。（例如id无setter方法，最终得到的id为null）  
+　　2）FastJson支持驼峰命名。Json中有个元素名为name_zh，类中属性名为name_zh和nameZh都可解析成功。  
+**·Popular类也可换为Map<String,String>**
+```java
+public class Brand {
+    private Integer id;
+    private String type;
+    private String nameZh;         
+    private String name_en;   
+    private Date createDate;
+    private List<String> subsidiary;
+    private List<Map<String,String>> popular;
+}       //get、set方法省略
+```
+解析结果:  
+![]({{ "/assets/img/fastjson2.jpg"}})
+### 三、Java类转Json
+```java
+String jsonString = JSON.toJSONString(brandList);
+```
+完事！
