@@ -6,7 +6,7 @@ tags:
 categories: GitLab
 description: GitLab用户IP被封最佳解禁方案
 ---
-#### 由高并发引起的GitLab用户IP被封的最佳解禁方案
+**由高并发引起的GitLab用户IP被封的最佳解禁方案**  
 
 <!-- more -->
 #### **现象**
