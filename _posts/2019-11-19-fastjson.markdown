@@ -1,0 +1,129 @@
+---
+layout: post
+title: java工具-FastJson是这样用的
+tags:
+- Java
+- Tools
+categories: Java
+description: 阿里团队FastJson使用记录
+---
+**好烦啊，怎么才能在3秒内学会使用FastJson呢**
+
+<!-- more -->
+
+### 一、FastJson简介
+　FastJson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java类转换为JSON字符串，也可以将JSON字符转换为Java类。  
+　FastJson优点：速度快、使用广泛、测试完备、使用简单、功能完备。（[GitHub地址](https://github.com/alibaba/fastjson)）  
+```xml
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>fastjson</artifactId>
+    <version>1.2.62</version>         <!--本文中所有相关代码使用此版本Java包-->
+</dependency>
+```
+### 二、Json解析
+**模板数据：**
+```json
+{
+  "status": 0,
+  "deploy": true,
+  "date": "2019-11-11 10:52:27.811321",
+  "message": "complex vehicle json sample",
+  "data": {
+    "archived": false,
+    "creator": "Anchor",
+    "time": "2019-11-11 11:30:26",
+    "brands": [
+      {
+        "id": 1205231,
+        "type": "LUXURY",
+        "name_zh": "奔驰",
+        "name_en": "Benz",
+        "createDate": "1844-11-25",
+        "subsidiary": ["smart", "GLC", "GLA"],
+        "popular": [{
+          "model": "S350L",
+          "color": "White"
+        },
+          {
+            "model": "C260",
+            "color": "Silver"
+          }]
+      },
+      {
+        "id": 1324561,
+        "type": "REALISTIC",
+        "name_zh": "长安",
+        "name_en": "CHANGAN",
+        "createDate": "1996-10-31",
+        "subsidiary": ["Passenger", "SUV", "MPV"],
+        "popular": [{
+          "model": "CS75",
+          "color": "Red"
+        },
+          {
+            "model": "XT",
+            "color": "Black"
+          }]
+      }
+    ]
+  }
+}
+```
+### 1.简单的读
+`核心点`是，将Json字符串转换成**JSONObject**，然后根据**元素名**从JSONObject中**get数据**。  
+`常用的get方法`，注意getXXX()一般返回**引用类型**，而对应的getXXXValue()一般返回**基本类型**，XXX为也可为Short、Float等，下表只是常用的一部分。    
+　　　　![]({{ "/assets/img/fastjson1.jpg"}})  
+**1）读取单层元素**  
+下例为简单读取sample中的status、message、deploy、date四个元素。  
+```java
+JSONObject jsonObject = JSON.parseObject(sample);      //sample为存储模板数据的String
+
+int status = jsonObject.getIntValue("status");         //getXXXValue()获取到基本类型
+
+String message = jsonObject.getString("message");
+
+Boolean deploy = jsonObject.getBoolean("deploy");      //getXXX()获取到引用类型
+
+Date date = jsonObject.getDate("date");                //可直接取出Date类型的时间
+```  
+**2）读取多层元素**  
+　多层实际上和单层一样，都是从JSONObject中获取数据，先一步一步将要获取的元素的上层转换成JSONObject，然后直接读就可以了。
+例如下例中先将data这个节点转换成JSONObject，再去读取archived、creator、time中的数据，三层、四层等依次类推。
+```java
+JSONObject jsonObject = JSON.parseObject(sample);         //第一步，将Json转换成JSONObject
+
+JSONObject data = jsonObject.getJSONObject("data");       //第二步，将data元素转换成JSONObject
+
+boolean archived = data.getBooleanValue("archived");      //第三步，取出数据
+
+String creator = data.getString("creator");
+
+Date time = data.getDate("time");
+```
+**3）读取数组**  
+　先使用**getJSONArray()**取到待解析的数组，然后**遍历**该JSONArray，将其中的每个元素转换成JSONObject，然后从JSONObject中读取相应数据。
+若此时的JSONObject还是一个数组，继续将其中的元素转换成JSONObject。  
+　下例展示了如何获取模板数据中所有的subsidiary（数组中嵌套着数组）。    
+```java
+JSONObject jsonObject = JSON.parseObject(sample);                 //第一步，将Json转换成JSONObject
+
+JSONObject data = jsonObject.getJSONObject("data");               //第二步，将data元素转换成JSONObject
+
+JSONArray brands = data.getJSONArray("brands");                   //第三步，将brands转换成JSONArray
+
+List<String> allSubsidiary = new ArrayList<>();
+for (int i = 0; i < brands.size(); i++) {                         //遍历brands
+
+    JSONObject brand = brands.getJSONObject(i);                   //将brands数组中每个元素转换成JSONObject
+    JSONArray subsidiary = brand.getJSONArray("subsidiary");      //第四步，将subsidiary转换成JSONArray
+
+    for (int j = 0; j < subsidiary.size(); j++) {                 //遍历subsidiary
+        String finalData = subsidiary.getString(j);               //第五步，取数据
+        allSubsidiary.add(finalData);
+    }
+
+}
+System.out.println(allSubsidiary);        //运行结果：[smart, GLC, GLA, Passenger, SUV, MPV]
+```  
+### 2.解析为Java类  

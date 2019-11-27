@@ -14,11 +14,11 @@ description: 阿里团队EasyExcel的初步使用
 ### 一、EasyExcel简介  
 　EasyExcel是阿里团队基于poi开发的操作Excel的开源项目。  
 　其优势在于上手容易、操作简单、节约内存。（[GitHub地址](https://github.com/alibaba/easyexcel)、[官方指南](https://alibaba-easyexcel.github.io/index.html)）
-```java
+```xml
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>easyexcel</artifactId>
-    <version>2.1.2</version>         <!-- 本文中所有相关代码使用此版本Java包 -->
+    <version>2.1.2</version>         <!--本文中所有相关代码使用此版本Java包-->
 </dependency>
 ```
 
@@ -39,7 +39,7 @@ System.out.println(listener.getData());    //取出并打印数据
 ![]({{ "/assets/img/excel3.jpg"}})（只解析到了最后一行数据）  
 `原因：`不论将T的类型声明为HashMap或Map，EasyExcel都会将其转换为LinkedHashMap。
 且invoke()中data的key每次始终都是0、1、2、3（列的index），因此最终读取到的dataList只是Excel中最后一行数据（Map的key不可重复）。
-因此应将dataList声明为**List<Map<Integer, String>>**类型。  
+因此应将NormalListener类中dataList声明为**List<Map<Integer, String>>**类型。  
 ![]({{ "/assets/img/excel2.png"}})              
 **Listener类：**
 ```java
