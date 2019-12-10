@@ -114,6 +114,11 @@ public interface UsersRepository extends JpaRepository<User,Long> {
     List<User> readByAgeLessThanEqual(int age);
     List<User> queryByNameStartingWith(String word);
     List<User> getByDescriptionIsNotNull();
+
+    @Transactional
+    @Modifying
+    int deleteByName(String name);    
+
 }
 ```    
 ##### 3）自定义方法  
@@ -168,6 +173,41 @@ javax.persistence.TransactionRequiredException: Executing an update/delete query
 ③更新、删除操作方法的返回值只能是**void**或**int/Integer**，否则会抛出如下异常。  
 ```text
 java.lang.IllegalArgumentException: Modifying queries can only use void or int/Integer as return type!
+```
+#### 3.Service
+在Service层注入后即可使用Repository层中的CURD方法。  
+```java
+@Component
+public class UsersService {
+
+    @Resource                                     //推荐使用@Resource，不推荐@Autowired(具体原因自行google)
+    private UsersRepository usersRepository;
+
+    public List<User> getAllUsers() {
+        return usersRepository.findAll();
+        //usersRepository.findByName(name)
+        //usersRepository.findByNameAndAge(name, age);
+        //...
+    }
+}
+```
+#### 4.Controller
+常规使用  
+```java
+@RestController
+@RequestMapping("/user")
+public class UsersController {
+
+    @Resource
+    private UsersService usersService;
+
+    @RequestMapping("/all")
+    public List<User> getAllUsers() {
+        return usersService.getAllUsers();
+    }
+
+   //...
+}
 ```
 
 
