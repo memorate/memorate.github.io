@@ -193,15 +193,15 @@ public interface UsersRepository extends JpaRepository<User,Long> {
 **c.排序和分页**  
 ```java
 @Query("select u from User u where u.age = ?1")
-List<User> findByAge(int age, Sort sort);           //排序
+List<User> findByAge(int age, Sort sort);           //自定义方法的排序
 
 @Query("select u from User u where u.age = ?1")
-Page<User> findByAge(int age, Pageable pageable);   //分页
+Page<User> findByAge(int age, Pageable pageable);   //自定义方法的分页
 ```
 **d.根据值长度排序**  
 ```java
 public List<User> sortByLength(int age) {
-    JpaSort sort = JpaSort.unsafe(Sort.Direction.ASC, "LENGTH(description)");     //LENGTH(属性名)。必须使用JpaSort.unsafe，否则报错
+    JpaSort sort = JpaSort.unsafe(Sort.Direction.ASC, "LENGTH(name)");     //LENGTH(属性名)。必须使用JpaSort.unsafe，使用Sort.by()报错
     return usersRepository.findByAge(age, sort);
 }
 ```
@@ -240,6 +240,7 @@ org.springframework.data.mapping.PropertyReferenceException: No property LENGTH(
  ```
 #### 3.Service
 在Service层注入Repository后即可使用其中定义的各类方法。  
+文末代码仓库中有使用示例。  
 ```java
 @Component
 public class UsersService {
@@ -247,8 +248,11 @@ public class UsersService {
     @Resource                                     //推荐使用@Resource，不推荐@Autowired(具体原因自行google)
     private UsersRepository usersRepository;
 
-    public List<User> getAllUsers() {
-        return usersRepository.findAll();
+    /**
+    * 使用默认方法 - 新增或更新一条数据
+    */
+    public User saveUser(User user) {
+        return usersRepository.save(user);
     }
 
     //...
@@ -266,12 +270,15 @@ public class UsersController {
 
     @RequestMapping("/all")
     public List<User> getAllUsers() {
-        return usersService.getAllUsers();
+        return usersService.getAllByDefault();
     }
 
-   //...
+    //类似调用UsersService中方法即可
+    //...
 }
 ```
+<br/>  
+本文中使用的所有代码：[https://github.com/memorate/SpringBootJPA](https://github.com/memorate/SpringBootJPA)，此工程中所有代码皆可正常运行。
 
 
 
