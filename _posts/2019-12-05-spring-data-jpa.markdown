@@ -8,7 +8,7 @@ tags:
 categories: Java
 description: Spring Data JPA使用简介
 ---  
-**Spring Data JPA使用实操步骤**
+**Spring Boot集成Spring Data JPA实操步骤**
 
 <!-- more -->
 ### 一、简介  
@@ -36,7 +36,7 @@ description: Spring Data JPA使用简介
 ```yml
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/springboot-demo?serverTimezone=Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=true
+    url: jdbc:mysql://localhost:3306/dataBaseName?serverTimezone=Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=true
     username: root
     password: anchor#123
     driver-class-name: com.mysql.cj.jdbc.Driver
