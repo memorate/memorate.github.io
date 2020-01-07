@@ -75,18 +75,53 @@ logging:
 　**创建文件时请遵循上述约定将对应的文件放在对应的Package或Directory下！**  
 # 三、细解
 ## 1.Mapper.xml  
-　　Mybatis根据在[application.yml](#application)中mybatis.mapper-locations的值来定位Mapper.xml文件。  
+　　Mybatis根据配置在[application.yml](#application)中“mybatis.mapper-locations”的值来定位Mapper.xml文件。  
 　　根据约定本文中此值设置为“classpath:mapping/*Mapper.xml”（相当于resources/mapping/*Mapper.xml）。  
-　　Mybatis的核心就在于Mapper.xml文件，Mybatis根据此类文件中的内容对数据库进行CURD操作，并将操作结果映射到指定的Java类。  
+　　Mybatis的核心就在于Mapper.xml文件，Mybatis根据此类文件中的SQL语句对数据库进行CURD操作，并将操作结果映射到指定的Java类。  
 #### 1）xml的框架
+以下是Mybatis xml的基础部分，**必须有**。标签mapper中的namespace用来绑定Java接口，需写对应Mapper接口的全路径。  
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="anchor.mybatis.mapper.UserMapper">
   <!-- 具体实现... -->
 </mapper>
+``` 
+可将多个xml指向同一个接口，增删查改语句中的id不同即可。  
+例：接口为UserMapper.java，两个xml文件为UserMapper.xml和UserExtMapper.xml，可将两个xml中的namespace都指向这个UserMapper.java。
+#### 2）结果映射
+标签 resultMap 用来对数据库字段和Java类属性进行映射，每个 resultMap 称为一个**结果集**。  
+　**a.**resultMap 后的 **id** 用来标识此结果集，可任意填写（别太任意..）；  
+　**b.type** 用来绑定Java类，绑定之后Mybatis才能进行识别，填写类的全路径；  
+　**c.**标签 **id** 和 **result** 都是用来将字段和属性进行绑定（id **并不是**必须要绑定表的主键），不同的是 id 元素表示的结果将是对象的标识属性，这会在比较对象实例时用到。
+这样可以提高整体的性能，尤其是进行缓存和嵌套结果映射（也就是连接映射）的时候；  
+　**d.column** 是数据库表的字段名，**property** 是Java类的属性名；  
+```xml
+<resultMap id="baseResultMap" type="anchor.mybatis.entity.User">
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="age" property="age"/>
+    <result column="description" property="description"/>
+</resultMap>
 ```
-前两行必须有但不必修改，标签mapper中的namespace用来绑定Java接口，需写对应Mapper接口的全路径。  
+#### 3）高级结果映射  
+可在<resultMap>的一个<result>里映射类或者一个Collection。（详细说明参考[此文](https://www.cnblogs.com/kenhome/p/7764398.html)）
+```xml
+<!--column不做限制，可以为任意表的字段，而property须为type 定义的pojo属性-->
+<resultMap id="唯一的标识" type="映射的pojo对象">
+  <id column="表的主键字段，或者可以为查询语句中的别名字段" jdbcType="字段类型" property="映射pojo对象的主键属性" />
+  <result column="表的一个字段（可以为任意表的一个字段）" jdbcType="字段类型" property="映射到pojo对象的一个属性（须为type定义的pojo对象中的一个属性）"/>
+  <association property="pojo的一个对象属性" javaType="pojo关联的pojo对象">
+    <id column="关联pojo对象对应表的主键字段" jdbcType="字段类型" property="关联pojo对象的主席属性"/>
+    <result  column="任意表的字段" jdbcType="字段类型" property="关联pojo对象的属性"/>
+  </association>
+  <!-- 集合中的property须为oftype定义的pojo对象的属性-->
+  <collection property="pojo的集合属性" ofType="集合中的pojo对象">
+    <id column="集合中pojo对象对应的表的主键字段" jdbcType="字段类型" property="集合中pojo对象的主键属性" />
+    <result column="可以为任意表的字段" jdbcType="字段类型" property="集合中的pojo对象的属性" />  
+  </collection>
+</resultMap>
+```
 ## 2.Entity
 ## 3.Mapper
 ## 4.Service
