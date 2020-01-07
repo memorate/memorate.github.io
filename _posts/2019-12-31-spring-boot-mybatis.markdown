@@ -75,11 +75,11 @@ logging:
 　**创建文件时请遵循上述约定将对应的文件放在对应的Package或Directory下！**  
 # 三、细解
 ## 1.Mapper.xml  
-　　Mybatis根据配置在[application.yml](#application)中“mybatis.mapper-locations”的值来定位Mapper.xml文件。  
-　　根据约定本文中此值设置为“classpath:mapping/*Mapper.xml”（相当于resources/mapping/*Mapper.xml）。  
-　　Mybatis的核心就在于Mapper.xml文件，Mybatis根据此类文件中的SQL语句对数据库进行CURD操作，并将操作结果映射到指定的Java类。  
+Mybatis根据配置在[application.yml](#application)中“mybatis.mapper-locations”的值来定位Mapper.xml文件。  
+根据约定本文中此值设置为“classpath:mapping/*Mapper.xml”（相当于resources/mapping/*Mapper.xml）。  
+Mybatis的核心就在于Mapper.xml文件，Mybatis根据此类文件中的SQL语句对数据库进行CURD操作，并将操作结果映射到指定的Java类。  
 #### 1）xml的框架
-以下是Mybatis xml的基础部分，**必须有**。标签mapper中的namespace用来绑定Java接口，需写对应Mapper接口的全路径。  
+以下是Mybatis xml的基础部分，**必须有**。标签 **\<mapper>** 中的 namespace 用来绑定Java接口，需写对应Mapper接口的全路径。  
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -87,15 +87,10 @@ logging:
   <!-- 具体实现... -->
 </mapper>
 ``` 
-可将多个xml指向同一个接口，增删查改语句中的id不同即可。  
+Tips：可将多个xml指向同一个接口，增删查改语句中的id不同即可。  
 例：接口为UserMapper.java，两个xml文件为UserMapper.xml和UserExtMapper.xml，可将两个xml中的namespace都指向这个UserMapper.java。
-#### 2）结果映射
-标签 resultMap 用来对数据库字段和Java类属性进行映射，每个 resultMap 称为一个**结果集**。  
-　**a.**resultMap 后的 **id** 用来标识此结果集，可任意填写（别太任意..）；  
-　**b.type** 用来绑定Java类，绑定之后Mybatis才能进行识别，填写类的全路径；  
-　**c.**标签 **id** 和 **result** 都是用来将字段和属性进行绑定（id **并不是**必须要绑定表的主键），不同的是 id 元素表示的结果将是对象的标识属性，这会在比较对象实例时用到。
-这样可以提高整体的性能，尤其是进行缓存和嵌套结果映射（也就是连接映射）的时候；  
-　**d.column** 是数据库表的字段名，**property** 是Java类的属性名；  
+#### 2）基本结果映射
+**`说明：`这里的映射是指将数据库的查询结果和Java类进行关联（数据库表到Java类的转换）。**  
 ```xml
 <resultMap id="baseResultMap" type="anchor.mybatis.entity.User">
     <id column="id" property="id"/>
@@ -104,8 +99,15 @@ logging:
     <result column="description" property="description"/>
 </resultMap>
 ```
-#### 3）高级结果映射  
-可在<resultMap>的一个<result>里映射类或者一个Collection。（详细说明参考[此文](https://www.cnblogs.com/kenhome/p/7764398.html)）
+标签 **\<resultMap>** 用来对数据库字段和Java类属性进行映射，每个 \<resultMap> 称为一个**结果集**。  
+　**a.**\<resultMap> 里的 **id** 用来标识此结果集，可任意填写（别太任意..）；  
+　**b.**\<resultMap> 里的 **type** 用来绑定Java类，绑定之后Mybatis才能进行映射，填写类的全路径；  
+　**c.**标签 **\<id>** 和 **\<result>** 都是用来将字段和属性进行绑定（\<id> **并不是**必须要绑定表的主键）。不同的是 \<id> 标签表示的结果将是对象的标识属性，会在比较对象实例时用到，
+并且能在进行缓存和嵌套结果映射的时候提高整体的性能；  
+　**d.**标签\<id>和\<result>里的 **column** 是数据库表的字段名，**property** 是Java类的属性名；  
+#### 3）高级结果映射
+普通场景使用基本结果映射可解决大多数问题，但有些复杂场景诸如类的属性是另一个类，类的属性是集合等，映射关系较为复杂。  
+此时可使用 **\<association>** 和 **\<collection>** 标签，\<association>用来映射Java类，\<collection>用来映射集合。（详细介绍可参考[此文](https://www.cnblogs.com/kenhome/p/7764398.html)）  
 ```xml
 <!--column不做限制，可以为任意表的字段，而property须为type 定义的pojo属性-->
 <resultMap id="唯一的标识" type="映射的pojo对象">
@@ -122,6 +124,12 @@ logging:
   </collection>
 </resultMap>
 ```
+#### 4）CURD
+使用 **\<insert>**、**\<delete>**、**\<select>**、**\<update>** 四个标签并编写SQL语句进行增删查改。  
+##### Ⅰ.新增
+##### Ⅱ.更新
+##### Ⅲ.查询
+##### Ⅳ.删除
 ## 2.Entity
 ## 3.Mapper
 ## 4.Service
