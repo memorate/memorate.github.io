@@ -76,8 +76,15 @@ logging:
 # 三、细解
 ## 1.Mapper.xml  
 Mybatis根据配置在[application.yml](#application)中“mybatis.mapper-locations”的值来定位Mapper.xml文件。  
-根据约定本文中此值设置为“classpath:mapping/*Mapper.xml”（相当于resources/mapping/*Mapper.xml）。  
+根据约定将此值设置为“classpath:mapping/*Mapper.xml”（相当于resources/mapping/*Mapper.xml）。  
 Mybatis的核心就在于Mapper.xml文件，Mybatis根据此类文件中的SQL语句对数据库进行CURD操作，并将操作结果映射到指定的Java类。  
+**XML说明：**  
+　　如下是XML中一个完整的标签，labelName是此标签的名字，property1、property2是该标签的属性，name1、name2分别是两个属性的名称，content是标签的内容。  
+```xml
+<labelName property1="name1" property2="name2">
+    content
+</labelName>
+```
 #### 1）xml的框架
 以下是Mybatis xml的基础部分，**必须有**。标签 **\<mapper>** 中的 namespace 用来绑定Java接口，需写对应Mapper接口的全路径。  
 ```xml
@@ -124,7 +131,26 @@ Tips：可将多个xml指向同一个接口，增删查改语句中的id不同�
   </collection>
 </resultMap>
 ```
-#### 4）CURD
+#### 4）SQL片段
+可在xml中使用 **\<sql>** 标签将重复的sql语句提取出来，通过 **\<include refid="something">** 标签引用，来达到重用的目的。
+```xml
+<sql id="snippet">                         <!-- 提取sql片段 -->
+    <if test="id!=null and id!=''">
+        id=#{id}
+    </if>
+    <if test="name!=null and name!=''">
+        and name like '%${name}%'
+    </if>
+</sql>
+
+<select id="findUserList" parameterType="anchor.mybatis.entity.User" resultType="anchor.mybatis.entity.User">
+    select * from user
+    <where>
+        <include refid="snippet"/>     <!-- 使用<include>标签进行引用，通过refid进行关联 -->
+    </where>
+</select>
+```
+#### 5）CURD
 使用 **\<insert>**、**\<delete>**、**\<select>**、**\<update>** 四个标签并编写SQL语句进行增删查改。  
 ##### Ⅰ.新增
 ##### Ⅱ.更新
