@@ -112,6 +112,13 @@ Tips：可将多个xml指向同一个接口，增删查改语句中的id不同�
 　**c.**标签 **\<id>** 和 **\<result>** 都是用来将字段和属性进行绑定（\<id> **并不是**必须要绑定表的主键）。不同的是 \<id> 标签表示的结果将是对象的标识属性，会在比较对象实例时用到，
 并且能在进行缓存和嵌套结果映射的时候提高整体的性能；  
 　**d.**标签\<id>和\<result>里的 **column** 是数据库表的字段名，**property** 是Java类的属性名；  
+**Tips：**  
+　resultMap 可以继承，resultMap 可通过 extends 属性继承此xml或其他xml中的 resultMap。  
+　extends 中值：\<mapper> 标签中 namespace 的值 + 被继承的 resultMap 的 id。 
+```xml
+<resultMap id="baseResultExtMap" type="anchor.mybatis.entity.User"
+           extends="anchor.mybatis.mapper.UserMapper.baseResultMap"></resultMap>
+```
 #### 3）高级结果映射
 普通场景使用基本结果映射可解决大多数问题，但有些复杂场景诸如类的属性是另一个类，类的属性是集合等，映射关系较为复杂。  
 此时可使用 **\<association>** 和 **\<collection>** 标签，\<association>用来映射Java类，\<collection>用来映射集合。（详细介绍可参考[此文](https://www.cnblogs.com/kenhome/p/7764398.html)）  
@@ -157,6 +164,17 @@ List<User> findByNameAndAge(String username, int age);
 　②不论参数个数，Mybatis会自动识别传入参数类型，因此不用在标签中显式指定 parameterType 的值；  
 　③当数据库中age的类型是int，接口中定义age的类型为String时，也可查询成功。（不建议）  
 ##### Ⅱ.类参数
+顾名思义，传入的参数是一个Java类。  
+可以通过属性 parameterType 显式指定入参的类型（值为类的全路径），也可不指明，Mybatis会自行处理。  
+\#{} 内的内容必须与类的属性名相同，否则无法匹配到。  
+```java
+List<User> findByUser(User user);
+```
+```xml
+<select id="findByUser" resultMap="baseResultMap">    <!- 未使用parameterType显式指明 ->
+    select * from users where name = #{name} and age = #{age}
+</select>
+```
 ##### Ⅲ.集合参数
 #### 5）SQL片段
 可在xml中使用 **\<sql>** 标签将重复的sql语句提取出来，通过 **\<include refid="something">** 标签引用，来达到重用的目的。
