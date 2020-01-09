@@ -78,8 +78,8 @@ logging:
 Mybatis根据配置在[application.yml](#application)中“mybatis.mapper-locations”的值来定位Mapper.xml文件。  
 根据约定将此值设置为“classpath:mapping/*Mapper.xml”（相当于resources/mapping/*Mapper.xml）。  
 Mybatis的核心就在于Mapper.xml文件，Mybatis根据此类文件中的SQL语句对数据库进行CURD操作，并将操作结果映射到指定的Java类。  
-**XML说明：**  
-　　如下是XML中一个完整的标签，labelName是此标签的名字，property1、property2是该标签的属性，name1、name2分别是两个属性的名称，content是标签的内容。  
+**标签说明：**  
+　如下是XML中一个完整的标签，labelName是此标签的名字，property1、property2是该标签的属性，name1、name2分别是两个属性的名称，content是标签的内容。  
 ```xml
 <labelName property1="name1" property2="name2">
     content
@@ -131,7 +131,34 @@ Tips：可将多个xml指向同一个接口，增删查改语句中的id不同�
   </collection>
 </resultMap>
 ```
-#### 4）SQL片段
+#### 4）传参
+传参指将xxMapper.java接口里方法中的参数传入xxMapper.xml，使用 #{paramName} 或 ${paramName}。  
+**#{paramName}** 与 **${paramName}** 的区别：  
+　二者都相当于一个占位符，当传入实际值时该值会替代占位符。假设传入值为"id"。  
+```xml
+select * from users order by ${paramName} asc
+#{paramName}：  select * from users order by 'id' asc
+${paramName}：  select * from users order by  id  asc       二者之间相差一对单引号。
+```
+以下三类传参基本满足日常需求。  
+##### Ⅰ.简单参数
+多参数时Mybatis会根据占位符 #{} 中的名字来匹配Mapper.java里方法中的参数。xml中等号左边 name 为数据库表中字段名，等号右边 username 为接口中的参数名。  
+```java
+List<User> findByNameAndAge(String username, int age);
+```
+```xml
+<select id="findByNameAndAge" resultMap="baseResultMap">
+    select * from users where name = #{username} and age = #{age}
+    <!- select * from users where name = #{myName} and age = #{age} -> 运行报错，无法找到到参数myName
+</select>
+```
+**Tips：**  
+　①当只有一个参数时，接口中参数名可与xml中 #{} 中的名字不同；（不建议）  
+　②不论参数个数，Mybatis会自动识别传入参数类型，因此不用在标签中显式指定 parameterType 的值；  
+　③当数据库中age的类型是int，接口中定义age的类型为String时，也可查询成功。（不建议）  
+##### Ⅱ.类参数
+##### Ⅲ.集合参数
+#### 5）SQL片段
 可在xml中使用 **\<sql>** 标签将重复的sql语句提取出来，通过 **\<include refid="something">** 标签引用，来达到重用的目的。
 ```xml
 <sql id="snippet">                         <!-- 提取sql片段 -->
@@ -144,13 +171,11 @@ Tips：可将多个xml指向同一个接口，增删查改语句中的id不同�
 </sql>
 
 <select id="findUserList" parameterType="anchor.mybatis.entity.User" resultType="anchor.mybatis.entity.User">
-    select * from user
-    <where>
-        <include refid="snippet"/>     <!-- 使用<include>标签进行引用，通过refid进行关联 -->
-    </where>
+    select * from user where
+    <include refid="snippet"/>     <!-- 使用<include>标签进行引用，通过refid进行关联 -->
 </select>
 ```
-#### 5）CURD
+#### 6）CURD
 使用 **\<insert>**、**\<delete>**、**\<select>**、**\<update>** 四个标签并编写SQL语句进行增删查改。  
 ##### Ⅰ.新增
 ##### Ⅱ.更新
