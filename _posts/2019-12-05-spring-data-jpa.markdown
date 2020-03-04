@@ -55,7 +55,7 @@ spring:
 　5）"**ddl-auto**"：[属性介绍](https://blog.csdn.net/fengyuhan123/article/details/80264795)，一般使用update；  
 　6）"**show-sql**"：是否在日志中打印真实操作的sql语句；   
 #### 3.项目结构
-　![]({{ "/assets/img/springJPA1.png"}})  
+　![]({{ "/assets/img/20191205/springJPA1.png"}})  
 `四类约定文件`：  
 　1)**model**：存放数据库中表对应的Java类；  
 　2)**repository**：每个Repository接口负责对一张表进行CURD，是Java应用操作数据库的工具；  
@@ -63,7 +63,7 @@ spring:
 　4)**controller**：与外界（请求）交互的门户，接收外界请求并调用service层的方法处理该请求；  
 　创建类时请遵循上述约定将对应的类放在对应的package下！  
 ### 三、细解
-　　　　　　　![]({{ "/assets/img/springJPA2.png"}})![]({{ "/assets/img/springJPA3.png"}})  
+　　　　　　　![]({{ "/assets/img/20191205/springJPA2.png"}})![]({{ "/assets/img/20191205/springJPA3.png"}})  
 　　　　　　　　　　　　　　(users表)　　　　　　　　　　　　　　　　　　　　　(detail表)
 #### 1.Model
 默认情况下，创建实体类时注意**类名**要与数据库中表名相同，类中各**属性名**与表中字段名相同。（符合驼峰也可匹配）  
@@ -106,7 +106,7 @@ public interface UsersRepository extends JpaRepository<User,Long> {    //用于�
 　　**默认方法开箱即可使用，约定方法只需根据约定起好方法名，自定义方法需自己编写[HQL](https://blog.csdn.net/qq_28633249/article/details/77884062)/SQL语句。**  
 ##### 1）<span id="default">默认方法</span>  
 以下方法为三个接口中自带，可直接使用。  
-![]({{ "/assets/img/springJPA4.png"}})  
+![]({{ "/assets/img/20191205/springJPA4.png"}})  
 **a.新增和更新**  
 　新增和更新单条记录都使用`S save(S var1)`方法。多条记录时使用重载方法`saveAll(Iterable<S> var1)`，注意两个方法返回值不同。   
 　①当var1变量的主键为空时，执行新增操作；  

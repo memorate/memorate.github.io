@@ -23,7 +23,7 @@ description: 阿里团队EasyExcel的初步使用
 ```
 
 ### 二、EasyExcel读取   
-　　![]({{ "/assets/img/excel1.jpg"}})（模板数据，共4列10行）  
+　　![]({{ "/assets/img/20191127/excel1.jpg"}})（模板数据，共4列10行）  
 　1）使用EasyExcel读取**首先要创建`Listener`类**，该类会**按行**解析Excel（需继承抽象类`AnalysisEventListener<T>`。T为期望将Excel转换成的数据类型）。  
 　2）继承AnalysisEventListener类后**必须**实现两个方法`invoke()`和`doAfterAllAnalysed()`。  
 　　①invoke()：用于处理读取到的每一行数据；  
@@ -36,11 +36,11 @@ EasyExcel.read("D:\\MyData\\Administrator\\Desktop\\sample.xlsx", listener).shee
 System.out.println(listener.getData());    //取出并打印数据
 ```
 **运行结果：**  
-![]({{ "/assets/img/excel3.jpg"}})（只解析到了最后一行数据）  
+![]({{ "/assets/img/20191127/excel3.jpg"}})（只解析到了最后一行数据）  
 `原因：`不论将T的类型声明为HashMap或Map，EasyExcel都会将其转换为LinkedHashMap。
 且invoke()中data的key每次始终都是0、1、2、3（列的index），因此最终读取到的dataList只是Excel中最后一行数据（Map的key不可重复）。
 因此应将NormalListener类中dataList声明为**List<Map<Integer, String>>**类型。  
-![]({{ "/assets/img/excel2.png"}})              
+![]({{ "/assets/img/20191127/excel2.png"}})              
 **Listener类：**
 ```java
 public class NormalListener extends AnalysisEventListener<Map<Integer, String>> {
