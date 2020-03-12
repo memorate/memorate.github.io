@@ -4,7 +4,7 @@ title: Jenkins-集成Sonar进行.NET代码扫描
 tags:
 - Jenkins
 - Sonar  
-- .Net
+- DotNet
 categories: Jenkins
 description: Jenkins集成Sonar进行.NET代码扫描
 ---

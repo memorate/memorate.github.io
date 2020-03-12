@@ -3,7 +3,7 @@ layout: post
 title: Java-Spring Boot集成Mybatis
 tags:
 - Java 
-- Spring Boot
+- SpringBoot
 - Study
 categories: Java
 description: Spring Boot集成Mybatis操作简介

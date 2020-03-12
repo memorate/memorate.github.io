@@ -3,7 +3,7 @@ layout: post
 title: Java-Spring Boot集成Spring Data JPA
 tags:
 - Java 
-- Spring Boot
+- SpringBoot
 - Study
 categories: Java
 description: Spring Data JPA使用简介
