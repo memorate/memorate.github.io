@@ -15,7 +15,7 @@ description: 各Java时间类介绍
 **②**根据观测天体运动而产生的`前世界统一标准时间`，12点为太阳横穿本初子午线时的时间，0点、24点分别向前、向后调整12小时。  
 ## 二、UTC
 **①UTC（Coordinated Universal Time）**，***世界协调时间***，24小时制。  
-**②**以GMT为准，结合地球自转时间与原子钟的高精度度量所综合精算而成的`现世界统一标准时间`（说是时间，实际是一个标准）。  
+**②**以GMT为准，由地球自转时间与原子钟的高精度度量所综合精算而成的`现世界统一标准时间`（说是时间，实际是一个标准）。  
 **③**由于地球分为24个时区（经度每15°为1个时区，时间为1小时），不同地区UTC的表示方式也不同，本初子午线为0时区。  
 **④**计算公式：`UTC + 时区差 = 本地时间`。时区差0时区**向东为正**，0时区**向西为负**。  
 　UTC + (+0800) = 北京时间，UTC标准时间10:22，北京本地时间为18:22；  
@@ -30,7 +30,7 @@ Cuba Standard Time                  古巴标准时间          UTC - 04:00
 ```
 ## 四、ISO
 **①**国际标准化组织发布的日期和时间的**表示方法**，目前最新为第三版ISO8601:2004。  
-**②**ISO 8601的**标准格式**是：YYYY-MM-DDTHH:mm:ss.sssZ（`严格区分大小写`），分别表示：  
+**②**ISO 8601的**标准格式**是：yyyy-MM-ddTHH:mm:ssZ（`严格区分大小写`），分别表示：  
 ```text
 YYYY：   年，0000 — 9999　　　　　　　　　　
 MM：     月， 01  —  12  
@@ -55,19 +55,36 @@ ss：     秒， 00  —  59                T：分隔符，用来分隔日期�
 1583547742     ——  2020/3/7 10:22:22  
 1583547742622  ——  2020/3/7 10:22:22.622  
 ```
-## 六、Date
+## 六、TimeZone
+#### 1.所在包
+```text
+import java.util.TimeZone;
+```
+#### 2.作用
+TimeZone表示一个时区（相对UTC）的偏移量，并且可以推算出[夏令时](https://baike.baidu.com/item/%E5%A4%8F%E4%BB%A4%E6%97%B6/1809579?fr=aladdin)，始于JDK1.1。
+简而言之，用来表示各个时区。   
+```text
+原文：TimeZone represents a time zone offset, and also figures out daylight savings.
+``` 
+#### 3.常用时区
+```text
+Asia/Shanghai      Asia/Urumqi             Hongkong
+Europe/London      America/Los_Angeles     Japan
+```
+可使用`TimeZone.getAvailableIDs()`来获取所有可用时区Id。
+## 七、Date
 #### 1.所在包
 ```text
 import java.util.Date;
 ```
-#### 2.说明
+#### 2.作用
 拥有毫秒级精确度的、用来表示一个特定时刻的Java类，始于JDK1.0。 
 ```text
 原文：The class Date represents a specific instant in time, with millisecond precision.
 ``` 
 #### 3.初始化
 Date类目前只有两个推荐使用的构造方法，其余已被弃用。  
-1）使用**无参构造函数**new一个Date类，表示当前时刻。内部实现：new Date(System.currentTimeMillis())（不准确）；
+1）使用**无参构造函数**new一个Date类，表示当前时刻。内部实现：new Date(System.currentTimeMillis())（非源码，仅用于表意）；
 ```java
 Date date = new Date();   
 ```
@@ -76,23 +93,39 @@ Date date = new Date();
 Date date = new Date(1583547742);
 ```
 #### 4.转换
-使用SimpleDateFormat类将Date转化为指定ISO格式字符串或解析ISO格式字符串。  
+使用SimpleDateFormat类可将Date转化为指定ISO格式字符串、或解析符合ISO格式的字符串为Date。  
 **1）Date转String**
 ```java
 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    //new SimpleDateFormat()时指定ISO格式
 Date date = new Date();
 String dateToString = format.format(date);
 ```
-**2）String转Date**，注意此时字符串中格式要与SimpleDateFormat的格式相符；
+**2）Date转**`指定时区`**String**  
+`TimeZone.getTimeZone("Japan")`中参数也可直接填写"UTC+XX00"和"UTC-XX00"。
+```java
+SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    //new SimpleDateFormat()时指定ISO格式
+format.setTimeZone(TimeZone.getTimeZone("Japan"));
+Date date = new Date();
+String dateToString = format.format(date);
+```
+**3）String转Date**，注意此时字符串中格式要与SimpleDateFormat的格式相符；
 ```java
 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    //new SimpleDateFormat()时指定ISO格式
 String stringDate = "2020-03-07 10:22";
 Date date = format.parse(stringDate);
 ```
-**3）Date转时间戳**，注意此时的timeStamp为13位；
+**4）Date转时间戳**，注意此时的timeStamp为13位；
 ```java
 Date date = new Date();
 long timeStamp = date.getTime();
 ```
-## 七、Calendar
-## 八、LocalDateTime
+## 八、Calendar
+#### 1.所在包
+```text
+import java.util.Calendar;
+```
+#### 2.作用
+抽象类，它提供了一些方法用于在特定时间与日历字段(如YEAR、MONTH、DAY_OF_MONTH等)之间进行转换，始于JDK1.1。  
+简而言之，**专门用于操作年月日时分秒的类**（[原文](https://docs.oracle.com/javase/8/docs/api/java/util/Calendar.html)）。  
+#### 3.初始化
+## 九、LocalDateTime
