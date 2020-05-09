@@ -93,7 +93,7 @@ Date date = new Date();
 Date date = new Date(1583547742);
 ```
 #### 4.转换
-使用SimpleDateFormat类可将Date转化为指定ISO格式字符串、或解析符合ISO格式的字符串为Date。  
+使用SimpleDateFormat类可将Date转化为指定ISO格式字符串、或解析符合ISO格式的字符串为Date类。  
 **1）Date转String**
 ```java
 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    //new SimpleDateFormat()时指定ISO格式
@@ -108,7 +108,7 @@ format.setTimeZone(TimeZone.getTimeZone("Japan"));
 Date date = new Date();
 String dateToString = format.format(date);
 ```
-**3）String转Date**，注意此时字符串中格式要与SimpleDateFormat的格式相符；
+**3）String转Date**，注意此时字符串中日期格式要与SimpleDateFormat指定的格式相符；
 ```java
 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    //new SimpleDateFormat()时指定ISO格式
 String stringDate = "2020-03-07 10:22";
