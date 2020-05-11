@@ -72,7 +72,41 @@ Asia/Shanghai      Asia/Urumqi             Hongkong
 Europe/London      America/Los_Angeles     Japan
 ```
 可使用`TimeZone.getAvailableIDs()`来获取所有可用时区Id。
-## 七、Date
+#### 4.使用
+## 七、Locale
+#### 1.所在包
+```text
+import java.util.Locale;
+```
+#### 2.作用 
+Locale类用来标识一个特定的地理位置，或政治、文化地区。  
+当做一些"地区敏感"的操作时，需要用到该类。例如展示数字就是一个地区敏感的操作，不同地区展示数字的格式是不同的。  
+```text
+原文：A Locale object represents a specific geographical, political or cultural region. 
+``` 
+#### 3.常用地区
+Locale主要有两部分组成：语言 + 国家。例如zh_CN，小写zh代表中文，大写CN代表中国。  
+```text
+zh_CN = 中国    zh_HK = 中国香港    zh_TW = 中国台湾
+en_US = 美国    en_GB = 英国        ja_JP = 日本       ko_KR = 韩国
+```
+#### 4.使用
+Locale类里已经声明了两类常用的Locale常量：语言和国家，直接使用即可。  
+1）语言
+```java
+Locale chinese = Locale.CHINESE;    //中文
+Locale english = Locale.ENGLISH;    //英语
+//其他自查...
+```
+2）国家
+```java
+Locale china = Locale.CHINA;       //中国
+Locale us = Locale.US;             //美国 
+//其他自查...
+```
+3）自定义
+
+## 八、Date
 #### 1.所在包
 ```text
 import java.util.Date;
@@ -119,13 +153,16 @@ Date date = format.parse(stringDate);
 Date date = new Date();
 long timeStamp = date.getTime();
 ```
-## 八、Calendar
+## 九、Calendar
 #### 1.所在包
 ```text
 import java.util.Calendar;
 ```
 #### 2.作用
-抽象类，它提供了一些方法用于在特定时间与日历字段(如YEAR、MONTH、DAY_OF_MONTH等)之间进行转换，始于JDK1.1。  
-简而言之，**专门用于操作年月日时分秒的类**（[原文](https://docs.oracle.com/javase/8/docs/api/java/util/Calendar.html)）。  
+①Calendar是一个抽象类，它提供了一些方法用于转换特定的时刻和Calendar字段(如YEAR、MONTH、DAY_OF_MONTH等)。  
+②Calendar类还提供了一些操作Calendar字段的方法，例如"getFirstDayOfWeek()"。该类始于JDK1.1（[原文](https://docs.oracle.com/javase/8/docs/api/java/util/Calendar.html)）。  
+③简而言之，**Calendar是专门用来操作年月日时分秒的类**。  
 #### 3.初始化
-## 九、LocalDateTime
+Calendar中的两个构造方法均为protected，因此只能使用
+#### 4.转换
+## 十、LocalDateTime
