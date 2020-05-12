@@ -56,7 +56,7 @@ ss：     秒， 00  —  59                T：分隔符，用来分隔日期�
 1583547742622  ——  2020/3/7 10:22:22.622  
 ```
 ## 六、TimeZone
-#### 1.所在包
+#### 1.引用
 ```text
 import java.util.TimeZone;
 ```
@@ -71,27 +71,40 @@ TimeZone表示一个时区（相对UTC）的偏移量，并且可以推算出[�
 Asia/Shanghai      Asia/Urumqi             Hongkong
 Europe/London      America/Los_Angeles     Japan
 ```
-可使用`TimeZone.getAvailableIDs()`来获取所有可用时区Id。
 #### 4.使用
+```java
+TimeZone aDefault = TimeZone.getDefault();                  //获取当前程序运行环境的默认TimeZone
+String[] availableIDs = TimeZone.getAvailableIDs();         //获取所有Java可识别的TimeZone
+TimeZone timeZone = TimeZone.getTimeZone("Asia/Shanghai");  //根据TimeZone的ID创建一个TimeZone对象。此方法为常用！！
+```
 ## 七、Locale
-#### 1.所在包
+#### 1.引用
 ```text
 import java.util.Locale;
 ```
 #### 2.作用 
 Locale类用来标识一个特定的地理位置，或政治、文化地区。  
-当做一些"地区敏感"的操作时，需要用到该类。例如展示数字就是一个地区敏感的操作，不同地区展示数字的格式是不同的。  
+当进行一些"地区敏感"的操作时，需要用到该类。例如展示日期，不同地区展示日期的格式是不同的。  
 ```text
 原文：A Locale object represents a specific geographical, political or cultural region. 
 ``` 
-#### 3.常用地区
-Locale主要有两部分组成：语言 + 国家。例如zh_CN，小写zh代表中文，大写CN代表中国。  
+#### 3.常见Locale
+Locale有以下三种表示方式：  
+**①语言：**例如 zh，表示所有官方语言为中文的国家或地区。  
+**②语言+国家：**例如 zh_CN，约定只用于表示中国。  
+**③语言+国家+变体：**例如 zh_CN_Kwangtung，表示中国广东。变体也可理解为版本，中国的不同版本即中国的不同地区。  
+**`第三种表示方式不常用，一般都使用第二种方式。`**  
+1）常用语言地区
+```text
+zh = 中文地区    en = 英语地区    ja = 日语地区    ko = 韩语地区
+```
+2）常用国家/地区
 ```text
 zh_CN = 中国    zh_HK = 中国香港    zh_TW = 中国台湾
 en_US = 美国    en_GB = 英国        ja_JP = 日本       ko_KR = 韩国
 ```
 #### 4.使用
-Locale类里已经声明了两类常用的Locale常量：语言和国家，直接使用即可。  
+Locale类里已经声明了①、②中表示方式常用的Locale常量：语言和国家，直接使用即可。  
 1）语言
 ```java
 Locale chinese = Locale.CHINESE;    //中文
@@ -104,10 +117,21 @@ Locale china = Locale.CHINA;       //中国
 Locale us = Locale.US;             //美国 
 //其他自查...
 ```
-3）自定义
-
+3）自定义，可使用以下三个构造方法new一个Locale类
+```java
+public Locale(String language);                                    //语言
+public Locale(String language, String country);                    //语言 + 国家
+public Locale(String language, String country, String variant);    //语言 + 国家 + 变体
+```
+4）其他使用
+```java
+Locale aDefault = Locale.getDefault();                      //获取当前程序运行环境的默认Locale
+String[] isoLanguages = Locale.getISOLanguages();           //获取ISO指定的语言
+String[] isoCountries = Locale.getISOCountries();           //获取ISO指定的国家或地区
+Locale[] availableLocales = Locale.getAvailableLocales();   //获取所有Java可识别的Locale
+```
 ## 八、Date
-#### 1.所在包
+#### 1.引用
 ```text
 import java.util.Date;
 ```
@@ -154,7 +178,7 @@ Date date = new Date();
 long timeStamp = date.getTime();
 ```
 ## 九、Calendar
-#### 1.所在包
+#### 1.引用
 ```text
 import java.util.Calendar;
 ```
@@ -163,6 +187,9 @@ import java.util.Calendar;
 ②Calendar类还提供了一些操作Calendar字段的方法，例如"getFirstDayOfWeek()"。该类始于JDK1.1（[原文](https://docs.oracle.com/javase/8/docs/api/java/util/Calendar.html)）。  
 ③简而言之，**Calendar是专门用来操作年月日时分秒的类**。  
 #### 3.初始化
-Calendar中的两个构造方法均为protected，因此只能使用
+Calendar中的两个构造方法均为protected，因此只能使用静态方法getInstance()来创建一个Calendar对象。  
+```java
+
+```
 #### 4.转换
 ## 十、LocalDateTime
