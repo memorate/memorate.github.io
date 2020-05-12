@@ -151,6 +151,8 @@ Date date = new Date();
 ```java
 Date date = new Date(1583547742);
 ```
+Question：如何初始化一个指定时刻的Date类？| 如何更改Date对象的年、月、日等？  
+Answer：初始化指定时刻的构造方法和Date类的setMonth()、setDate()、setHour()等方法已被弃用，改用Calendar类。
 #### 4.转换
 使用SimpleDateFormat类可将Date转化为指定ISO格式字符串、或解析符合ISO格式的字符串为Date类。  
 **1）Date转String**
