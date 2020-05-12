@@ -77,6 +77,7 @@ TimeZone aDefault = TimeZone.getDefault();                  //获取当前程序
 String[] availableIDs = TimeZone.getAvailableIDs();         //获取所有Java可识别的TimeZone
 TimeZone timeZone = TimeZone.getTimeZone("Asia/Shanghai");  //根据TimeZone的ID创建一个TimeZone对象。此方法为常用！！
 ```
+**注意：**`TimeZone.getTimeZone("Asia/Shanghai")`中参数也可直接填写"UTC+XX00"或"UTC-XX00"。
 ## 七、Locale
 #### 1.引用
 ```text
@@ -104,7 +105,7 @@ zh_CN = 中国    zh_HK = 中国香港    zh_TW = 中国台湾
 en_US = 美国    en_GB = 英国        ja_JP = 日本       ko_KR = 韩国
 ```
 #### 4.使用
-Locale类里已经声明了①、②中表示方式常用的Locale常量：语言和国家，直接使用即可。  
+Locale类里已经声明两类常用的Locale常量：语言和国家，直接使用即可。  
 1）语言
 ```java
 Locale chinese = Locale.CHINESE;    //中文
@@ -159,7 +160,6 @@ Date date = new Date();
 String dateToString = format.format(date);
 ```
 **2）Date转**`指定时区`**String**  
-`TimeZone.getTimeZone("Japan")`中参数也可直接填写"UTC+XX00"和"UTC-XX00"。
 ```java
 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    //new SimpleDateFormat()时指定ISO格式
 format.setTimeZone(TimeZone.getTimeZone("Japan"));
