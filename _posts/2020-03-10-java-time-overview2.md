@@ -35,12 +35,24 @@ public static Calendar getInstance(TimeZone zone, Locale aLocale);   //指定时
 ```
 `注意：`getInstance()方法最终会将时间设为System.currentTimeMillis()。  
 **2）指定时间**  
-在调用getInstance()创建Calendar对象之后，再调用下述set方法来指定特定的时间。
+在调用getInstance()创建Calendar对象之后，再调用下述set方法来设置特定的时间。
 ```java
-public void setTimeInMillis(long millis);        //设定时间戳
-public void set(int field, int value);           //设定某个Calendar字段的值，field为Calendar中定义的各个常量
+public void setTimeInMillis(long millis);        //根据时间戳来设定
+public void set(int field, int value);           //直接设置某个Calendar字段的值，field为Calendar中定义的各个常量
 public final void set(int year, int month, int date, int hourOfDay, int minute, int second);    //直接设定年月日时分秒
 ```  
 #### 4.转换
-
+**1）Calendar转Date**
+```java
+Calendar calendar = Calendar.getInstance();
+Date date = calendar.getTime();
+```
+**2）Date转Calendar**
+```java
+Calendar calendar = Calendar.getInstance();
+Date date = new Date();
+calendar.setTime(date);
+```
+**3）Calendar转String**  
+先将Calendar转为Date类，再使用SimpleDateFormat类将Date转String。
 ## 十、LocalDateTime
