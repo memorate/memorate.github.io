@@ -32,13 +32,13 @@ Cuba Standard Time                  古巴标准时间          UTC - 04:00
 **①**国际标准化组织发布的日期和时间的**表示方法**，目前最新为第三版ISO8601:2004。  
 **②**ISO 8601的**标准格式**是：yyyy-MM-ddTHH:mm:ssZ（`严格区分大小写`），分别表示：  
 ```text
-YYYY：   年，0000 — 9999　　　　　　　　　　
+YYYY：   年，0000 — 9999　　　　　　　　　例：2020-03-07T10:20:22.310Z　
 MM：     月， 01  —  12  
 DD：     日， 01  —  31　　　　　　　　　　　　　　
 HH：     时， 00  —  24  
 mm：     分， 00  —  59　　　　　　　　　　　　　
 ss：     秒， 00  —  59                T：分隔符，用来分隔日期和时间，T之前为日期，T之后为时间
-.sss：  毫秒，000 —  999               Z：零时区，可以是：Z、+HH:mm、-HH:mm
+.sss：  毫秒，000 —  999               Z：表示零时区，也可以是：+HH:mm、-HH:mm
 ```
 更多格式——>[这里](https://baijiahao.baidu.com/s?id=1660164866833260888&wfr=spider&for=pc)
 ## 五、Unix
@@ -172,6 +172,11 @@ String dateToString = format.format(date);
 ```java
 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    //new SimpleDateFormat()时指定ISO格式
 String stringDate = "2020-03-07 10:22";
+Date date = format.parse(stringDate);
+```
+```java
+SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");    //ISO标准格式
+String stringDate = "2020-03-07T10:20:22.310Z";
 Date date = format.parse(stringDate);
 ```
 **4）Date转时间戳**，注意此时的timeStamp为13位；
