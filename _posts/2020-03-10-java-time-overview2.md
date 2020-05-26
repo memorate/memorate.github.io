@@ -100,6 +100,7 @@ String longMon = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.U
 `注意：`  
 ①一般只使用**Calendar.SHORT**、**Calendar.LONG**两种style。**Calendar.NARROW_FORMAT**只显示首字母，存在重复无法识别的情况。  
 ②get()获取到的是数字值，getDisplayName()获取到的是String值。  
+③Year、Day这类数据只有int一种表示方法，因此使用getDisplayName()会返回null。  
 **3）getDisplayNames()**  
 获取某个字段的所有展示值，**返回值为Map<String, Integer>**。  
 ```java
@@ -115,9 +116,24 @@ Map<String, Integer> usNames = calendar.getDisplayNames(Calendar.DAY_OF_WEEK, Ca
 chinaNames = {星期二=3, 星期六=7, 星期三=4, 星期四=5, 星期五=6, 星期日=1, 星期一=2}
 usNames = {Monday=2, Thursday=5, Friday=6, Sunday=1, Wednesday=4, Tuesday=3, Saturday=7}
 ```
-`注意：`当没有可用的符合style和locale的展示形式时，getDisplayName()会返回null。  
 **4）add()**  
 ```java
-
+abstract public void add(int field, int amount);      //增、减某个字段的值，amount正为增，负为减
 ```
+```java
+Calendar calendar = Calendar.getInstance();
+calendar.add(Calendar.MONTH, -7);
+calendar.add(Calendar.DATE, 10);
+```
+`注意：`若当前为3月，amount为-5，add()之后月份为九月；日期相同，可倒退。  
+**5）比较**  
+```java
+public boolean before(Object when);                  //是否早于
+```  
+```java
+public boolean after(Object when);                   //是否迟于
+```  
+```java
+public int compareTo(Calendar anotherCalendar);      //比较。0 = 相等；小于0 = 早于；大于0 = 迟于
+```  
 ## 十、LocalDateTime
