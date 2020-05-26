@@ -72,6 +72,16 @@ Calendar常用的几个方法。
 ```java
 public int get(int field);
 ```
+```java
+Calendar calendar = Calendar.getInstance();
+int year = calendar.get(Calendar.YEAR);
+int month = calendar.get(Calendar.MONTH);               //month = 2，并不是指2月，而是Calendar类中3月对应的int是2
+int day = calendar.get(Calendar.DATE);
+int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);     //dayOfWeek = 3，并不是指周三，而是周二
+```
+```text
+上述结果为：year = 2020，month = 2，day = 10，dayOfWeek = 3
+```
 **2）getDisplayName()**  
 获取指定字段的值，**返回值为String**。
 ```java
@@ -79,7 +89,7 @@ public String getDisplayName(int field, int style, Locale locale);      //根据
 ```
 ```java
 Calendar calendar = Calendar.getInstance();
-calendar.set(Calendar.MONTH, 11);
+calendar.set(Calendar.MONTH, 11);               //11 也可用 Calendar.DECEMBER 来代替，更加直观
 String shortMon = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US);
 String narrowMon = calendar.getDisplayName(Calendar.MONTH, Calendar.NARROW_FORMAT, Locale.US);
 String longMon = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
@@ -87,10 +97,13 @@ String longMon = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.U
 ```text
 上述结果为：shortMon = Dec，narrowMon = D，longMon = December
 ```
-一般只使用**Calendar.SHORT**、**Calendar.LONG**两种style。**Calendar.NARROW_FORMAT**只显示首字母，存在重复无法识别的情况。  
+`注意：`  
+①一般只使用**Calendar.SHORT**、**Calendar.LONG**两种style。**Calendar.NARROW_FORMAT**只显示首字母，存在重复无法识别的情况。  
+②get()获取到的是数字值，getDisplayName()获取到的是String值。  
 **3）getDisplayNames()**  
+获取某个字段的所有展示值，**返回值为Map<String, Integer>**。  
 ```java
-public String getDisplayNames(int field, int style, Locale locale);     //根据style和locale展示某个字段的所有可用值
+public String getDisplayNames(int field, int style, Locale locale);     //根据style和locale展示某个字段的所有展示
 ```
 ```java
 Calendar calendar = Calendar.getInstance();
