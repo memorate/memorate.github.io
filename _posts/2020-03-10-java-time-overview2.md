@@ -125,7 +125,7 @@ Calendar calendar = Calendar.getInstance();
 calendar.add(Calendar.MONTH, -7);
 calendar.add(Calendar.DATE, 10);
 ```
-`注意：`若当前为3月，amount为-5，add()之后月份为九月；日期相同，可倒退。  
+`注意：`若当前为3月，amount为-5，add()之后月份为九月；日期类似，也可倒退。  
 **5）比较**  
 ```java
 public boolean before(Object when);                  //是否早于
@@ -137,3 +137,5 @@ public boolean after(Object when);                   //是否迟于
 public int compareTo(Calendar anotherCalendar);      //比较。0 = 相等；小于0 = 早于；大于0 = 迟于
 ```  
 ## 十、LocalDateTime
+#### 1.为什么使用
+LocalDateTime
