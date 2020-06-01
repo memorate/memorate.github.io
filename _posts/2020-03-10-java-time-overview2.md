@@ -20,7 +20,7 @@ import java.util.Calendar;
 ②Calendar类还提供了一些操作Calendar字段的方法，例如"getFirstDayOfWeek()"。  
 ③简而言之，**Calendar是专门用来操作年月日时分秒的类**。  
 ④Calendar始于JDK1.1（[原文](https://docs.oracle.com/javase/8/docs/api/java/util/Calendar.html)）。
-#### 3.初始化
+#### 3.实例化
 **1）当前时间**  
 Calendar中的两个构造方法均为protected，因此只能使用静态方法**getInstance()**来创建Calendar对象。  
 ```java
@@ -85,7 +85,7 @@ int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);     //dayOfWeek = 3，并不
 **2）getDisplayName()**  
 获取指定字段的值，**返回值为String**。
 ```java
-public String getDisplayName(int field, int style, Locale locale);      //根据style和locale展示某个字段的值
+public String getDisplayName(int field, int style, Locale locale);      //根据style和locale展示某个field的值
 ```
 ```java
 Calendar calendar = Calendar.getInstance();
@@ -102,7 +102,7 @@ String longMon = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.U
 ②get()获取到的是数字值，getDisplayName()获取到的是String值。  
 ③Year、Day这类数据只有int一种表示方法，因此使用getDisplayName()会返回null。  
 **3）getDisplayNames()**  
-获取某个字段的所有展示值，**返回值为Map<String, Integer>**。  
+获取某个字段的`所有展示值`，**返回值为Map<String, Integer>**。  
 ```java
 public String getDisplayNames(int field, int style, Locale locale);     //根据style和locale展示某个字段的所有展示
 ```
@@ -125,7 +125,7 @@ Calendar calendar = Calendar.getInstance();
 calendar.add(Calendar.MONTH, -7);
 calendar.add(Calendar.DATE, 10);
 ```
-`注意：`若当前为3月，amount为-5，add()之后月份为九月；日期类似，也可倒退。  
+`注意：`若当前为3月，amount为-5，add()之后月份为9月；日期类似，也可倒退到1之前。  
 **5）比较**  
 ```java
 public boolean before(Object when);                  //是否早于
@@ -138,4 +138,10 @@ public int compareTo(Calendar anotherCalendar);      //比较。0 = 相等；小
 ```  
 ## 十、LocalDateTime
 #### 1.为什么使用
-LocalDateTime
+1）Date体系混乱，***java.util***和***java.sql***包中都有Date类。  
+2）  
+3）  
+#### 2.引用
+#### 3.实例化
+#### 4.转换
+#### 5.使用

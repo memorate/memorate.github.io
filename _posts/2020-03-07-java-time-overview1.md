@@ -141,7 +141,7 @@ import java.util.Date;
 ```text
 原文：The class Date represents a specific instant in time, with millisecond precision.
 ``` 
-#### 3.初始化
+#### 3.实例化
 Date类目前只有两个推荐使用的构造方法，其余已被弃用。  
 1）使用**无参构造函数**new一个Date类，表示当前时刻。内部实现：new Date(System.currentTimeMillis())（非源码，仅用于表意）；
 ```java
