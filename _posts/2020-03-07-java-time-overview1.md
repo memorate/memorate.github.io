@@ -184,3 +184,5 @@ Date date = format.parse(stringDate);
 Date date = new Date();
 long timeStamp = date.getTime();
 ```
+#### 5.常用操作
+常用的例如获取年、月、日操作，日期加减操作等需要使用Calendar类。  
