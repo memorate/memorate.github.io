@@ -7,7 +7,7 @@ tags:
 categories: Java
 description: 各Java时间类介绍
 ---  
-**Java中各类时间介绍与基本使用(一)**
+**GMT、UTC、CST、ISO、Unix介绍，TimeZone、Locale、Date基本使用**
 
 <!-- more -->
 ## 一、GMT

@@ -7,7 +7,7 @@ tags:
 categories: Java
 description: 各Java时间类介绍
 ---  
-**Java中各类时间介绍与基本使用(二)**
+**Calendar、LocalDateTime介绍与基本使用**
 
 <!-- more -->
 ## 九、Calendar
@@ -139,16 +139,16 @@ public int compareTo(Calendar anotherCalendar);      //比较。0 = 相等；小
 ## 十、LocalDateTime
 #### 1.为什么使用
 1）Date体系混乱且复杂，存在两个***java.util.Date***、***java.sql.Date***类，还需配套的Calendar、TimeZone、Locale类等。  
-2）最重要的是，SimpleDateFormat格式化Date的操作***是线程不安全的***。  
-3）LocalDateTime简单，学习简单、使用简单。  
+2）Date若不格式化，打印出的日期可读性差，而SimpleDateFormat格式化Date的操作是***线程不安全***的。  
+3）LocalDateTime***简单***，学习简单、使用简单。  
 #### 2.引用
 ```text
 import java.time.LocalDateTime;
 ```
 #### 3.实例化
-构造方法为private，不可用。使用静态方法***now()***来实例化。
+构造方法权限为private，不可用。使用静态方法***now()***来实例化。
 ```java
-LocalDateTime now = LocalDateTime.now();
+LocalDateTime now = LocalDateTime.now();        //实例化一个表示当前时间的LocalDateTime类
 ```
 或者使用静态方法***of()***直接指定年月日时分秒来实例化。
 ```java
@@ -157,8 +157,8 @@ LocalDateTime time2 = LocalDateTime.of(2020, 3, 10, 18, 22, 34);         //指�
 LocalDateTime time3 = LocalDateTime.of(2020, 3, 10, 18, 22);             //指定 年月日、时分
 ```
 `注意：`  
-　1）月的范围从1到12，也可用枚举类***java.time.Month***来代替。  
-　2）日的范围从1到31，时的范围从0到23，分、秒的范围从0到59。  
+　1）月的范围是1到12，也可用枚举类***java.time.Month***来代替。  
+　2）日的范围是1到31，时的范围是0到23，分、秒的范围是0到59。  
 　3）若使用***of()***时超出上述范围，编译会报错。  
 #### 4.转换
 #### 5.使用
