@@ -87,6 +87,8 @@ author:
   name: Anchor
   intro_line1:  "Hi ,I'm Anchor, 一只毛发浓密的攻城狮"    ## your introduction on the bottom of the page
   intro_line2:  "这是我的博客，用来记录日常所见所得"  ## the 2nd line
+  email:        291712141@qq.com
+  github:       memorate
   #weibo:      ## e.g. wuchong1014 or 2176287895 for http://weibo.com/2176287895
   #weibo_verifier:  ## e.g. b3593ceb Your weibo-show widget verifier ,if you use weibo-show it is needed.
   #tsina:      ## e.g. 2176287895  Your weibo ID,It will be used in share button.

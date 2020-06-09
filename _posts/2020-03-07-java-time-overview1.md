@@ -165,8 +165,8 @@ String dateToString = format.format(date);
 ```java
 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    //new SimpleDateFormat()时指定ISO格式
 format.setTimeZone(TimeZone.getTimeZone("Japan"));
-Date date = new Date();
-String dateToString = format.format(date);
+Date date = new Date();                                //date值为         2020-03-07 10:20:22
+String dateToString = format.format(date);             //dateToString值为 2020-03-07 11:20:22
 ```
 **3）String转Date**，注意此时字符串中日期格式要与SimpleDateFormat指定的格式相符；
 ```java

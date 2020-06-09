@@ -138,15 +138,16 @@ public int compareTo(Calendar anotherCalendar);      //比较。0 = 相等；小
 ```  
 ## 十、LocalDateTime
 #### 1.为什么使用
-1）Date体系混乱且复杂，存在两个***java.util.Date***、***java.sql.Date***类，还需配套的Calendar、TimeZone、Locale类等。  
-2）Date若不格式化，打印出的日期可读性差，而SimpleDateFormat格式化Date的操作是***线程不安全***的。  
-3）LocalDateTime***简单***，学习简单、使用简单。  
+1）LocalDateTime是Java8推出的Date类的升级版，若条件允许，推荐使用LocalDateTime。  
+2）Date体系混乱且复杂，存在两个***java.util.Date***、***java.sql.Date***类，还需配套的Calendar、TimeZone、Locale类等。  
+3）Date若不格式化，打印出的日期可读性差，而SimpleDateFormat格式化Date的操作是***线程不安全***的。  
+4）LocalDateTime***简单***，学习简单、使用简单。  
 #### 2.引用
 ```text
 import java.time.LocalDateTime;
 ```
 #### 3.实例化
-构造方法权限为private，不可用。使用静态方法***now()***来实例化。
+构造方法访问权限为private，不可用。使用静态方法***now()***来实例化。
 ```java
 LocalDateTime now = LocalDateTime.now();        //实例化一个表示当前时间的LocalDateTime类
 ```
@@ -161,4 +162,24 @@ LocalDateTime time3 = LocalDateTime.of(2020, 3, 10, 18, 22);             //指�
 　2）日的范围是1到31，时的范围是0到23，分、秒的范围是0到59。  
 　3）若使用***of()***时超出上述范围，编译会报错。  
 #### 4.转换
+**1）LocalDateTime转String**  
+利用toString()方法进行转换。
+```java
+LocalDateTime now = LocalDateTime.now();
+System.out.println(now);
+```
+或者使用***DateTimeFormatter***类来转换为自定义格式。与Date的SimpleDateFormat类似。
+```java
+LocalDateTime now = LocalDateTime.now();
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+System.out.println(now.format(formatter));
+```
+DateTimeFormatter有15种内置的格式（其他自行探索）：
+```text
+DateTimeFormatter.BASIC_ISO_DATE               20200310
+DateTimeFormatter.ISO_LOCAL_DATE_TIME          2020-03-10T18:30:34
+DateTimeFormatter.ISO_LOCAL_DATE               2020-03-10
+DateTimeFormatter.ISO_DATE_TIME                2020-03-10T18:30:34
+DateTimeFormatter.ISO_ORDINAL_DATE             2020-070
+```
 #### 5.使用
