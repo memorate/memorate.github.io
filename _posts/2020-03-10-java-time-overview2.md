@@ -163,18 +163,18 @@ LocalDateTime time3 = LocalDateTime.of(2020, 3, 10, 18, 22);             //指�
 　3）若使用***of()***时超出上述范围，编译会报错。  
 #### 4.转换
 **1）LocalDateTime转String**  
-利用toString()方法进行转换。
+利用***toString()***方法进行转换,其默认格式为：`yyyy-MM-ddTHH:mm:ss.SSS`。
 ```java
 LocalDateTime now = LocalDateTime.now();
-System.out.println(now);
+System.out.println(now);        //输出 2020-03-10T15:34:48.926
 ```
-或者使用***DateTimeFormatter***类来转换为自定义格式。与Date的SimpleDateFormat类似。
+或者使用LocalDateTime的***format()***方法转换为自定义格式的String。通过DateTimeFormatter来指定需要的String格式。
 ```java
 LocalDateTime now = LocalDateTime.now();
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-System.out.println(now.format(formatter));
+String time = now.format(formatter);
 ```
-DateTimeFormatter有15种内置的格式（其他自行探索）：
+DateTimeFormatter有15种内置格式（以下为部分）：
 ```text
 DateTimeFormatter.BASIC_ISO_DATE               20200310
 DateTimeFormatter.ISO_LOCAL_DATE_TIME          2020-03-10T18:30:34
@@ -182,4 +182,14 @@ DateTimeFormatter.ISO_LOCAL_DATE               2020-03-10
 DateTimeFormatter.ISO_DATE_TIME                2020-03-10T18:30:34
 DateTimeFormatter.ISO_ORDINAL_DATE             2020-070
 ```
+**2）String转LocalDateTime**  
+使用***LocalDateTime.parse()***进行解析，String中的时间格式必须与DateTimeFormatter的pattern匹配。
+```java
+String time = "2020-03-10 11:11:11";
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
+```  
+**3）Date转LocalDateTime**  
+
+**4）LocalDateTime转Date**  
 #### 5.使用
