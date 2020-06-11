@@ -190,6 +190,60 @@ DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
 ```  
 **3）Date转LocalDateTime**  
-
+时间戳是所有系统通用的表示时间的方式，因此通过时间戳来转换Date和LocalDateTime。  
+具体使用***LocalDateTime.ofInstant()***进行转换（Java中将时间戳抽象为***Instant***类）。  
+```java
+Date date = new Date();
+LocalDateTime time = LocalDateTime.ofInstant(date.toInstant(), ZoneId.of("Asia/Shanghai"));
+```
+`注`：因为时间戳不带有任何地区信息，所以***ofInstant()***方法需要借助***ZoneId***类。  
 **4）LocalDateTime转Date**  
+借助***Instant***类使用***Date.from()***方法来转换。
+```java
+LocalDateTime now = LocalDateTime.now();
+Date date = Date.from(now.toInstant(ZoneOffset.of("+8")));
+```
+`注`：***ZoneOffset.of("+8")***中**+8**代表中国时区，其他时区可**+/- N**。
 #### 5.使用
+LocalDateTime常用的几类方法。  
+**1）获取某个字段值**
+```java
+LocalDateTime now = LocalDateTime.now();
+int year = now.getYear();                       //年
+Month month = now.getMonth();                   //月
+int monthValue = now.getMonthValue();           //int类型的月
+int day = now.getDayOfMonth();                  //日
+DayOfWeek dayOfWeek = now.getDayOfWeek();       //星期几，dayOfWeek.getValue()获取int值，周一int值为1，周天为7
+int hour = now.getHour();                       //时
+int minute = now.getMinute();                   //分
+```
+**2）加减**  
+a.加减操作有三类方法，分别以**plus**、**minus**、**with**开头；  
+b.三类方法入参都可正可负，意味着每类方法都可以单独实现加、减两个功能，但是根据约定plus用来加，minus用来减；  
+c.minus实际调用了plus方法，而plus方法最终又调用了with方法；    
+```java
+LocalDateTime now = LocalDateTime.now();
+LocalDateTime plusDays = now.plusDays(3);
+LocalDateTime minusDays = now.minusDays(3);
+LocalDateTime withDays = now.withDayOfMonth(3);
+```
+`注意`：三类方法并不改变自己身的值，而是返回一个修改过值得副本。
+**3）比较**  
+```java
+LocalDateTime now = LocalDateTime.now();
+LocalDateTime future = now.plusDays(3);
+boolean after = now.isAfter(future);            //是否迟于
+boolean before = now.isBefore(future);          //是否早于
+boolean equal = now.isEqual(future);            //是否相等
+int i = now.compareTo(future);                  //负为早于，正为迟于，0为相等
+```  
+**4）计算**  
+利用***java.time.Duration***类来计算两个LocalDateTime之间的时间差。
+```java
+LocalDateTime now = LocalDateTime.now();
+LocalDateTime plusDays = now.plusDays(3);
+Duration between = Duration.between(now, plusDays);
+long days = between.toDays();         //正为plusDays迟于now几天，负为早于
+long hours = between.toHours();
+long minutes = between.toMinutes();
+```
