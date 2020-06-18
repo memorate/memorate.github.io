@@ -17,3 +17,4 @@ description: Java与MySQL时间类型对照表
 **3.**  
 ### 细节问题
 **1.MySQL中time类型只会存储时间，不会存储日期。因此读取到的Java类日期会显示为1970-01-01。**  
+**2.MySQL中timestamp类型会存储日期、时间，可以和Java类无缝转换。**  
