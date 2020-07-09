@@ -11,8 +11,8 @@ description: Controller返回Excel文件
 
 <!-- more -->
 ## 先上代码
+**1.Controller层代码**
 ```java
-/* Controller层代码 */
 @RestController
 @RequestMapping("/file")
 public class FileController {
@@ -25,8 +25,8 @@ public class FileController {
     }
 }
 ```
+**2.ServiceImpl层代码(省略Service层代码)**
 ```java
-/* ServiceImpl层代码(省略Service层代码) */
 @Slf4j
 @Service
 public class FileServiceImpl implements FileService {
@@ -38,7 +38,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void exportAllUsers(){
-        List<User> users = userService.getAllUser("id");    //获取源数据
+        List<User> users = userService.getAllUser("id");    //从数据库获取源数据
         List<UserDTO> collect = users.stream().map(UserDTO::new).collect(Collectors.toList());   //转为DTO
         ExportParams params = new ExportParams(null, "用户信息", ExcelType.HSSF);    //三个参数(Excel中标题，sheetName，Excel类型)
         try (Workbook wb = ExcelExportUtil.exportExcel(params, UserDTO.class, collect)) {
@@ -57,7 +57,7 @@ public class FileServiceImpl implements FileService {
 }
 ```
 ## 一、Excel
-使用EasyPoi生成Excel([EasyPoi官网](http://doc.wupaas.com/docs/easypoi/easypoi-1c0u4mo8p4ro8))。
+**使用EasyPoi生成Excel([EasyPoi官网](http://doc.wupaas.com/docs/easypoi/easypoi-1c0u4mo8p4ro8))。**
 #### 1.引入
 ```xml
 <dependency>
@@ -70,7 +70,7 @@ public class FileServiceImpl implements FileService {
 ```java
 public class UserDTO {
 
-    @Excel(name = "序号", type = 10, width = 8)
+    @Excel(name = "序号", type = 10, width = 8)    //使用此注解来映射 类的属性 与 Excel的列
     private Long id;
 
     @Excel(name = "姓名")                //name是列名
@@ -89,10 +89,10 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 
 ExportParams params = new ExportParams(null, "用户信息", ExcelType.HSSF);
-Workbook wb = ExcelExportUtil.exportExcel(params, UserDTO.class, data)
+Workbook wb = ExcelExportUtil.exportExcel(params, UserDTO.class, data)    //data一般为一个List
 ```
 ## 二、导出
-①通过HttpServletResponse进行导出。([HttpServletResponse介绍](https://www.jianshu.com/p/8bc6b82403c5))  
+①通过**HttpServletResponse**进行导出。([HttpServletResponse介绍](https://www.jianshu.com/p/8bc6b82403c5))  
 ②简单来说整个过程是这样：后端接收请求方的HttpRequest，然后返回一个HttpResponse，我们将Excel转换成二进制流塞进这个response并设置好格式等就OK了。
 ```text
 import javax.servlet.http.HttpServletResponse;
@@ -109,4 +109,5 @@ try (Workbook wb = ExcelExportUtil.exportExcel(params, UserDTO.class, collect)) 
     log.error("Export error!", e);
 }
 ```
+## 三、下载
 ![]({{ "/assets/img/20200425/export.jpeg"}})
