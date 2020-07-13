@@ -1,6 +1,6 @@
 ---
 layout: post
-title: GitLab-IP解禁最佳方案
+title: GitLab - IP解禁最佳方案
 tags:
 - GitLab
 categories: GitLab

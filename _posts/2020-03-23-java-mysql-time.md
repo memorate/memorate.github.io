@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Java-MySQL时间对照表
+title: Java - MySQL时间对照表
 tags:
 - Java 
 - Study

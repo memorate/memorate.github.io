@@ -1,6 +1,6 @@
 ---
 layout: post
-title: SpringBoot-Mybatis自动分页之PageHelper
+title: SpringBoot - Mybatis自动分页之PageHelper
 tags:
 - Java 
 - SpringBoot 
@@ -32,7 +32,7 @@ import com.github.pagehelper.PageInfo;
 @Override
 public PageInfo<User> pageQuery(int pageNumber, int pageSize) {
     PageHelper.startPage(pageNumber, pageSize);
-    List<User> users = userMapper.findAll(UserColumn.NAME);    //startPage()后第一个数据库查询操作
+    List<User> users = userMapper.findAll(UserColumn.NAME);    //startPage()后第一个Mybatis查询操作
     return new PageInfo<>(users);
 }
 ```
@@ -52,7 +52,7 @@ public PageInfo<UserDTO> pageQuery(int pageNumber, int pageSize) {
     List<User> users = userMapper.findAll(UserColumn.NAME);
     PageInfo pageInfo = new PageInfo<>(users);      //先用查出的源数据初始化pageInfo，注意不要指定PageInfo<T>中泛型T
     List<UserDTO> collect = pageInfo.getList().stream().map(UserDTO::new).collect(Collectors.toList());    //数据格式转换
-    pageInfo.setList(collect);    //将转换后的数据塞进pageInfo
+    pageInfo.setList(collect);    //用转换后的数据覆盖原有的List
     return pageInfo;
 }
 ```

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Java-Spring Boot集成Mybatis
+title: SpringBoot - Mybatis集成
 tags:
 - Java 
 - SpringBoot

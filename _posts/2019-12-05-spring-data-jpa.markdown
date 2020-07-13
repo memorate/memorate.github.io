@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Java-Spring Boot集成Spring Data JPA
+title: SpringBoot - Spring Data JPA集成
 tags:
 - Java 
 - SpringBoot

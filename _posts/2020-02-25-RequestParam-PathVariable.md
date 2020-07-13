@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Java-@RequestParam与@PathVariable
+title: SpringBoot - @RequestParam与@PathVariable
 tags:
 - Java 
 - SpringBoot

@@ -1,6 +1,6 @@
 ---
 layout: post  
-title: java-泛型原来是这么回事  
+title: java - 泛型原来是这么回事  
 tags: 
 - Java
 - Study

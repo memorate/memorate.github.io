@@ -1,6 +1,6 @@
 ---
 layout: post
-title: java工具-FastJson是这样用的
+title: java工具 - FastJson是这样用的
 tags:
 - Java
 - Tools
