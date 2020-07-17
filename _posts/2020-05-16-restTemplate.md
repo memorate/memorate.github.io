@@ -152,3 +152,5 @@ public ResponseEntity<QRCodeResponse> postForEntityWithHeader(String content) {
 ```
 ## 五、问题
 1.将请求的Response序列化为指定类时，若因指定类中属性不符合驼峰命名而导致序列化失败，可在getter方法上使用@JsonProperty注解来映射。  
+2.实操时ResponseEntity\<MobileResponse>的值。   
+![]({{ "/assets/img/20200516/20200516.jpg"}})  
