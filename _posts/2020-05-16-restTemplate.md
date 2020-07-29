@@ -53,7 +53,7 @@ private RestTemplate restTemplate;      //使用时注入RestTemplate类
 1）**将Get请求的Response序列化为String**
 ```java
 public String getForString(String mobile) {
-    String url = MXN_HOST + "/mobile_location/aim_mobile?mobile={mobile}&app_id={app_id}&app_secret={app_secret}";    //声明请求参数
+    String url = MXN_HOST + "/mobile_location/aim_mobile?mobile={mobile}&app_id={app_id}&app_secret={app_secret}";    //声明三个请求参数
     Map<String, String> params = new HashMap<>();
     params.put("mobile", mobile);
     params.put("app_id", MXN_APP_ID);
@@ -118,7 +118,7 @@ public ResponseEntity<MobileResponse> getForEntityWithHeader(String mobile) {
 ## 四、Post请求
 RestTemplate中Post用法与Get一致，简单的用法不再赘述，只写一个终极Post。
 #### 终极Post
-此Post请求需携带Header，且需要Post一张图片至服务器，最终将Response序列化为ResponseEntity\<T>。
+此Post请求需携带Header，且需要Post一张图片至服务器，最终将Response序列化为QRCodeResponse。
 ```java
 @Data
 public class QRCodeResponse extends MXNResponse{

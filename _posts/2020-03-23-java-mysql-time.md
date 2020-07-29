@@ -16,7 +16,7 @@ description: Java与MySQL时间类型对照表
 ## 注意事项  
 **1.实操时MySQL版本为8.0.20。**  
 **2.上表中右列的Java类型数据均可对应入库为左列的MySQL类型数据。**    
-**3.采坑：MySQL时区设置为UTC导致Java、MySQL显示的时间不一致（[解决方案](https://blog.csdn.net/starlemon2016/article/details/90314649?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task)）。**  
+**3.采坑：MySQL时区默认设置为UTC导致Java、MySQL显示的时间不一致（[解决方案](https://blog.csdn.net/starlemon2016/article/details/90314649?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task)）。**  
 ## 细节问题  
 **1.MySQL中time类型只会存储时间，`不会`存储日期。因此读取到的Java类日期会显示为1970-01-01。**  
 **2.MySQL中timestamp类型会存储日期、时间，可以和Java类无缝转换。**  
