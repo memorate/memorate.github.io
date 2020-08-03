@@ -16,10 +16,27 @@ description: 高频使用sql语句收集
 ## 一、增
 **1.创建数据库**  
 ```sql
-CREATE DATABASE 数据库名;
+create database collection;
+```
+```sql
+create database if not exists collection;
 ```
 **2.创建表**  
+```sql
+create table student(
+    stu_id int auto_increment primary key,
+    stu_name varchar(16) not null comment '学生姓名',
+    stu_age smallint not null default 18 comment '学生年龄',
+    stu_gender char(8) not null default 'male' comment '学生性别',
+    stu_class int not null default 0 comment '学生所在班级，1—N',
+    stu_grade char(10) not null default 'first' comment '学生所在年级,'
+)comment '学生信息表';
+```
 **3.创建记录**  
+```sql
+insert into student (stu_id, stu_name, stu_age, stu_gender, stu_class, stu_grade)
+    value (default, 'Anchor', 17, 'male', 13, 'sixth')
+```
 ## 二、删
 ## 三、查
 ## 四、修
