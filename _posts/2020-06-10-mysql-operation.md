@@ -37,6 +37,13 @@ create table student(
 insert into student (stu_id, stu_name, stu_age, stu_gender, stu_class, stu_grade)
     value (default, 'Anchor', 17, 'male', 13, 'sixth')
 ```
+```sql
+
+```
+**4.新增字段**  
+```sql
+alter table student add column stu_boarder boolean not null default false comment '是否住校，默认否';
+```
 ## 二、删
 ## 三、查
 ## 四、修
