@@ -22,27 +22,45 @@ create database collection;
 create database if not exists collection;
 ```
 **2.创建表**  
+**1）**枚举类型数据（stu_gender）使用int来保存，在注释中写清对应的含义即可。  
+**2）**更新时间和创建时间一般必有，使用**current_timestamp**函数来自动生成。  
 ```sql
-create table student(
-    stu_id int auto_increment primary key,
-    stu_name varchar(16) not null comment '学生姓名',
-    stu_age smallint not null default 18 comment '学生年龄',
-    stu_gender char(8) not null default 'male' comment '学生性别',
-    stu_class int not null default 0 comment '学生所在班级，1—N',
-    stu_grade char(10) not null default 'first' comment '学生所在年级,'
-)comment '学生信息表';
+drop table if exists student;
+create table student
+(
+    id          int unsigned auto_increment primary key comment '学生id',
+    stu_name    varchar(16) not null comment '学生姓名',
+    stu_age     smallint    not null default 18 comment '学生年龄',
+    stu_gender  int(2)      not null default 0 comment '0-男生，1女生',
+    stu_class   int(2)      not null default 0 comment '学生所在班级，1—N',
+    stu_grade   char(10)    not null default 'first' comment '学生所在年级',
+    stu_boarder boolean     not null default false comment '是否住校，true-是，false-否',
+    create_time timestamp   not null default current_timestamp comment '学生记录创建时间',
+    update_time timestamp   not null default current_timestamp on update current_timestamp comment '学生记录更新时间',
+    index index_stu_name (stu_name),
+    index index_stu_grade (stu_grade)
+) comment '学生信息表' character set 'utf8mb4';
 ```
-**3.创建记录**  
+**3.新增字段**  
 ```sql
-insert into student (stu_id, stu_name, stu_age, stu_gender, stu_class, stu_grade)
-    value (default, 'Anchor', 17, 'male', 13, 'sixth')
+alter table student add column stu_boarder boolean not null default false comment '是否住校，true-是，false-否';
+```
+**4.新增索引**
+```sql
+alter table student add index index_stu_grade (stu_grade);
+```  
+**5.新增记录**  
+1）**自增的主键**可使用**default或不填**。  
+2）插入记录时某字段若使用**默认值**可用**default或不填**。  
+3）value和values**都可以**用来插入单条/多条记录，`value插入多条记录时较快，values插入单条记录时较快`。（It confused）  
+```sql
+insert into student (id, stu_name, stu_age, stu_gender, stu_class, stu_grade) 
+    values (default, 'Anchor', 17, 'male', 13, 'sixth');
 ```
 ```sql
-
-```
-**4.新增字段**  
-```sql
-alter table student add column stu_boarder boolean not null default false comment '是否住校，默认否';
+insert into student (stu_name, stu_age, stu_gender, stu_class, stu_grade, stu_address, stu_boarder)
+value ('Anchor', 17, 'male', 13, 'sixth', 'Nanjing', default),
+      ('Michel', 25, 'male', 6, 'ninth', 'Beijing', true);
 ```
 ## 二、删
 ## 三、查
