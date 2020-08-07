@@ -203,7 +203,12 @@ LocalDateTime time = LocalDateTime.ofInstant(date.toInstant(), ZoneId.of("Asia/S
 LocalDateTime now = LocalDateTime.now();
 Date date = Date.from(now.toInstant(ZoneOffset.of("+8")));
 ```
-`注`：***ZoneOffset.of("+8")***中**+8**代表中国时区，其他时区可**+/- N**。
+`注`：***ZoneOffset.of("+8")***中**+8**代表中国时区，其他时区可**+/- N**。  
+**5）LocalDateTime转Unix**  
+```java
+long utc = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);          //转表示UTC的unix
+long cst = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));     //转表示CST的unix
+```
 #### 5.使用
 LocalDateTime常用的几类方法。  
 **1）获取某个字段值**

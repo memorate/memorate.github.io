@@ -22,8 +22,8 @@ create database collection;
 create database if not exists collection;
 ```
 **2.创建表**  
-**1）**枚举类型数据（stu_gender）使用int来保存，在注释中写清对应的含义即可。  
-**2）**更新时间和创建时间一般必有，使用**current_timestamp**函数来自动生成。  
+1）枚举类型数据（stu_gender）使用int来保存，在注释中写清对应的含义即可。  
+2）更新时间和创建时间一般必有，使用**current_timestamp**函数来自动生成。  
 ```sql
 drop table if exists student;
 create table student
