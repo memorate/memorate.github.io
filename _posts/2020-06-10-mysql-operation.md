@@ -12,7 +12,8 @@ description: 高频使用sql语句收集
 <!-- more -->
 ## 注
 1.编写sql语句时一律使用**小写**字母(保留字可大写，仅仅是为了便于人类可以迅速识别sql的含义)。Win下MySQL大小写不敏感，Linux下MySQL大小写敏感。  
-2.
+2.char和varchar的区别？  
+3.int(10)、char(10)、varchar(10)分别能存多少个字符？  
 ## 一、增
 **1.创建数据库**  
 ```sql
@@ -64,4 +65,8 @@ value ('Anchor', 17, 'male', 13, 'sixth', 'Nanjing', default),
 ```
 ## 二、删
 ## 三、查
-## 四、修
+## 四、改
+**1.修改字段**  
+```sql
+
+```

@@ -110,4 +110,9 @@ try (Workbook wb = ExcelExportUtil.exportExcel(params, UserDTO.class, collect)) 
 }
 ```
 ## 三、下载
-![]({{ "/assets/img/20200425/export.jpeg"}})
+![]({{ "/assets/img/20200425/export.jpeg"}})  
+## 四、问题
+Controller层方法的返回值**必须**设为**void**，不能返回其他内容，否则会报以下Warn：  
+```text
+org.springframework.web.HttpMediaTypeNotAcceptableException: Could not find acceptable representation
+```
