@@ -182,14 +182,25 @@ DateTimeFormatter.ISO_LOCAL_DATE               2020-03-10
 DateTimeFormatter.ISO_DATE_TIME                2020-03-10T18:30:34
 DateTimeFormatter.ISO_ORDINAL_DATE             2020-070
 ```
-**2）String转LocalDateTime**  
+**2）LocalDateTime转指定时区的String**  
+```java
+LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC"));        //实例化时指定时区
+String time = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+```
+或者
+```java
+LocalDateTime now = LocalDateTime.now();
+LocalDateTime utc = now.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+String time = utc.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+```
+**3）String转LocalDateTime**  
 使用***LocalDateTime.parse()***进行解析，String中的时间格式必须与DateTimeFormatter的pattern匹配。
 ```java
 String time = "2020-03-10 11:11:11";
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
 ```  
-**3）Date转LocalDateTime**  
+**4）Date转LocalDateTime**  
 时间戳是所有系统通用的表示时间的方式，因此通过时间戳来转换Date和LocalDateTime。  
 具体使用***LocalDateTime.ofInstant()***进行转换（Java中将时间戳抽象为***Instant***类）。  
 ```java
@@ -197,14 +208,14 @@ Date date = new Date();
 LocalDateTime time = LocalDateTime.ofInstant(date.toInstant(), ZoneId.of("Asia/Shanghai"));
 ```
 `注`：因为时间戳不带有任何地区信息，所以***ofInstant()***方法需要借助***ZoneId***类。  
-**4）LocalDateTime转Date**  
+**5）LocalDateTime转Date**  
 借助***Instant***类使用***Date.from()***方法来转换。
 ```java
 LocalDateTime now = LocalDateTime.now();
 Date date = Date.from(now.toInstant(ZoneOffset.of("+8")));
 ```
 `注`：***ZoneOffset.of("+8")***中**+8**代表中国时区，其他时区可**+/- N**。  
-**5）LocalDateTime转Unix**  
+**6）LocalDateTime转Unix**  
 ```java
 long utc = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);          //转表示UTC的unix
 long cst = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));     //转表示CST的unix
