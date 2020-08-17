@@ -174,6 +174,7 @@ LocalDateTime now = LocalDateTime.now();
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 String time = now.format(formatter);
 ```
+`注：`ISO 8601标准格式转换**DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")**  
 DateTimeFormatter有15种内置格式（以下为部分）：
 ```text
 DateTimeFormatter.BASIC_ISO_DATE               20200310
