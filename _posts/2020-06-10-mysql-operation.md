@@ -24,7 +24,7 @@ create database if not exists collection;
 ```
 **2.创建表**  
 1）枚举类型数据（stu_gender）使用int来保存，在注释中写清对应的含义即可。  
-2）更新时间和创建时间一般必有，使用**current_timestamp**函数来自动生成。  
+2）创建时间和更新时间一般必有，使用**current_timestamp**函数来自动生成。  
 ```sql
 drop table if exists student;
 create table student
@@ -51,16 +51,16 @@ alter table student add column stu_boarder boolean not null default false commen
 alter table student add index index_stu_grade (stu_grade);
 ```  
 **5.新增记录**  
-1）**自增的主键**可使用**default或不填**。  
-2）插入记录时某字段若使用**默认值**可用**default或不填**。  
-3）value和values**都可以**用来插入单条/多条记录，`value插入多条记录时较快，values插入单条记录时较快`。（It confused）  
+1）新增记录时**自增的主键**可使用**default**或**不填**。  
+2）新增记录时某字段若使用**默认值**可用**default**或**不填**。  
+3）关键字value和values**都可以**用来插入单条/多条记录，`value插入多条记录时较快，values插入单条记录时较快`。（It confused）  
 ```sql
 insert into student (id, stu_name, stu_age, stu_gender, stu_class, stu_grade) 
-    values (default, 'Anchor', 17, 'male', 13, 'sixth');
+    values (default, 'Anchor', 17, 'male', 13, 'sixth');          <!-- 插入自增主键id时用default -->
 ```
 ```sql
 insert into student (stu_name, stu_age, stu_gender, stu_class, stu_grade, stu_address, stu_boarder)
-value ('Anchor', 17, 'male', 13, 'sixth', 'Nanjing', default),
+value ('Anchor', 17, 'male', 13, 'sixth', 'Nanjing', default),     <!-- stu_boarder使用默认值时用default -->
       ('Michel', 25, 'male', 6, 'ninth', 'Beijing', true);
 ```
 ## 二、删
