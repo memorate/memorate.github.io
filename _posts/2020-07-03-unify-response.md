@@ -22,7 +22,7 @@ description: 统一Response设计
 2.后续所有的响应码类实现StatusCode即可。  
 ```java
 public interface StatusCode extends Serializable {
-    @JsonValue
+    @JsonValue       //序列化时只显示code，message以BaseResponse中的为准
     int code();
 
     String message();
@@ -64,12 +64,12 @@ public enum DefaultStatus implements StatusCode {
 }
 ```
 ## 三、BaseResponse
-1.BaseResponse是用于返回调用结果的类，不可被继承，所有Controller中方法的返回值统一使用此类。  
-2.BaseResponse有三个属性：**code**(响应码)、**message**(返回信息)、**data**(返回数据)。  
-3.为什么StatusCode中已经有返回信息，而BaseResponse还要设置message属性？  
+**1**.BaseResponse是用于返回调用结果的类，不可被继承，所有Controller中方法的返回值统一使用此类。  
+**2**.BaseResponse有三个属性：**code**(响应码)、**message**(返回信息)、**data**(返回数据)。  
+**3**.为什么StatusCode中已经有message()，BaseResponse还要设置message属性？  
 　例：DefaultStatus中400携带的信息是"Invalid parameters"，然而有些业务场景中400需要描述为"参数不合法，请检查！"。
 这时在BaseResponse中复写message即可，便于灵活交互。  
-4.提供4个静态with方法，用于灵活实例化BaseResponse。  
+**4**.提供4个静态with方法，用于灵活实例化BaseResponse。  
 ```java
 public final class BaseResponse<T> implements Serializable {
 
@@ -156,5 +156,27 @@ public final class BaseResponse<T> implements Serializable {
                 ", data=" + data +
                 '}';
     }
+}
+```
+## 三、使用
+```java
+@GetMapping("/api1")
+public BaseResponse api1(@RequestParam String something) throws Exception {
+    //code
+    return new BaseResponse();
+}
+```
+```java
+@GetMapping("/api2")
+public BaseResponse<String> api2(@RequestParam String something) throws Exception {
+    //code
+    return new BaseResponse(something);
+}
+```
+```java
+@GetMapping("/api3")
+public BaseResponse<String> api3(@RequestParam String something) throws Exception {
+    //code
+    return BaseResponse.with(DefaultStatus.SUCCESS, "操作成功", something);
 }
 ```
