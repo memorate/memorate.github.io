@@ -30,7 +30,7 @@ public interface StatusCode extends Serializable {
 ```
 ## 二、DefaultStatus
 1.DefaultStatus是一个默认的响应码枚举类，仅仅定义了四种简单的响应码。  
-2.后续其他业务的状态码模仿该类实现即可。
+2.后续其他业务的状态码类模仿该类实现即可。
 ```java
 public enum DefaultStatus implements StatusCode {
 
@@ -158,7 +158,7 @@ public final class BaseResponse<T> implements Serializable {
     }
 }
 ```
-## 三、使用
+## 四、使用
 ```java
 @GetMapping("/api1")
 public BaseResponse api1(@RequestParam String something) throws Exception {
@@ -180,3 +180,8 @@ public BaseResponse<String> api3(@RequestParam String something) throws Exceptio
     return BaseResponse.with(DefaultStatus.SUCCESS, "操作成功", something);
 }
 ```
+## 五、问题
+**1.为什么不把所有的响应码都放在DefaultStatus类中？**  
+　目前我所在的项目中有400+个响应码，都放在同一个类中过于冗长，不便管理，且响应码分类不够明确。  
+**2.为什么不使用Spring框架自带的HttpStatus类？**  
+　该类是Http的请求状态码，并非业务所需的响应码，且无法对此类进行扩充。  
