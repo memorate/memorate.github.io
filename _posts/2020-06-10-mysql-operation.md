@@ -60,7 +60,7 @@ insert into student (id, stu_name, stu_age, stu_gender, stu_class, stu_grade)
 ```
 ```sql
 insert into student (stu_name, stu_age, stu_gender, stu_class, stu_grade, stu_address, stu_boarder)
-value ('Anchor', 17, 'male', 13, 'sixth', 'Nanjing', default),     <!-- stu_boarder使用默认值时用default -->
+value ('Anchor', 17, 'male', 13, 'sixth', 'Nanjing', default),     <!-- default表示使用stu_boarder的默认值 -->
       ('Michel', 25, 'male', 6, 'ninth', 'Beijing', true);
 ```
 ## 二、删
