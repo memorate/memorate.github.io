@@ -7,7 +7,7 @@ tags:
 categories: Java
 description: 统一Response设计
 ---  
-**Java接口的Response设计**
+**Java自定义Response设计**
 
 <!-- more -->
 ## 前言
