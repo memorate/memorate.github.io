@@ -63,10 +63,20 @@ insert into student (stu_name, stu_age, stu_gender, stu_class, stu_grade, stu_ad
 value ('Anchor', 17, 'male', 13, 'sixth', 'Nanjing', default),     <!-- default表示使用stu_boarder的默认值 -->
       ('Michel', 25, 'male', 6, 'ninth', 'Beijing', true);
 ```
+**6.新增视图**  
+修改视图(增减视图的字段)也用此条语句。  
+```sql
+create or replace view ms_dept_auth_view as
+select auth.id, auth.live_id, dept.dept_name, dept.dept_name_path, 'WeiXin' as channel
+from ms_dept dept,
+     ms_dept_auth auth
+where dept.dept_number = auth.dept_number;
+```
 ## 二、删
 ## 三、查
 ## 四、改
 **1.修改字段**  
 ```sql
-
+alter table live_config
+    modify column need_comment_audit boolean not null default false comment '是否需要评论审核';
 ```
