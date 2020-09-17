@@ -15,8 +15,10 @@ description: 统一Exception设计
 　　　　　　　　　　　　![]({{ "/assets/img/20200716/20200716003.png"}})  
 **1）Throwable：**所有Error和Exception的父类。只有Throwable与其子类才能被JVM或throw关键字抛出、被catch语句捕捉。
 Throwable主要包含了该类被创建时当前线程的执行信息。  
-**2）Error：**  
-**3）Exception：**  
+**2）Error：**程序运行时出现的系统错误或资源错误，代码无法捕获、处理，如栈溢出(StackOverFlowError)、内存溢出(OutOfMemoryError)等。  
+**3）Exception：**代码编写引起的异常，代码可以捕获并处理。Exception分为**受检异常**和**非受检异常**。  
+　**a.Checked**：除RuntimeException(及其子类)外的所有Exception，此类异常编译器**会强制**捕获并处理。  
+　**b.Unchecked**：RuntimeException及其子类，此类异常是程序员代码问题造成的的，编译器**不强制**捕获处理，JVM会处理。  
 **4）RuntimeException：**  
 ## 小知识
 **问：Java类中的Fields和Properties有什么区别？**  
