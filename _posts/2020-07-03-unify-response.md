@@ -17,8 +17,17 @@ description: 统一Response设计
 　a.通用性，可满足所有Controller的返回需求;  
 　b.可扩展性，不同的业务所需要的返回码不同，因此要易扩展、可分类;  
 　c.易用性，简洁、便于使用;  
+## 设计
+Response类最关键的是响应码，响应码的数量随着项目复杂度的增加而增加，因此定义一个接口StatusCode，所有响应码类实现此接口即可。
+```java
+class Response{           //伪代码
+    StatusCode code;      //响应码
+    String message;       //返回信息
+    T data;               //返回数据
+}
+```
 ## 一、StatusCode
-1.StatusCode接口定义了状态相关的规范，包含两个方法，分别用于返回响应码和返回信息。  
+1.StatusCode接口定义了响应码相关的规范，包含两个方法，分别用于返回响应码和返回信息。  
 2.后续所有的响应码类实现StatusCode即可。  
 ```java
 public interface StatusCode extends Serializable {
