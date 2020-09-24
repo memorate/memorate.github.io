@@ -19,11 +19,11 @@ Throwable主要包含了该类被创建时当前线程的执行信息。
 **3）Exception：**代码编写引起的异常，代码可以捕获并处理。Exception分为**受检异常**和**非受检异常**。  
 　**a.Checked**：除RuntimeException(及其子类)外的所有Exception，此类异常编译器**会强制**要求处理。如IOException、SQLException。  
 　**b.Unchecked**：RuntimeException及其子类，此类异常是程序员代码问题造成的的，编译器**不强制**要求处理，JVM会处理。如NullPointerException。  
-`综上，自定义异常应是Unchecked异常，也就是说需要继承RuntimeException`  
+`综上，自定义异常是哪种类型可自由决定，若不强制要求调用者处理抛出的异常则继承RuntimeException，反之继承Exception。本文选择继承RuntimeException`  
 **2.应在方法签名处抛出异常还是在方法中捕获处理异常？**  
 　原则是：捕捉并处理知道如何处理的异常，抛出不知如何处理的异常。  
 ## 设计
-1.异常类只需提供**异常码**和**异常信息**两类数据即可，异常码可以用来定位发生异常代码所在的位置，异常信息用来提示用户。  
+1.异常类只需提供**异常码**和**异常信息**两类数据即可，异常码可以用来定位发生异常代码所在的位置(反向搜索)，异常信息用来提示用户。  
 2.异常码数量会逐渐增多，因此定义StatusCode接口，所有异常码类实现此接口即可。  
 ```java
 class Exception extends RuntimeException{           //伪代码
@@ -33,15 +33,81 @@ class Exception extends RuntimeException{           //伪代码
 ```
 **Exception与上篇中的Response设计基本相同，二者的响应码(异常码)部分可以共用**  
 ## 一、StatusCode
-1.StatusCode接口定义了异常码相关的规范，包含两个方法，分别用于返回异常码和异常信息。  
+1.StatusCode接口定义了异常码相关的规范，包含两个方法，分别用于返回**异常码**和**异常信息**。  
 2.后续所有的异常码类实现StatusCode即可。  
-（此接口与统一Response中的相同）  
+（StatusCode与统一Response中的相同，同一项目中可重用）  
 ```java
 public interface StatusCode extends Serializable {
     @JsonValue       //序列化时只显示code，message以DefaultException中的为准
     int code();
 
     String message();
+}
+```
+## 二、ErrorStatus
+1.ErrorStatus是一个简单的异常码枚举类，仅仅定义了四种简单的异常码。  
+2.后续其他的业务异常码可写在此类中，或者仿照此类定义一个新的异常码枚举类。
+```java
+public enum ErrorStatus implements StatusCode{
+
+    PARAMETER_MISSING(10001,"Missing required parameter"),
+    PARAMETER_INVALID(10002,"Invalid parameter"),
+    RESOURCE_NOT_FOUND(10003,"Resource not found"),
+    REQUEST_THIRD_PARTY_FAILED(10004,"Request third-party system failed");
+
+    private final int code;
+    private final String message;
+
+    ErrorStatus(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    @Override
+    public int code() {
+        return code;
+    }
+
+    @Override
+    public String message() {
+        return message;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(this.code);
+    }
+}
+```
+## 三、DefaultException
+```java
+public class DefaultException extends RuntimeException {
+
+    private static final long serialVersionUID = -8618092465858207782L;
+
+    private StatusCode code;
+    private String message;
+
+    public DefaultException(StatusCode code) {
+        this.code = code;
+        this.message = code.message();
+    }
+
+    public DefaultException(String message) {
+        this.message = message;
+    }
+
+    public DefaultException(StatusCode code, String message) {
+        super(message);
+        this.code = code;
+        this.message = message;
+    }
+
+    public DefaultException(StatusCode code, Throwable cause) {
+        super(cause);
+        this.code = code;
+        this.message = code.message();
+    }
 }
 ```
 ## 小知识
