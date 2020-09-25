@@ -80,8 +80,11 @@ public enum ErrorStatus implements StatusCode{
 }
 ```
 ## 三、DefaultException
+**1**.DefaultException是用于表示代码异常的类，不可被继承，在所有需要抛出自定义异常的代码处使用此类即可。  
+**2**.DefaultException有两个属性：**code**(异常码)、**message**(异常信息)。  
+**3**.DefaultException中设置了五个重载构造器，可以灵活使用。由于重写了getMessage()方法，所以构造器中不用调用super(message)。  
 ```java
-public class DefaultException extends RuntimeException {
+public final class DefaultException extends RuntimeException {
 
     private static final long serialVersionUID = -8618092465858207782L;
 
@@ -94,11 +97,11 @@ public class DefaultException extends RuntimeException {
     }
 
     public DefaultException(String message) {
+        this.code = ErrorStatus.INTERNAL_ERROR;
         this.message = message;
     }
 
     public DefaultException(StatusCode code, String message) {
-        super(message);
         this.code = code;
         this.message = message;
     }
@@ -108,12 +111,39 @@ public class DefaultException extends RuntimeException {
         this.code = code;
         this.message = code.message();
     }
+
+    public DefaultException(StatusCode code, String message, Throwable cause) {
+        super(cause);
+        this.code = code;
+        this.message = message;
+    }
+
+    public StatusCode getCode() {
+        return code;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }
 ```
+## 四、使用
+```java
+public void verify(String param, int type) {
+    if (param.isEmpty()) 
+        throw new DefaultException(ErrorStatus.PARAMETER_MISSING);
+    if (type != 0 && type != 1 && type != 2)
+        throw new DefaultException(ErrorStatus.PARAMETER_INVALID, "Type can only be 1 or 2");
+}
+```
+## 五、问题
+**1.DefaultException与BaseResponse有什么区别？**  
+　本质上的区别是DefaultException是一个Exception类，而BaseResponse只是一个普通类。  
+　其实二者功能有点相似，都是一种返回值的体现。BaseResponse是成功的返回，而DefaultException可以看作是失败的返回。  
 ## 小知识
 **问：Java类中的Fields和Properties有什么区别？**  
 **答：Fields** —— 成员变量，可直接访问(意味着访问控制符必须为public)。例，下图中pi是成员变量。    
 　　**Properties** —— 属性，需通过get/set访问。例，下图中name、AGE、gender是属性。  
 `注：`属性的名字是由get/set后的字符串决定的。例：属性名为AGE而不是age。  
 　　![]({{ "/assets/img/20200716/20200716001.png"}})![]({{ "/assets/img/20200716/20200716002.png"}})
-**2.**
