@@ -12,9 +12,10 @@ description: Linux机器巡检
 <!-- more -->
 ## 前言
 1.每逢大的节假日前公司都要对主要应用所在的机器做一次巡检，确保假期期间机器不会出问题。  
-2.其实所有机器都已经装了Zabbix监控，并且配置了报警，但是奈何形式大于一切，因此在领导的示意下开发了这个脚本。  
+2.其实所有机器都已经装了Zabbix监控，并且配置了报警，但是奈何形式大于一切，因此在领导的示意下开发了此脚本。  
 3.只巡检三个指标：**CPU使用率**、**内存使用率**、**硬盘使用率**。  
 ## 脚本
+使用前需要使用命令`pip install paramiko`安装paramiko模块
 ```python
 import re
 
@@ -137,8 +138,27 @@ if __name__ == '__main__':
 
 ```
 ## 核心
+解析此行命令返回的数据即可获得三个巡检值
 ```shell
 cd /apps;df -h /apps;free;sar -u 1 1
 ```  
-解析此命令返回的数据即可获得三个巡检值
+返回数据展示
+```text
+Filesystem                   Size  Used Avail Use% Mounted on
+/dev/mapper/data01vg-appslv  197G   74G  113G  40% /apps
+              total        used        free      shared  buff/cache   available
+Mem:        8010808     5288156      609260      162016     2113392     1311712
+Swap:       8388604      605336     7783268
+Linux 3.10.0-514.16.1.el7.x86_64 (mvxl9136) 	10/09/2020 	_x86_64_	(4 CPU)
+
+02:45:41 PM     CPU     %user     %nice   %system   %iowait    %steal     %idle
+02:45:42 PM     all      0.50      0.00      0.00      0.00      0.00     99.50
+Average:        all      0.50      0.00      0.00      0.00      0.00     99.50
+```
 ## 解析
+### CPU
+### 内存
+### 硬盘
+## 小知识
+Linux在一行执行多条命令
+![]({{ "/assets/img/20200930/20200930.jpg"}})
