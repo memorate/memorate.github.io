@@ -85,6 +85,9 @@ def read_storage(s_line):
 
 
 def execute():
+    """
+    批量从文件中读取ip、密码，并连接执行Linux命令
+    """
     source = open(ip_file)
     log = open(log_file, 'a')
     result_array = []
@@ -111,6 +114,9 @@ def execute():
 
 
 def write_xls(array):
+    """
+    将结果写入Excel中
+    """
     write_book = xlwt.Workbook()
     sheet = write_book.add_sheet(sheet_name)
     i = j = 0
@@ -156,9 +162,42 @@ Linux 3.10.0-514.16.1.el7.x86_64 (mvxl9136) 	10/09/2020 	_x86_64_	(4 CPU)
 Average:        all      0.50      0.00      0.00      0.00      0.00     99.50
 ```
 ## 解析
+整个脚本实际上就是对返回数据进行处理的过程，找到需要数据所在的行并取出数据即可。
 ### CPU
+匹配到“Average”所在行，取第三列即为CPU使用率
+```python
+def read_cpu(c_line):
+    c_list = []
+    for c_each in c_line.split(' '):
+        if c_each == '':
+            continue
+        else:
+            c_list.append(c_each)
+    r_cpu = c_list[2] + '%'
+    return r_cpu
+```
 ### 内存
+匹配到“Mem”所在行，取第2、3列，用第3列除第2列得到结果内存使用率
+```python
+def read_memory(m_line):
+    m_list = []
+    for m_each in m_line.split(' '):
+        if m_each == '':
+            continue
+        else:
+            m_list.append(m_each)
+    memory = (int(m_list[2]) / int(m_list[1])) * 100
+    r_memory = str(round(memory, 1)) + '%'
+    return r_memory
+```
 ### 硬盘
+匹配到“/apps”所在的行，用正则表达式匹配到40%。findall()后的结果是：['40%']，因此需要再次处理。
+```python
+def read_storage(s_line):
+    storage = str(re.findall('[0-9]+%', s_line))
+    r_storage = storage.strip('[').strip(']').strip('\'')
+    return r_storage
+```
 ## 小知识
 Linux在一行执行多条命令
 ![]({{ "/assets/img/20200930/20200930.jpg"}})
