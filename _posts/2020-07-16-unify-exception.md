@@ -13,6 +13,7 @@ description: 统一Exception设计
 ## 前言
 **1.Throwable、Exception、RuntimeException**  
 　　　　　　　　　　　　![]({{ "/assets/img/20200716/20200716003.png"}})  
+　　　　　　　　　(java.lang.Throwable、java.lang.Exception、java.lang.Error、java.lang.RuntimeException)  
 **1）Throwable：**所有Error和Exception的父类。只有Throwable与其子类才能被JVM或throw关键字抛出、被catch语句捕捉。
 Throwable主要包含了该类被创建时当前线程的执行信息。  
 **2）Error：**程序运行时出现的系统错误或资源错误，代码无法捕获、处理，如栈溢出(StackOverFlowError)、内存溢出(OutOfMemoryError)等。  
