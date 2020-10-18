@@ -21,9 +21,9 @@ description: 自动分页插件PageHelper使用
 </dependency>
 ```
 ## 二、使用
-#### 1.正常使用
+#### 1.使用方式
 **1）ServiceImpl层代码**  
-①必须有**PageHelper.startPage()**，且其必须在Mybatis查询操作之前。  
+①必须有**PageHelper.startPage()**，且其必须在Mybatis的mapper查询操作之前。  
 ②PageHelper会为PageHelper.startPage()之后的**第一个**Mybatis**查询**进行分页。  
 ```java
 import com.github.pagehelper.PageHelper;
@@ -50,7 +50,7 @@ mapper.xml中为普通的查询语句，不需要"limit"关键字和其他特殊
 public PageInfo<UserDTO> pageQuery(int pageNumber, int pageSize) {
     PageHelper.startPage(pageNumber, pageSize);
     List<User> users = userMapper.findAll(UserColumn.NAME);
-    PageInfo pageInfo = new PageInfo<>(users);      //先用查出的源数据初始化pageInfo，注意不要指定PageInfo<T>中泛型T
+    PageInfo pageInfo = new PageInfo<>(users);      //先用查出的源数据初始化pageInfo，注意不要指定PageInfo<T>中T
     List<UserDTO> collect = pageInfo.getList().stream().map(UserDTO::new).collect(Collectors.toList());    //数据格式转换
     pageInfo.setList(collect);    //用转换后的数据覆盖原有的List
     return pageInfo;
@@ -58,7 +58,7 @@ public PageInfo<UserDTO> pageQuery(int pageNumber, int pageSize) {
 ```
 ## 三、问题
 **1.关于多个Mybatis查询操作。**  
-①如下代码，PageHelper只对users进行了分页操作，而最终的pageInfo并未实现分页。  
+①如下代码，PageHelper只对users进行了分页操作，未对details进行分页，因此最终的pageInfo并未实现分页效果。  
 ②PageHelper只对**PageHelper.startPage()后第一个**Mybatis查询操作进行分页。  
 ```java
 PageHelper.startPage(1, 2);
