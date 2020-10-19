@@ -66,17 +66,37 @@ value ('Anchor', 17, 'male', 13, 'sixth', 'Nanjing', default),     <!-- default�
 **6.新增视图**  
 修改视图(增减视图的字段)也用此条语句。  
 ```sql
-create or replace view ms_dept_auth_view as
+create or replace view dept_auth_view as
 select auth.id, auth.live_id, dept.dept_name, dept.dept_name_path, 'WeiXin' as channel
-from ms_dept dept,
-     ms_dept_auth auth
+from dept dept,
+     dept_auth auth
 where dept.dept_number = auth.dept_number;
 ```
 ## 二、删
-## 三、查
-## 四、改
+**1.删除student表中年龄为17的数据**    
+```sql
+delete from student where stu_age = 17;
+```
+**2.删除student表前100条数据**    
+```sql
+delete from student order by id limit 100;
+```
+## 三、改
 **1.修改字段**  
 ```sql
-alter table live_config
-    modify column need_comment_audit boolean not null default false comment '是否需要评论审核';
+alter table student
+    modify column stu_boarder boolean not null default false comment '学生是否住校';
+```
+## 四、查
+**1.查询student表中有多少条数据**    
+```sql
+select count(*) from student;
+```
+**2.查询student表中有哪些年级**    
+```sql
+select distinct stu_grade from student;
+```
+**3.查询student表中各年级分别有多少人**    
+```sql
+select stu_grade, count(*) from student group by stu_grade;
 ```
