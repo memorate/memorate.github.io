@@ -7,7 +7,7 @@ tags:
 categories: Java
 description: 统一Exception处理
 ---  
-**SpringBoot异常处理机制**
+**SpringBoot统一异常处理实践**
 
 <!-- more -->
 ## 前言
