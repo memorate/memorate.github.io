@@ -3,15 +3,15 @@ layout: post
 title: SpringBoot - 默认异常处理机制探索
 tags:
 - Java
-- Tips
-categories: Java
+- SpringBoot
+categories: SpringBoot
 description: Exception处理机制
 ---  
 **SpringBoot默认异常处理机制探索**
 
 <!-- more -->
 ## 前言
-使用 Postman 和浏览器访问 SpringBoot 的接口异常时会返回下面的信息，本文着重于探索异常抛出到返回信息的整个过程。  
+使用 Postman 和浏览器访问 SpringBoot 的接口**异常时**会返回下面的信息，本文着重于**探索异常抛出到返回下图中信息的整个过程**。  
 ![]({{ "/assets/img/20200728/20200728001.jpg"}})![]({{ "/assets/img/20200728/20200728002.jpg"}})  
 ## DispatcherServlet
 **DispatcherServlet** 是 `org.springframework.web.servlet` 包下的一个 Java 类。
@@ -26,5 +26,5 @@ DispatcherServlet 是 SpringBoot 中 HTTP 请求的中央调度器，为 Web UI 
 
 个人理解：
 DispatcherServlet 类是 SpringBoot 的入口，它负责组织和协调不同组件完成请求并返回响应结果。
-DispatcherServlet 的主要任务是：将请求发送至对应的 Controller、异常处理。
+DispatcherServlet 的主要任务是：Ⅰ将请求发送至对应的 Controller/Handler、Ⅱ异常处理、Ⅲ请求正常结果返回。(本文只聚焦于异常处理部分)
 ```
