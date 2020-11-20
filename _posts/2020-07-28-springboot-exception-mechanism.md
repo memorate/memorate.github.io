@@ -26,5 +26,5 @@ DispatcherServlet 是 SpringBoot 中 HTTP 请求的中央调度器，为 Web UI 
 
 个人理解：
 DispatcherServlet 类是 SpringBoot 的入口，它负责组织和协调不同组件完成请求并返回响应结果。
-DispatcherServlet 的主要任务是：Ⅰ将请求发送至对应的 Controller/Handler、Ⅱ异常处理、Ⅲ请求正常结果返回。(本文只聚焦于异常处理部分)
+DispatcherServlet 的主要任务是：①将请求发送至对应的 Controller/Handler、②请求结果处理及返回（正常及异常处理结果）。(本文只聚焦于异常处理部分)
 ```
