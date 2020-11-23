@@ -15,7 +15,17 @@ description: Exception处理机制
 ![]({{ "/assets/img/20200728/20200728001.jpg"}})![]({{ "/assets/img/20200728/20200728002.jpg"}})  
 ## 流程
 ![]({{ "/assets/img/20200728/20200728003.png"}})
-## 默认配置
+## 自动配置
+自动配置类为**ErrorMvcAutoConfiguration**，其中配置了一些组装错误信息页所需要的组件(Bean)。  
+```java
+package org.springframework.boot.autoconfigure.web.servlet.error;
+```
+**1.DefaultErrorAttributes**  
+此类用于接收并传递异常相关的关键属性，如时间戳、请求状态、异常类名、异常信息、异常请求地址等。  
+**2.BasicErrorController**  
+此类用于提取请求中的关键信息，并将其封装成错误信息页返回给请求调用者。(详细解析在[这里](#here))  
+**3.ErrorPageCustomizer**  
+此类用于向Spring注册一个ErrorPage
 ## 一、StandardHostValve
 ## 二、DispatcherServlet
 1、**DispatcherServlet** 是 `org.springframework.web.servlet` 包下的一个 Java 类。  
@@ -32,5 +42,5 @@ DispatcherServlet 是 SpringBoot 中 HTTP 请求的中央调度器，为 Web UI 
 DispatcherServlet 类是 SpringBoot 的调度器，它负责组织和协调不同组件完成请求并返回响应结果。
 DispatcherServlet 的主要任务是：①将请求发送至对应的 Controller/Handler、②请求结果处理及返回（正常及异常处理结果）。(本文只聚焦于异常处理部分)
 ```
-## 三、BasicErrorController
+## 三、<span id="here">BasicErrorController</span>  
 
