@@ -11,10 +11,14 @@ description: Exception处理机制
 
 <!-- more -->
 ## 前言
-使用 Postman 和浏览器访问 SpringBoot 的接口**异常时**会返回下面的信息，本文着重于**探索异常抛出到返回下图中信息的整个过程**。  
+使用 Postman 和浏览器访问 SpringBoot 的接口**异常时默认**会返回如下信息，本文着重于**探索异常抛出到返回下图中信息的整个过程**。  
 ![]({{ "/assets/img/20200728/20200728001.jpg"}})![]({{ "/assets/img/20200728/20200728002.jpg"}})  
-## DispatcherServlet
-**DispatcherServlet** 是 `org.springframework.web.servlet` 包下的一个 Java 类。
+## 流程
+![]({{ "/assets/img/20200728/20200728003.png"}})
+## 默认配置
+## 一、StandardHostValve
+## 二、DispatcherServlet
+1、**DispatcherServlet** 是 `org.springframework.web.servlet` 包下的一个 Java 类。  
 ```text
 官方注释：
 Central dispatcher for HTTP request handlers/controllers, e.g. for web UI controllers or HTTP-based remote service exporters. 
@@ -25,6 +29,8 @@ DispatcherServlet 是 SpringBoot 中 HTTP 请求的中央调度器，为 Web UI 
 其主要作用是向注册的可以处理 web 请求的 handlers 分发请求，并提供方便的映射、异常处理设施。
 
 个人理解：
-DispatcherServlet 类是 SpringBoot 的入口，它负责组织和协调不同组件完成请求并返回响应结果。
+DispatcherServlet 类是 SpringBoot 的调度器，它负责组织和协调不同组件完成请求并返回响应结果。
 DispatcherServlet 的主要任务是：①将请求发送至对应的 Controller/Handler、②请求结果处理及返回（正常及异常处理结果）。(本文只聚焦于异常处理部分)
 ```
+## 三、BasicErrorController
+
