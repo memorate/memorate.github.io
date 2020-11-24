@@ -12,21 +12,61 @@ description: Exception处理机制
 <!-- more -->
 ## 前言
 使用 Postman 和浏览器访问 SpringBoot 的接口**异常时默认**会返回如下信息，本文着重于**探索异常抛出到返回下图中信息的整个过程**。  
+`注：`异常处理过程实质上是一次特殊的请求处理过程。  
 ![]({{ "/assets/img/20200728/20200728001.jpg"}})![]({{ "/assets/img/20200728/20200728002.jpg"}})  
 ## 流程
 ![]({{ "/assets/img/20200728/20200728003.png"}})
 ## 自动配置
-自动配置类为**ErrorMvcAutoConfiguration**，其中配置了一些组装错误信息页所需要的组件(Bean)。  
+1)自动配置类**ErrorMvcAutoConfiguration**中配置了一些组装错误信息页所需要的组件(Bean);  
+2)第五个注解注入的**ServerProperties**类中定义了**ErrorProperties**类，ErrorProperties中又定义了**默认的异常处理路径**是`/error`;
 ```java
 package org.springframework.boot.autoconfigure.web.servlet.error;
+
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnWebApplication(type = Type.SERVLET)
+@ConditionalOnClass({ Servlet.class, DispatcherServlet.class })
+@AutoConfigureBefore(WebMvcAutoConfiguration.class)
+@EnableConfigurationProperties({ ServerProperties.class, ResourceProperties.class, WebMvcProperties.class })
+public class ErrorMvcAutoConfiguration {
+    //code
+}
 ```
+以下是ErrorMvcAutoConfiguration中定义的几个较为重要的组件(Bean)：  
 **1.DefaultErrorAttributes**  
-此类用于接收并传递异常相关的关键属性，如时间戳、请求状态、异常类名、异常信息、异常请求地址等。  
+该Bean用于接收并传递异常相关的关键属性，如时间戳、请求状态、异常类名、异常信息、异常请求地址等。
+```java
+@Bean
+@ConditionalOnMissingBean(value = ErrorAttributes.class, search = SearchStrategy.CURRENT)
+public DefaultErrorAttributes errorAttributes() {
+    return new DefaultErrorAttributes(this.serverProperties.getError().isIncludeException());
+}
+```
 **2.BasicErrorController**  
-此类用于提取请求中的关键信息，并将其封装成错误信息页返回给请求调用者。(详细解析在[这里](#here))  
+该Bean用于提取异常中的关键信息，并将其封装成错误信息页返回给请求调用者。(详细解析在[这里](#here))  
+```java
+@Bean
+@ConditionalOnMissingBean(value = ErrorController.class, search = SearchStrategy.CURRENT)
+public BasicErrorController basicErrorController(ErrorAttributes errorAttributes,
+		ObjectProvider<ErrorViewResolver> errorViewResolvers) {
+    return new BasicErrorController(errorAttributes, this.serverProperties.getError(),
+			errorViewResolvers.orderedStream().collect(Collectors.toList()));
+}
+```
 **3.ErrorPageCustomizer**  
-此类用于向Spring注册一个ErrorPage
+该Bean用于向Spring注册**ErrorPage**(错误页抽象成的类)，注册时将ErrorPage的URL路径设为了**/error**。
+```java
+@Bean
+public ErrorPageCustomizer errorPageCustomizer(DispatcherServletPath dispatcherServletPath) {
+    return new ErrorPageCustomizer(this.serverProperties, dispatcherServletPath);
+}
+```
+**4.其他Beans**  
+除了上述三个Beans，还有**PreserveErrorControllerTargetClassPostProcessor**和
+内置配置类**DefaultErrorViewResolverConfiguration**、**WhitelabelErrorViewConfiguration**。
 ## 一、StandardHostValve
+1)Tomcat采用**Pipeline**、**Valve**机制(相关内容可自行查询);  
+2)**StandardHostValve**是Tomcat中的一个**默认基础Valve**，负责处理**Pipeline**中流传过来的请求;  
+3)StandardHostValve是Tomcat处理异常的最后一站，它处理完数据后会将请求转发给Spring的中央调度器;  
 ## 二、DispatcherServlet
 1、**DispatcherServlet** 是 `org.springframework.web.servlet` 包下的一个 Java 类。  
 ```text
