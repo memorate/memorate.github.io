@@ -66,8 +66,50 @@ public ErrorPageCustomizer errorPageCustomizer(DispatcherServletPath dispatcherS
 ## 一、StandardHostValve
 1)Tomcat采用**Pipeline**、**Valve**机制(相关内容可自行查询);  
 2)**StandardHostValve**是Tomcat中的一个**默认基础Valve**，负责处理**Pipeline**中流传过来的请求;  
-3)StandardHostValve是Tomcat处理异常的最后一站，在其处理完请求数据后会将请求转发给Spring的中央调度器;  
-4)  
+3)StandardHostValve会在Context中寻找合适的ErrorPage(未找到则使用默认的ErrorPage)，并根据ErrorPage里的location转发请求;  
+```java
+//以下是节选的部分与本文有关的逻辑处理代码，完整代码自行搜索查看
+final class StandardHostValve extends ValveBase {
+    //valve的invoke()方法
+    public final void invoke(Request request, Response response) throws IOException, ServletException {
+        //获取到我们抛出的异常
+        Throwable t = (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
+        if (response.isErrorReportRequired()) {
+            AtomicBoolean result = new AtomicBoolean(false);
+            response.getCoyoteResponse().action(ActionCode.IS_IO_ALLOWED, result);
+            if (result.get()) {
+                if (t != null) {
+                    //进入throwable()方法
+                    throwable(request, response, t);
+                } else {
+                    status(request, response);
+                }
+            }
+        }
+    }
+
+    //throwable()方法，用于处理request中的异常，产生异常对应的response
+    protected void throwable(Request request, Response response, Throwable throwable) {
+            Context context = request.getContext();
+            Throwable realError = throwable;
+            //根据异常类名来查找对应的ErrorPage
+            //findErrorPage()最终执行了ErrorPageSupport类中的find()方法
+            //find()方法实际是去ErrorPageSupport维护的一个 Map<String, ErrorPage> 中查找ErrorPage
+            //查询Map的key是throwable对象所代表类的完整类名
+            ErrorPage errorPage = context.findErrorPage(throwable);
+            if (errorPage != null) {
+                //省略
+            } else {
+                //设置HttpStatus为500
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                //将返回标记为Error
+                response.setError();
+                //进入status()方法
+                status(request, response);
+            }
+        }
+}
+```  
 ## 二、DispatcherServlet
 1、**DispatcherServlet** 是 `org.springframework.web.servlet` 包下的一个 Java 类。  
 ```text
