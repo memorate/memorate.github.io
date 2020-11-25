@@ -28,7 +28,7 @@ package org.springframework.boot.autoconfigure.web.servlet.error;
 @AutoConfigureBefore(WebMvcAutoConfiguration.class)
 @EnableConfigurationProperties({ ServerProperties.class, ResourceProperties.class, WebMvcProperties.class })
 public class ErrorMvcAutoConfiguration {
-    //code
+    // 省略代码
 }
 ```
 以下是ErrorMvcAutoConfiguration中定义的几个较为重要的组件(Bean)：  
@@ -68,18 +68,19 @@ public ErrorPageCustomizer errorPageCustomizer(DispatcherServletPath dispatcherS
 2)**StandardHostValve**是Tomcat中的一个**默认基础Valve**，负责处理**Pipeline**中流传过来的请求;  
 3)StandardHostValve会在Context中寻找合适的ErrorPage(未找到则使用默认的ErrorPage)，并根据ErrorPage里的location转发请求;  
 ```java
-//以下是节选的部分与本文有关的逻辑处理代码，完整代码自行搜索查看
+package org.apache.catalina.core;
+// 以下是节选的部分与本文有关的逻辑处理代码，完整代码自行搜索查看
 final class StandardHostValve extends ValveBase {
-    //valve的invoke()方法
+    // valve的invoke()方法
     public final void invoke(Request request, Response response) throws IOException, ServletException {
-        //获取到我们抛出的异常
+        // 获取到我们抛出的异常
         Throwable t = (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
         if (response.isErrorReportRequired()) {
             AtomicBoolean result = new AtomicBoolean(false);
             response.getCoyoteResponse().action(ActionCode.IS_IO_ALLOWED, result);
             if (result.get()) {
                 if (t != null) {
-                    //进入throwable()方法
+                    // 进入throwable()方法
                     throwable(request, response, t);
                 } else {
                     status(request, response);
@@ -88,26 +89,70 @@ final class StandardHostValve extends ValveBase {
         }
     }
 
-    //throwable()方法，用于处理request中的异常，产生异常对应的response
+    // throwable()方法，用于处理request中的异常，产生异常对应的response
     protected void throwable(Request request, Response response, Throwable throwable) {
             Context context = request.getContext();
             Throwable realError = throwable;
-            //根据异常类名来查找对应的ErrorPage
-            //findErrorPage()最终执行了ErrorPageSupport类中的find()方法
-            //find()方法实际是去ErrorPageSupport维护的一个 Map<String, ErrorPage> 中查找ErrorPage
-            //查询Map的key是throwable对象所代表类的完整类名
+            // 根据异常类名来查找对应的ErrorPage
+            // findErrorPage()最终执行了ErrorPageSupport类中的find()方法
+            // find()方法实际是去ErrorPageSupport维护的一个 Map<String, ErrorPage> 中查找ErrorPage
+            // 查询Map的key是throwable对象所代表类的完整类名
             ErrorPage errorPage = context.findErrorPage(throwable);
             if (errorPage != null) {
-                //省略
+                // 省略
             } else {
-                //设置HttpStatus为500
+                // 找不到合适的ErrorPage，设置HttpStatus为500
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                //将返回标记为Error
+                // 将返回标记为Error
                 response.setError();
-                //进入status()方法
+                // 进入status()方法
                 status(request, response);
             }
         }
+
+    // status()方法，用于处理 HttpStatus
+    private void status(Request request, Response response) {
+        int statusCode = response.getStatus();
+        Context context = request.getContext();
+        // 根据HttpStatus来查找对应的ErrorPage
+        // 去ErrorPageSupport维护的另一个 Map<Integer, ErrorPage> 中查找ErrorPage
+        ErrorPage errorPage = context.findErrorPage(statusCode);
+        if (errorPage == null) {
+            // 找到则使用默认的ErrorPage
+            errorPage = context.findErrorPage(0);
+        }
+        if (errorPage != null && response.isErrorReportRequired()) {
+            // 省略部分属性设置代码
+
+            // 进入custom()方法
+            // custom()方法根据errorPage里的location将请求发送到相应的Controller
+            // 这里会根据 /error 这个地址，将请求发送到BasicErrorController(当然中间还会经过DispatcherServlet)
+            if (custom(request, response, errorPage)) {
+                // 省略
+            }
+        }
+    }
+
+    // custom()方法，用于转发请求
+    private boolean custom(Request request, Response response, ErrorPage errorPage) {
+        try {
+            ServletContext servletContext =
+                request.getContext().getServletContext();
+            // errorPage.getLocation()值为 /error
+            RequestDispatcher rd =
+                servletContext.getRequestDispatcher(errorPage.getLocation());
+            if (response.isCommitted()) {
+                // 省略
+            } else {
+                // 转发请求
+                rd.forward(request.getRequest(), response.getResponse());
+                response.setSuspended(false);
+            }
+            return true;
+        } catch (Throwable t) {
+            // 省略
+        }
+    }
 }
 ```  
 ## 二、DispatcherServlet
