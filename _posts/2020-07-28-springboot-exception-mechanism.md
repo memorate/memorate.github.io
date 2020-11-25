@@ -66,7 +66,8 @@ public ErrorPageCustomizer errorPageCustomizer(DispatcherServletPath dispatcherS
 ## 一、StandardHostValve
 1)Tomcat采用**Pipeline**、**Valve**机制(相关内容可自行查询);  
 2)**StandardHostValve**是Tomcat中的一个**默认基础Valve**，负责处理**Pipeline**中流传过来的请求;  
-3)StandardHostValve是Tomcat处理异常的最后一站，它处理完数据后会将请求转发给Spring的中央调度器;  
+3)StandardHostValve是Tomcat处理异常的最后一站，在其处理完请求数据后会将请求转发给Spring的中央调度器;  
+4)  
 ## 二、DispatcherServlet
 1、**DispatcherServlet** 是 `org.springframework.web.servlet` 包下的一个 Java 类。  
 ```text
