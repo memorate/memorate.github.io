@@ -127,7 +127,7 @@ public String ParamVariable(@PathVariable String name) {
 }
 ```
 调用结果：  
-![]({{ "/assets/img/20200225/p3.jpg"}})
+![]({{ "/assets/img/20200225/p3.jpg"}})  
 2）**【多个参数】**
 ```java
 @GetMapping("/multiVariable/{name}/{gender}")
