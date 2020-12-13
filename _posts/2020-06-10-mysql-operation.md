@@ -82,10 +82,25 @@ delete from student where stu_age = 17;
 delete from student order by id limit 100;
 ```
 ## 三、改
-**1.修改字段**  
+**1.修改表名**  
+```sql
+alter table student rename student_info;
+```
+**2.修改字段**  
 ```sql
 alter table student
     modify column stu_boarder boolean not null default false comment '学生是否住校';
+```
+**3.修改记录**  
+```sql
+update student
+set stu_grade = case stu_age
+                    when 6 then 'first'
+                    when 7 then 'second'
+                    when 8 then 'third'
+                    else 'kindergarten'
+    end
+where stu_age <= 8;
 ```
 ## 四、查
 **1.查询student表中有多少条数据**    
@@ -99,4 +114,13 @@ select distinct stu_grade from student;
 **3.查询student表中各年级分别有多少人**    
 ```sql
 select stu_grade, count(*) from student group by stu_grade;
+```
+**3.根据年龄筛选出高年级和低年级**    
+```sql
+select stu_age age,
+       case
+           when stu_grade < 10 then 'junior'
+           when stu_grade >= 10 then 'senior'
+           end grade
+from student
 ```
