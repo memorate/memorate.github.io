@@ -12,8 +12,9 @@ description: Mybatis常用语句示例
 
 <!-- more -->
 ## 注
+**本文中所有代码皆已实操成功。**  
+**本文中使用了 Mybatis-Plus 来简化开发。**  
 **本文中每个示例将会展示两部分代码：Mapper.java中方法的`声明`，Mapper.xml中方法的`实现`。**   
-**本文中使用了 Mybatis-Plus 来简化开发。**
 #### 1.表结构
 ```hql
 create table customer(
@@ -108,14 +109,16 @@ int num = mapper.delete(Wrappers.lambdaQuery(Customer.class)
 ```
 #### 1.单一参数
 ```java
-List<Customer> findById(Long id);
+List<Customer> findByName(String name);
 ```
 ```xml
-<select id="findById" resultMap="BaseResultMap">
+<select id="findByName" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List"/>
     from customer
-    where id = #{id}
+    <if test="name != null and name !=''">
+        where name like concat ('%', #{name} ,'%')
+    </if>
 </select>
 ```
 #### 2.多个参数  
@@ -164,33 +167,26 @@ List<Customer> listByQuery(CustomerQuery query);
     order by name
 </select>
 ```
-#### 4.模糊查询
-```java
-List<Customer> findLikeName(String name);
-```
-```xml
-<select id="findLikeName" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List"/>
-    from user
-    where name like concat ('%', #{name} ,'%')
-    order by name
-</select>
-```
-#### 4.if语句
-```java
-List<Customer> findByTime(String name);
-```
-```xml
-<select id="findLikeName" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List"/>
-    from user
-    where name like concat ('%', #{name} ,'%')
-    order by name
-</select>
-```
 ## 四、改
+```java
+int update();
+```
+```xml
+<update id="update">
+    update customer set name = 
+    case
+        when name = 'Jhonny' then 'aa'
+        when name = 'Andy' then 'bb'
+        else 'cc'
+        end
+    where gender = 1;
+</update>
+```
 ## 五、小知识
 1.Mysql中 **order by** 的**默认顺序**是**升序(asc)**;  
 2.当 name = Anchor 时，**#{name}** 最终替换为 `'Anchor'`，**${name}** 替换为 `Anchor`;  
+3.XML中的大于号和小于号:  
+```text
+&gt;  表示 >         &lt;  表示 <
+&gt;= 表示 >=        &lt;= 表示 <=
+```
