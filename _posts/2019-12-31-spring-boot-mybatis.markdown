@@ -74,7 +74,28 @@ logging:
 在此类xml文件中编写SQL语句来实现[mapper接口](#mapper)；  
 　**创建文件时请遵循上述约定将对应的文件放在对应的Package或Directory下！**  
 # 三、细解
-## 1.Mapper.xml  
+## 1.Entity
+```java
+public class User{
+    Long id;
+    String name;
+    Integer age;
+}
+```
+## 2.Mapper
+```java
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserMapper{
+    List<User> findByNameAndAge(String username, int age);
+   
+    List<User> findByUser(User user);
+
+    List<User> search(List<String> nameList);      //改方法名命名不规范
+}
+```
+## 3.Mapper.xml  
 Mybatis根据配置在[application.yml](#application)中“mybatis.mapper-locations”的值来定位Mapper.xml文件。  
 根据约定将此值设置为“classpath:mapping/*Mapper.xml”（相当于resources/mapping/*Mapper.xml）。  
 Mybatis的核心就在于Mapper.xml文件，Mybatis根据此类文件中的SQL语句对数据库进行CURD操作，并将操作结果映射到指定的Java类。  
@@ -139,8 +160,8 @@ Tips：可将多个xml指向同一个接口，增删查改语句中的id不同�
 </resultMap>
 ```
 #### 4）传参
-传参指将xxMapper.java接口里方法中的参数传入xxMapper.xml，使用 #{paramName} 或 ${paramName}。  
-**#{paramName}** 与 **${paramName}** 的区别：  
+①传参指将xxMapper.java接口里方法中的参数传入xxMapper.xml，使用 #{paramName} 或 ${paramName}。  
+②**#{paramName}** 与 **${paramName}** 的区别：  
 　二者都相当于一个占位符，当传入实际值时该值会替代占位符。假设传入值为"id"。  
 ```xml
 select * from users order by ${paramName} asc
@@ -160,13 +181,14 @@ List<User> findByNameAndAge(String username, int age);
 </select>
 ```
 **Tips：**  
-　①当只有一个参数时，接口中参数名可与xml中 #{} 中的名字不同；（不建议）  
-　②不论参数个数，Mybatis会自动识别传入参数类型，因此不用在标签中显式指定 parameterType 的值；  
-　③当数据库中age的类型是int，接口中定义age的类型为String时，也可查询成功。（不建议）  
+①当只有一个参数时，接口中参数名可与xml中 #{} 中的名字不同；（不建议）  
+②不论参数个数，Mybatis会自动识别传入参数类型，因此不用在标签中显式指定 parameterType 的值；  
+③当数据库中age的类型是int，接口中定义age的类型为String时，也可查询成功；（不建议）  
+④3.4.1之前版本的Mybatis，多参数时需要用**@Param**来指定绑定到xml中的参数。（[详情](https://github.com/mybatis/mybatis-3/issues/549)）  
 ##### Ⅱ.类参数
-顾名思义，传入的参数是一个Java类。  
-可以通过属性 parameterType 显式指定入参的类型（值为类的全路径），也可不指明，Mybatis会自行处理。  
-\#{} 内的内容必须与类的属性名相同，否则无法匹配到。  
+①顾名思义，传入的参数是一个Java类。  
+②可以通过属性 parameterType 显式指定入参的类型（值为类的全路径），也可不指明，Mybatis会自行处理。  
+③\#{} 内的内容必须与类的属性名相同，否则无法匹配到。  
 ```java
 List<User> findByUser(User user);
 ```
@@ -176,6 +198,27 @@ List<User> findByUser(User user);
 </select>
 ```
 ##### Ⅲ.集合参数
+①用**foreach**来处理集合中的数据;  
+②xml中**collection**的值与Java方法中的参数名相同;(单参数时可不同，不建议)  
+③xml中**item**代表foreach当前遍历的对象，如果item是个类时，可以用item.name来获取name的值;  
+④xml中**open**与close代表在foreach开始和结束时添加的字符;  
+⑤xml中**separator**代表在这次遍历结果和上次遍历结果间添加的分隔符;  
+```java
+List<User> search(List<String> nameList);
+```
+```xml
+<select id="search" resultMap="baseResultMap">        
+    select * from users 
+    where name in
+    <foreach collection="nameList" item="item" open="(" close=")" separator=",">
+        #{item}
+    </foreach>
+</select>
+```
+最终执行的sql：  
+```sql
+select * from users where name in ('name1', 'name2', 'name3')
+```
 #### 5）SQL片段
 可在xml中使用 **\<sql>** 标签将重复的sql语句提取出来，通过 **\<include refid="something">** 标签引用，来达到重用的目的。
 ```xml
@@ -195,11 +238,36 @@ List<User> findByUser(User user);
 ```
 #### 6）CURD
 使用 **\<insert>**、**\<delete>**、**\<select>**、**\<update>** 四个标签并编写SQL语句进行增删查改。  
-##### Ⅰ.新增
-##### Ⅱ.更新
-##### Ⅲ.查询
-##### Ⅳ.删除
-## 2.Entity
-## 3.Mapper
-## 4.Service
+下篇文章中收录了一些常用的CURD。  
+## 4.ServiceImpl
+```java
+import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    @Resource
+    private UserMapper userMapper;
+
+    @Override
+    public List<User> getByNameAndAge(String name, int age) {
+        return userMapper.findByNameAndAge(name, age);
+    }
+}
+```
 ## 5.Controller
+```java
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    @Resource
+    private UserService userService;
+
+    @GetMapping("/getByNameAndAge")
+    public List<User> getByNameAndAge(@RequestParam String name, @RequestParam int age) {
+        return userService.getByNameAndAge(name, age);
+    }
+}
+```
