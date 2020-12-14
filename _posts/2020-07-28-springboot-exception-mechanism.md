@@ -118,7 +118,7 @@ final class StandardHostValve extends ValveBase {
         // 去ErrorPageSupport维护的另一个 Map<Integer, ErrorPage> 中查找ErrorPage
         ErrorPage errorPage = context.findErrorPage(statusCode);
         if (errorPage == null) {
-            // 找到则使用默认的ErrorPage
+            // 找不到则使用默认的ErrorPage
             errorPage = context.findErrorPage(0);
         }
         if (errorPage != null && response.isErrorReportRequired()) {
@@ -155,6 +155,7 @@ final class StandardHostValve extends ValveBase {
     }
 }
 ```  
+
 ## 二、DispatcherServlet
 1、**DispatcherServlet** 是 `org.springframework.web.servlet` 包下的一个 Java 类。  
 ```text
@@ -170,5 +171,37 @@ DispatcherServlet 是 SpringBoot 中 HTTP 请求的中央调度器，为 Web UI 
 DispatcherServlet 类是 SpringBoot 的调度器，它负责组织和协调不同组件完成请求并返回响应结果。
 DispatcherServlet 的主要任务是：①将请求发送至对应的 Controller/Handler、②请求结果处理及返回（正常及异常处理结果）。(本文只聚焦于异常处理部分)
 ```
+2、**StandardHostValve**中转发的请求最终会由**DispatcherServlet**类中的doDispatch()方法来处理。  
+```java
+public class DispatcherServlet extends FrameworkServlet {
+    protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HttpServletRequest processedRequest = request;
+        HandlerExecutionChain mappedHandler = null;
+        try {
+            ModelAndView mv = null;
+            try {
+                // Determine handler for the current request.
+                mappedHandler = getHandler(processedRequest);
+                if (mappedHandler == null) {
+                    noHandlerFound(processedRequest, response);
+                    return;
+                }
+
+                // Determine handler adapter for the current request.
+                HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
+
+                // Actually invoke the handler.
+                mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+            } catch (Exception ex) {
+                // 省略
+            }
+        } catch (Exception ex) {
+            // 省略
+        } finally {
+            // 省略
+        }
+    }
+}
+```  
 ## 三、<span id="here">BasicErrorController</span>  
 
