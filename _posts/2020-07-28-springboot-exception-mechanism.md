@@ -18,7 +18,7 @@ description: Exception处理机制
 ![]({{ "/assets/img/20200728/20200728003.png"}})
 ## 自动配置
 1)自动配置类**ErrorMvcAutoConfiguration**中配置了一些组装错误信息页所需要的组件(Bean);  
-2)第五个注解注入的**ServerProperties**类中定义了**ErrorProperties**类，ErrorProperties中又定义了**默认的异常处理路径**是`/error`;
+2)最后一个注解注入的**ServerProperties**类中定义了**ErrorProperties**类，ErrorProperties中又定义了**默认的异常处理路径**是`/error`;
 ```java
 package org.springframework.boot.autoconfigure.web.servlet.error;
 
@@ -68,7 +68,6 @@ public ErrorPageCustomizer errorPageCustomizer(DispatcherServletPath dispatcherS
 2)**StandardHostValve**是Tomcat中的一个**默认基础Valve**，负责处理**Pipeline**中流传过来的请求;  
 3)StandardHostValve会在Context中寻找合适的ErrorPage(未找到则使用默认的ErrorPage)，并根据ErrorPage里的location转发请求;  
 ```java
-package org.apache.catalina.core;
 // 以下是节选的部分与本文有关的逻辑处理代码，完整代码自行搜索查看
 final class StandardHostValve extends ValveBase {
     // valve的invoke()方法
@@ -155,7 +154,6 @@ final class StandardHostValve extends ValveBase {
     }
 }
 ```  
-
 ## 二、DispatcherServlet
 1、**DispatcherServlet** 是 `org.springframework.web.servlet` 包下的一个 Java 类。  
 ```text
@@ -172,36 +170,103 @@ DispatcherServlet 类是 SpringBoot 的调度器，它负责组织和协调不�
 DispatcherServlet 的主要任务是：①将请求发送至对应的 Controller/Handler、②请求结果处理及返回（正常及异常处理结果）。(本文只聚焦于异常处理部分)
 ```
 2、**StandardHostValve**中转发的请求最终会由**DispatcherServlet**类中的doDispatch()方法来处理。  
+1）HandlerExecutionChain：处理链，包括Handler(Controller)和拦截器。  
+2）ModelAndView：用来存储请求处理返回的数据和视图。  
+3）HandlerAdapter：Handler适配器，主要用于用给定的Handler去处理Request。  
 ```java
+// 以下是节选的部分与本文有关的逻辑处理代码，完整代码自行搜索查看
 public class DispatcherServlet extends FrameworkServlet {
     protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // 当前请求
         HttpServletRequest processedRequest = request;
+        // 处理链（handler 和 拦截器）
         HandlerExecutionChain mappedHandler = null;
         try {
+            // 返回给用户的包装视图
             ModelAndView mv = null;
             try {
-                // Determine handler for the current request.
+                // 通过请求获取 handler
                 mappedHandler = getHandler(processedRequest);
+                // 如果未找到 handler，报异常
                 if (mappedHandler == null) {
                     noHandlerFound(processedRequest, response);
                     return;
                 }
 
-                // Determine handler adapter for the current request.
+                // 根据 handler 找到 handlerAdapter
                 HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
-                // Actually invoke the handler.
+                // 调用具体的 handler 处理请求，并返回 modelAndView
                 mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
-            } catch (Exception ex) {
-                // 省略
             }
-        } catch (Exception ex) {
-            // 省略
-        } finally {
-            // 省略
-        }
+            catch (Exception ex) { /* 省略 */ }
+            catch (Throwable err){ /* 省略 */ }
+            // 处理返回结果（异常处理、页面渲染、拦截器的 afterCompletion 触发等）
+            processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
+        } 
+        catch (Exception ex) { /* 省略 */ }
+        catch (Throwable err){ /* 省略 */ }
+        finally { /* 省略 */ }
     }
 }
-```  
+``` 
+4）getHandler()方法会根据request中的请求地址`/error`获取到ErrorMvcAutoConfiguration注册的HandlerBasicErrorController。  
 ## 三、<span id="here">BasicErrorController</span>  
+BasicErrorController是SpringBoot中自带的**基础全局错误处理器(Handler、Controller)。**  
+**1、请求地址**  
+三元写法，若配置文件中配置了**server.error.path**，则使用此异常处理地址；若未配置则使用配置的**error.path**，
+若error.path也未配置，则使用**/error**。  
+```java
+@RequestMapping("${server.error.path:${error.path:/error}}")
+```
+**2、处理规则**  
+根据@RequestMapping注解中的**produces**参数来匹配errorHtml()或error();  
+浏览器发出的请求header中**Content-Type默认为text/html**，postman中**Content-Type默认为application/json**;  
+```java
+@Controller
+@RequestMapping("${server.error.path:${error.path:/error}}")
+public class BasicErrorController extends AbstractErrorController {
 
+	@RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
+	public ModelAndView errorHtml(HttpServletRequest request, HttpServletResponse response) {
+		HttpStatus status = getStatus(request);
+		Map<String, Object> model = Collections
+				.unmodifiableMap(getErrorAttributes(request, getErrorAttributeOptions(request, MediaType.TEXT_HTML)));
+		response.setStatus(status.value());
+		ModelAndView modelAndView = resolveErrorView(request, response, status, model);
+		return (modelAndView != null) ? modelAndView : new ModelAndView("error", model);
+	}
+
+	@RequestMapping
+	public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
+        // 获取http请求状态
+		HttpStatus status = getStatus(request);
+		// 状态为204返回No Content
+		if (status == HttpStatus.NO_CONTENT) {
+			return new ResponseEntity<>(status);
+		}
+        // 组装 timestamp、status、error、message、path
+		Map<String, Object> body = getErrorAttributes(request, getErrorAttributeOptions(request, MediaType.ALL));
+		return new ResponseEntity<>(body, status);
+	}
+}
+```
+getErrorAttributes()方法的最终实现如下：  
+```java
+public class DefaultErrorAttributes implements ErrorAttributes, HandlerExceptionResolver, Ordered {
+    
+	public Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace) {
+		Map<String, Object> errorAttributes = new LinkedHashMap<>();
+		errorAttributes.put("timestamp", new Date());
+		addStatus(errorAttributes, webRequest);
+		addErrorDetails(errorAttributes, webRequest, includeStackTrace);
+		addPath(errorAttributes, webRequest);
+		return errorAttributes;
+	}
+}
+```
+## 四、总结
+1、刚开始这个主题时感觉根本无从下手，然后开始baidu、google，先找到BasicErrorController类，然后从它出发开始摸索。  
+2、要找清楚最终返回的五个属性是在哪段代码生成的，代码是怎么运行到BasicErrorController的error()方法的，http状态是在哪段代码中确定的等等。  
+3、一个比较好的方法是debug + 堆栈，可以从栈中找到代码运行过的轨迹，然后挨个去读源码。  
+4、个人觉得读源码最大的问题是不知道这个类是干啥的，这个时候baidu + google一波，再看类上的注释，大致就清楚了。   
