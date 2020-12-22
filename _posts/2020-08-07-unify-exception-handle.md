@@ -18,23 +18,22 @@ description: 统一Exception处理
 ## 一、@ExceptionHandler
 使用**@RestControllerAdvice**和**@ExceptionHandler**注解来全局处理异常，使用方式如下：  
 ```java
-@RestControllerAdvice                               //该注解 = @ControllerAdvice + @ResponseBody
+@RestControllerAdvice                            //该注解 = @ControllerAdvice + @ResponseBody
 public class GlobalExceptionHandler {
-                                                    //BaseResponse是之前设计的统一Response类
-    @ExceptionHandler(Exception.class)              //指定要处理的异常类，可以是一个数组
+                                                 //BaseResponse是之前文章中设计的统一Response类
+    @ExceptionHandler(Exception.class)           //指定要处理的异常类，可以是一个数组
     public BaseResponse<String> ExceptionHandler(Exception e) {
-        BaseResponse<String> response = new BaseResponse<>();
-        response.setCode(ErrorStatus.INTERNAL_ERROR);
-        response.setMessage(e.getMessage());
-        response.setData(e.getClass().getName());
+        BaseResponse<String> response = BaseResponse.with(DefaultStatus.INTERNAL_ERROR);
+        if (!StringUtils.isEmpty(e.getMessage())) {
+            response.setMessage(e.getMessage());
+        }
+        response.setData("朋友，我们好像碰到了点麻烦！");
         return response;
     }
 
-    @ExceptionHandler(DefaultException.class)       //DefaultException是之前文章中设计的统一Exception类
+    @ExceptionHandler(DefaultException.class)     //DefaultException是之前文章中设计的统一Exception类
     public BaseResponse<String> DefaultExceptionHandler(DefaultException e) {
-        BaseResponse<String> response = new BaseResponse<>();
-        response.setCode(e.getCode());
-        response.setMessage(e.getCode().message());
+        BaseResponse<String> response = BaseResponse.with(e.getCode());
         response.setData(e.getMessage());
         return response;
     }
@@ -53,7 +52,7 @@ public class SpringBootMybatisApp {
         }
 }
 ```
-或者可以使用@Bean直接注入;
+或者可以使用@Bean直接注入(**推荐使用**);
 ```java
 @Configuration
 public class GlobalConfig {
