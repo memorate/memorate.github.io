@@ -18,11 +18,13 @@ description: 统一Exception处理
 ## 一、@ExceptionHandler
 使用**@RestControllerAdvice**和**@ExceptionHandler**注解来全局处理异常，使用方式如下：  
 ```java
+@Slf4j
 @RestControllerAdvice                            //该注解 = @ControllerAdvice + @ResponseBody
 public class GlobalExceptionHandler {
                                                  //BaseResponse是之前文章中设计的统一Response类
     @ExceptionHandler(Exception.class)           //指定要处理的异常类，可以是一个数组
     public BaseResponse<String> ExceptionHandler(Exception e) {
+        log.error(e.getMessage(), e);            //手动打印堆栈信息
         BaseResponse<String> response = BaseResponse.with(DefaultStatus.INTERNAL_ERROR);
         if (!StringUtils.isEmpty(e.getMessage())) {
             response.setMessage(e.getMessage());
@@ -33,6 +35,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DefaultException.class)     //DefaultException是之前文章中设计的统一Exception类
     public BaseResponse<String> DefaultExceptionHandler(DefaultException e) {
+        log.error(e.getMessage(), e);
         BaseResponse<String> response = BaseResponse.with(e.getCode());
         response.setData(e.getMessage());
         return response;
@@ -62,7 +65,11 @@ public class GlobalConfig {
     }
 }
 ```
-5.@RestControllerAdvice注解**[原理](https://zhuanlan.zhihu.com/p/73087879#:~:text=%40ControllerAdvice%E6%98%AF%E5%9C%A8%E7%B1%BB%E4%B8%8A,%E5%BC%82%E5%B8%B8%E5%85%A8%E5%B1%80%E5%A4%84%E7%90%86%E7%9A%84%E7%9B%AE%E7%9A%84%EF%BC%9B&text=%40ModelAttribute%E6%B3%A8%E8%A7%A3%E6%A0%87%E6%B3%A8%E7%9A%84%E6%96%B9%E6%B3%95,%E7%9B%AE%E6%A0%87Controller%E6%96%B9%E6%B3%95%E4%B9%8B%E5%89%8D%E6%89%A7%E8%A1%8C%E3%80%82)**;
+5.@ExceptionHandler处理异常后不会在日志中打印堆栈信息，因此需要手动打印，便于排查问题;  
+```java
+log.error(e.getMessage(), e);
+```
+6.@RestControllerAdvice注解**[原理](https://zhuanlan.zhihu.com/p/73087879#:~:text=%40ControllerAdvice%E6%98%AF%E5%9C%A8%E7%B1%BB%E4%B8%8A,%E5%BC%82%E5%B8%B8%E5%85%A8%E5%B1%80%E5%A4%84%E7%90%86%E7%9A%84%E7%9B%AE%E7%9A%84%EF%BC%9B&text=%40ModelAttribute%E6%B3%A8%E8%A7%A3%E6%A0%87%E6%B3%A8%E7%9A%84%E6%96%B9%E6%B3%95,%E7%9B%AE%E6%A0%87Controller%E6%96%B9%E6%B3%95%E4%B9%8B%E5%89%8D%E6%89%A7%E8%A1%8C%E3%80%82)**;
 ## 二、ErrorController
 A.实现**ErrorController**接口来覆盖SpringBoot默认的异常处理类**BasicErrorController**。  
 B.由于下文的GlobalExceptionController类与应用启动类不在同一个包下，因此采用上文中GlobalConfig的方式注入此类。  
