@@ -65,7 +65,7 @@ public class GlobalConfig {
     }
 }
 ```
-5.@ExceptionHandler处理异常后不会在日志中打印堆栈信息，因此需要手动打印，便于排查问题;  
+5.@ExceptionHandler处理异常后**不会**在日志中**打印**堆栈信息，因此需要**手动**打印，便于排查问题;  
 ```java
 log.error(e.getMessage(), e);
 ```
