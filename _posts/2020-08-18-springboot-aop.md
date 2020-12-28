@@ -10,19 +10,19 @@ description: SpringBoot-AOP使用
 **SpringBoot中AOP使用教程**
 
 <!-- more -->
-## AOP
+## 一、AOP
 1.AOP(Aspect Oriented Programming，**面向切面编程**)，是对OOP(Object Oriented Programming，面向对象编程)的一种**补充**；  
 2.OOP的关键是**类(Class)**，侧重于对象的封装、继承；AOP的关键是**切面(Aspect)**，侧重于对业务代码中某一公共行为的提取；  
 3.AOP可以在不修改业务代码的情况下，在连接点(Join point)向现有代码中添加一些自定义行为(Advice)；  
 4.SpringBoot中AOP的底层原理是**动态代理**技术，AOP的主要应用场景是事务管理、日志记录、用户权限校验等；  
-## 术语
+## 二、术语
 ***以下英文摘自[官网](https://docs.spring.io/spring-framework/docs/2.5.x/reference/aop.html)，中文为个人理解。***
 #### 1.连接点 (Join point)
 ```text
 A point during the execution of a program, such as the execution of a method or the handling of an exception. In Spring AOP, a join point 
 always represents a method execution.
 ```
-`切面与逻辑代码的连接点，在SpringBoot中连接点一般是方法的执行。`  
+`切面与逻辑代码的连接点，在SpringBoot中的连接点是方法的执行。`  
 #### 2.切点 (Pointcut)
 ```text
 A predicate that matches join points. Advice is associated with a pointcut expression and runs at any join point matched by the pointcut 
@@ -74,24 +74,34 @@ An object created by the AOP framework in order to implement the aspect contract
 Framework, an AOP proxy will be a JDK dynamic proxy or a CGLIB proxy.
 ```
 `AOP框架创建的一个代理对象，这个代理对象负责执行通知和目标对象的连接点方法。`
-## 理解
+## 三、理解
 **以乘客坐飞机从乌鲁木齐到广州为例（[或参考此文](https://my.oschina.net/yanquan345/blog/203415)）：**  
 1.正常处理逻辑是，乘客从乌鲁木齐某地点出发、起飞、飞行、降落、到达广州某一地点；  
 2.在乌市某地出发和起飞这两流程之间插入一个安检动作，此时安检就是AOP中的通知(Advice)；  
 3.安检发生在机场，则机场就是连接点(Join point)；对安检时间做一个限定：到达机场且飞机起飞前，这个限定条件就是切点(Pointcut)；  
 4.其余上文中列出的术语在实际应用中很少用到；  
 ![]({{ "/assets/img/20200818/20200818001.png"}})
-## 解析
-#### 一、Pointcut使用
-1）Pointcut在SpringBoot中以注解@Pointcut的形式使用。  
-2）通过@Pointcut("xxx")来定义切面作用的点，其中xxx有两种格式：方法、注解。  
+## 四、解析
+#### 1.@Pointcut
+SpringBoot通过注解**@Pointcut("xxx")**来定义一个Pointcut，其中xxx有**10种表达式**。  
+　　　　　　　　　　![]({{ "/assets/img/20200818/20200818004.png"}})  
 **1.作用于方法**  
+```java
 
+```
 **2.作用于注解**  
-#### 二、Advice类型
+```java
+public class LogAdvice {
+    @Pointcut("@annotation(anchor.mybatis.aop.LogTag)")     //@annotation()表明将注解@LogTag标注的方法作为切点
+    //@Pointcut("@annotation(LogTag)")       同一包下这种写法同样生效
+    private void pointcut() {}
+}
+```
+@LogTag是一个自定义注解。当LogAdvice类与LogTag在**同一包**下时，可以直接写@Pointcut("@annotation(LogTag)")，**否则**需要写注解的**全路径**。
+#### 2.Advice
 　　　　　　　　　　　　　　　![]({{ "/assets/img/20200818/20200818002.png"}})
-## 使用
-#### 一、引入
+## 五、使用
+#### 1.引入
 ```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -101,5 +111,5 @@ Framework, an AOP proxy will be a JDK dynamic proxy or a CGLIB proxy.
 ```
 PS：在IDEA中使用AOP可以打开下面的插件，体验较好。  
 ![]({{ "/assets/img/20200818/20200818003.png"}})
-#### 二、构建
-## 总结
+#### 2.构建
+## 六、总结
