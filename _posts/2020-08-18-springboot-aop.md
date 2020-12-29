@@ -83,23 +83,71 @@ Framework, an AOP proxy will be a JDK dynamic proxy or a CGLIB proxy.
 ![]({{ "/assets/img/20200818/20200818001.png"}})
 ## 四、解析
 #### 1.@Pointcut
-SpringBoot通过注解**@Pointcut("xxx")**来定义一个Pointcut，其中xxx有**10种表达式**。  
-　　　　　　　　　　![]({{ "/assets/img/20200818/20200818004.png"}})  
-**1.作用于方法**  
+1）SpringBoot中通过注解**@Pointcut("xxx")**来定义一个Pointcut，xxx用来**匹配连接点**。  
+2）xxx中可以使用以下10个关键字，最常用的是**execution**和**@annotation**，其余了解即可(可参考[此篇文章](https://itsoku.blog.csdn.net/article/details/107096539?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control))。  
+3）关键字之间可以通过 **&&、||、！** 进行组合使用，代表**与、或、非**。例：execution(XXX) && @annotation(xxx)  
+`PS:`建议将所有Pointcut定义在一个类中，在切面类中通过**完整类名 + 方法名**使用。  
+　　　　　![]({{ "/assets/img/20200818/20200818004.png"}})  
+**4）execution**  
 ```java
-
-```
-**2.作用于注解**  
-```java
-public class LogAdvice {
-    @Pointcut("@annotation(anchor.mybatis.aop.LogTag)")     //@annotation()表明将注解@LogTag标注的方法作为切点
-    //@Pointcut("@annotation(LogTag)")       同一包下这种写法同样生效
-    private void pointcut() {}
+/**
+ * execution(public * anchor.mybatis.controller.CommonController.aopTest(..)) 解析：
+ * 
+ *           public          —— 方法修饰符，可省略，省略时默认为 public
+ *             *             —— 方法返回值，* 代表任意类型返回值
+ * anchor.mybatis.controller —— 包名
+ *      CommonController     —— 类名
+ *          aopTest          —— 方法名
+ *            ..             —— 方法入参，‘..’ 代表任意个数、任意类型的参数
+ */
+public class CommonPointcut {
+    @Pointcut("execution(public * anchor.mybatis.controller.CommonController.aopTest(..))")    //连接点是aopTest()方法
+    public void executionExp() {}
 }
 ```
-@LogTag是一个自定义注解。当LogAdvice类与LogTag在**同一包**下时，可以直接写@Pointcut("@annotation(LogTag)")，**否则**需要写注解的**全路径**。
+几个execution写法的例子：
+```text
+A.execution(public * *(..))
+含义：匹配任意返回值、任意包任意类中、任意方法名、任意个数和类型的public方法
+
+B.execution(String anchor.mybatis..*(*,String))
+含义：匹配 anchor.mybatis 包及其子包下所有返回值为String、有两个入参(第一个任意类型，第二个为String类型)的方法
+
+C.execution(anchor.common.response.BaseResponse anchor.mybatis..get*(*))
+含义：匹配 anchor.mybatis 包及其子包下所有返回值为BaseResponse类、只有一个入参且入参类型不限、方法名以get开头的方法
+```
+**5）@annotation**  
+```java
+public class CommonPointcut {
+    @Pointcut("@annotation(anchor.mybatis.aop.LogTag)")     //@annotation()表明将 注解@LogTag 标注的方法作为连接点
+    //@Pointcut("@annotation(LogTag)")       CommonPointcut类 与 @LogTag注解 在同一包下时，可以只写注解名
+    private void annotationExp() {}
+}
+```
 #### 2.Advice
-　　　　　　　　　　　　　　　![]({{ "/assets/img/20200818/20200818002.png"}})
+　　　　　　　　　　　![]({{ "/assets/img/20200818/20200818002.png"}})  
+　　　　　　　![]({{ "/assets/img/20200818/20200818005.png"}})  
+```java
+@Aspect
+@Component
+public class LogAdvice {
+
+    @Before("CommonPointcut.executionExp1()")           //使用同一个包下定义的Pointcut
+    public void before(JoinPoint joinPoint) {           //JoinPoint用于获取连接点的信息，
+        Object[] args = joinPoint.getArgs();
+        String methodName = joinPoint.getSignature().getName();
+        String staticPart = joinPoint.getStaticPart().toLongString();
+    }
+
+    @Around(value = "CommonPointcut.executionExp1()")
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {    //ProceedingJoinPoint是JoinPoint的子类，只是多了执行功能
+        Object proceed = joinPoint.proceed();                                 //ProceedingJoinPoint只能用于@Around
+        return proceed;
+    }
+}
+```
+1）Advice一般都使用@Around，因为它最强大，其他四个Advice能实现的它都能做。  
+2）**proceed()**方法可以控制连接点什么时候执行，在proceed()之前可以实现@Before、之后可以做相应的@After操作。  
 ## 五、使用
 #### 1.引入
 ```xml
@@ -109,7 +157,83 @@ public class LogAdvice {
     <version>${latestVersion}</version>
 </dependency>
 ```
-PS：在IDEA中使用AOP可以打开下面的插件，体验较好。  
+PS：在IDEA中使用AOP时可以打开下面这个插件，体验较好。  
 ![]({{ "/assets/img/20200818/20200818003.png"}})
-#### 2.构建
+#### 2.实例
+```java
+package anchor.mybatis.aop;
+
+public class CommonPointcut {        //定义Pointcut
+    @Pointcut("execution(* anchor.mybatis.controller.CommonController.aopTest(..))")
+    public void executionExp1() {
+    }
+}
+```
+```java
+package anchor.mybatis.aop;
+
+@Slf4j
+@Aspect
+@Component
+public class LogAdvice {             //使用@Aspect注解定义Aspect
+    @Before("CommonPointcut.executionExp1()")
+    public void before() {
+        log.info("Before advice...");
+    }
+
+    @After("CommonPointcut.executionExp1()")
+    public void after() {
+        log.info("After advice...");
+    }
+
+    @AfterReturning(value = "CommonPointcut.executionExp1()", returning = "result")     //接收连接点的返回值
+    public void afterReturning(Object result) {
+        log.info("AfterReturning advice, return value is {}...", result);
+    }
+
+    @AfterThrowing(value = "CommonPointcut.executionExp1()", throwing = "exception")     //接收抛出的异常
+    public void afterReturning(Exception exception) {
+        log.info("AfterThrowing advice, exception is {}...", exception.toString());
+    }
+
+    @Around(value = "CommonPointcut.executionExp1()")
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info("Entering around advice...");
+        Object proceed = joinPoint.proceed();
+        log.info("Existing around advice...");
+        return proceed;
+    }
+}
+```
+```java
+package anchor.mybatis.controller;
+
+@RestController
+@RequestMapping("/common")
+public class CommonController {
+    @Resource
+    private CommonService commonService;
+
+    @LogTag
+    @GetMapping("/aopTest")
+    public BaseResponse<Boolean> aopTest(String aa, String bb){
+        return new BaseResponse<>(commonService.aopTest());
+    }
+}
+```
+```java
+package anchor.mybatis.service.impl;
+
+@Slf4j
+@Service
+public class CommonServiceImpl implements CommonService {
+    @Override
+    public boolean aopTest() {           //连接点
+        log.info("Executing aopTest()");
+        return true;
+    }
+}
+```
+运行结果：
+![]({{ "/assets/img/20200818/20200818006.png"}})
 ## 六、总结
