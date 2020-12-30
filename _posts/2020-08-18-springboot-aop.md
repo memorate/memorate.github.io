@@ -85,8 +85,8 @@ Framework, an AOP proxy will be a JDK dynamic proxy or a CGLIB proxy.
 #### 1.@Pointcut
 1）SpringBoot中通过注解**@Pointcut("xxx")**来定义一个Pointcut，xxx用来**匹配连接点**。  
 2）xxx中可以使用以下10个关键字，最常用的是**execution**和**@annotation**，其余了解即可(可参考[此篇文章](https://itsoku.blog.csdn.net/article/details/107096539?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control))。  
-3）关键字之间可以通过 **&&、||、！** 进行组合使用，代表**与、或、非**。例：execution(XXX) && @annotation(xxx)  
-`PS:`建议将所有Pointcut定义在一个类中，在切面类中通过**完整类名 + 方法名**使用。  
+3）10个关键字之间可以通过 **&&、||、！** 组合使用，分别代表**与、或、非**。例：execution(XXX) && @annotation(xxx)  
+`PS:`建议将项目中所有Pointcut定义在一个类中，在切面类中通过**完整类名 + 方法名**使用。  
 　　　　　![]({{ "/assets/img/20200818/20200818004.png"}})  
 **4）execution**  
 ```java
@@ -116,6 +116,7 @@ B.execution(String anchor.mybatis..*(*,String))
 C.execution(anchor.common.response.BaseResponse anchor.mybatis..get*(*))
 含义：匹配 anchor.mybatis 包及其子包下所有返回值为BaseResponse类、只有一个入参且入参类型不限、方法名以get开头的方法
 ```
+`PS:`AOP只能作用于**Public**和有限条件下的**Protected**的方法。Why？补充下基础知识...
 **5）@annotation**  
 ```java
 public class CommonPointcut {
@@ -125,18 +126,17 @@ public class CommonPointcut {
 }
 ```
 #### 2.Advice
-　　　　　　　　　　　![]({{ "/assets/img/20200818/20200818002.png"}})  
-　　　　　　　![]({{ "/assets/img/20200818/20200818005.png"}})  
+　　　　　　　　　　　![]({{"/assets/img/20200818/20200818002.png"}})  
+　　　　　　　　![]({{"/assets/img/20200818/20200818005.png"}})  
 ```java
-@Aspect
+@Aspect                                                 //使用@Aspect注解来定义一个切面
 @Component
 public class LogAdvice {
-
     @Before("CommonPointcut.executionExp1()")           //使用同一个包下定义的Pointcut
     public void before(JoinPoint joinPoint) {           //JoinPoint用于获取连接点的信息，
-        Object[] args = joinPoint.getArgs();
-        String methodName = joinPoint.getSignature().getName();
-        String staticPart = joinPoint.getStaticPart().toLongString();
+        Object[] args = joinPoint.getArgs();                             //获取方法入参
+        String methodName = joinPoint.getSignature().getName();          //获取方法签名(返回值、方法名称)
+        String staticPart = joinPoint.getStaticPart().toLongString();    //获取方法相关的静态对象
     }
 
     @Around(value = "CommonPointcut.executionExp1()")
@@ -175,13 +175,13 @@ package anchor.mybatis.aop;
 @Slf4j
 @Aspect
 @Component
-public class LogAdvice {             //使用@Aspect注解定义Aspect
+public class LogAdvice {                          //使用@Aspect注解定义切面
     @Before("CommonPointcut.executionExp1()")
     public void before() {
         log.info("Before advice...");
     }
 
-    @After("CommonPointcut.executionExp1()")
+    @After("execution(* anchor.mybatis.controller.CommonController.aopTest(..))")       //也可以直接在Advice中定义Pointcut
     public void after() {
         log.info("After advice...");
     }
@@ -220,7 +220,6 @@ public class CommonController {
     @Resource
     private CommonService commonService;
 
-    @LogTag
     @GetMapping("/aopTest")
     public BaseResponse<Boolean> aopTest(String aa, String bb){
         return new BaseResponse<>(commonService.aopTest());
@@ -243,3 +242,6 @@ public class CommonServiceImpl implements CommonService {
 运行结果：
 ![]({{ "/assets/img/20200818/20200818006.png"}})
 ## 六、总结
+1.AOP的核心概念是：**Pointcut**、**PCD**(PointCut Designators)、**Advice**。  
+2.AOP在SpringBoot中是：**@Aspect** + **@Pointcut** + **@Around**(或其他)。  
+3.AOP是Spring的三大支柱之一(IOC、DI、AOP)，功能很强大，但是它实际上是一种不同于OOP的**编程思想**。
