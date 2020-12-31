@@ -199,15 +199,14 @@ public class LogAdvice {                          //使用@Aspect注解定义切
     @Around(value = "CommonPointcut.executionExp1()")
     public Object around(ProceedingJoinPoint joinPoint) {
         log.info("Entering around advice...");
-        Object proceed;
         try {
-            proceed = joinPoint.proceed();
+            return joinPoint.proceed();
         } catch (Throwable throwable) {
-            proceed = throwable;
             log.info("Around catch an exception,exception is {}...", throwable.toString());
+            throw throwable;
+        }finally {
+            log.info("Exiting around advice...");
         }
-        log.info("Exiting around advice...");
-        return proceed;
     }
 }
 ```

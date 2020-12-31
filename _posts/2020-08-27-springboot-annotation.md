@@ -23,8 +23,21 @@ description: Java - Annotation
 自定义注解一般配合AOP使用。注解给被标注对象打一个标记，AOP根据这个标记找到需要切入的点，然后实现自定义的业务逻辑。
 ```
 ## 二、元注解
-**1.四个元注解**  
-Java中定义了四个元注解，用来修饰其他注解：
+**Java中定义了四个元注解，用来修饰其他注解。**
+#### 1.@Retention
+表名被标注的注解怎么保存，描述此注解的声明周期(即被标注的注解在什么范围内有效)。有三种可选，可选值在枚举类**RetentionPolicy**中。
+```java
+public enum RetentionPolicy {
+    SOURCE,    //被标注的注解只保存在源文件中，在编译时会被编译器忽略
+
+    CLASS,     //
+
+    RUNTIME    //
+}
+```
+#### 2.@Target
+#### 3.@Inherited
+#### 4.@Documented
 - @Retention，**标注此注解怎么保存**。有三种可选，可选值在枚举类**RetentionPolicy**中。
 - @Documented，**标注生成Javadoc时是此注解否会被记录**，没有实际作用。
 - @Target，**标注此注解可以作用于哪些对象**，可填一个数组。有十种可选，可选值在枚举类**ElementType**中。
@@ -37,9 +50,22 @@ Java中定义了四个元注解，用来修饰其他注解：
 - @SuppressWarnings，指示编译器去忽略注解中声明的警告。  
 - @SafeVarargs，Java7开始支持，忽略任何使用参数为泛型变量的方法或构造函数调用产生的警告。  
 - @FunctionalInterface，Java8开始支持，标识一个匿名函数或函数式接口。  
-- @Repeatable，Java8开始支持，标识某注解可以在同一个声明上使用多次。  
-## 三、实践
+- @Repeatable，Java8开始支持，标识某注解可以在同一个声明上使用多次。
+## 三、参数
+## 四、实践
+本次实践内容：使用自定义注解记录请求相关信息，将请求人uid、uname、请求的资源、执行的方法、返回码、返回信息、请求时间记录入库。  
 #### 1.定义
+定义注解@ResultRecorder，该注解作用于Controller类，需要传入的参数是此Controller所操作的资源名。  
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ResultRecorder {
+    /**
+     * RestFul中所操作的资源名，例：用户、订单、地址
+     */
+    String value();
+}
+```
 #### 2.处理
 #### 3.结果
-## 四、总结
+## 五、总结
