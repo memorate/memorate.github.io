@@ -25,25 +25,35 @@ description: Java - Annotation
 ## 二、元注解
 **Java中定义了四个元注解，用来修饰其他注解。**
 #### 1.@Retention
-表名被标注的注解怎么保存，描述此注解的声明周期(即被标注的注解在什么范围内有效)。有三种可选，可选值在枚举类**RetentionPolicy**中。
+指明注解怎么保存；描述注解的声明周期(即被标注的注解在什么范围内有效)。有三种可选，可选值在枚举类**RetentionPolicy**中。
 ```java
 public enum RetentionPolicy {
-    SOURCE,    //被标注的注解只保存在源文件中，在编译时会被编译器忽略
-
-    CLASS,     //
-
-    RUNTIME    //
+    SOURCE,    //注解只保存在源文件中，在编译时会被编译器忽略
+    CLASS,     //注解保存到Class文件中，但在JVM加载Class文件时遗弃
+    RUNTIME    //注解保存到Class文件中，并且会被JVM加载
 }
 ```
 #### 2.@Target
+指明此注解可以作用于哪些对象，可填单个值或数组。有十种可选，可选值在枚举类**ElementType**中。  
+`PS:`不使用@Target时默认注解可作用于任何地方。  
+```java
+public enum ElementType {
+    TYPE,                //类、接口、注解、枚举类
+    FIELD,               //字段，包括枚举值
+    METHOD,              //方法
+    PARAMETER,           //方法的参数
+    CONSTRUCTOR,         //构造方法
+    LOCAL_VARIABLE,      //局部变量
+    ANNOTATION_TYPE,     //注解
+    PACKAGE,             //包
+    TYPE_PARAMETER,      //泛型
+    TYPE_USE             //任何地方
+}
+```
 #### 3.@Inherited
+指明注解所标注类的子类也会被此注解标注(**此注解可以继承给子类**)，接口不受影响(实现接口的类也不会受此注解影响)。
 #### 4.@Documented
-- @Retention，**标注此注解怎么保存**。有三种可选，可选值在枚举类**RetentionPolicy**中。
-- @Documented，**标注生成Javadoc时是此注解否会被记录**，没有实际作用。
-- @Target，**标注此注解可以作用于哪些对象**，可填一个数组。有十种可选，可选值在枚举类**ElementType**中。
-- @Inherited，标注被此注解标注的类的子类也会被此注解标注(**此注解可以继承给子类**)，接口不受影响(实现接口的类不会受此注解影响)。  
-`PS:`RetentionPolicy类中的三种类型：SOURCE(只保存在代码中)、CLASS(编入Class文件中)、RUNTIME(编入Class文件且保存在JVM中)。  
-  
+指明生成Javadoc时是此注解否会被记录，没有实际作用。  
 **2.Java自带注解**  
 - @Override，检查该方法是否是重写方法。如果发现其父类，或者是引用的接口中并没有该方法时，会报编译错误。  
 - @Deprecated，标记过时方法。如果使用该方法，会报编译警告。  
