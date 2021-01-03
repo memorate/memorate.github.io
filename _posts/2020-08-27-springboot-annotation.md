@@ -153,7 +153,7 @@ public class ResultRecorderAspect {    //切面类
         } catch (Throwable throwable) {   
             log.setCode(500);
             log.setMessage(throwable.getMessage());
-            throw throwable;
+            throw throwable;                           //异常要抛出给下一流程
         } finally {
             System.out.println(log);
         }
@@ -162,3 +162,6 @@ public class ResultRecorderAspect {    //切面类
 ```
 #### 3.结果
 ## 五、总结
+1.注解(@interface)由元注解和注解参数构成，使用注解时若某个参数无默认值，则必须给它赋值。  
+2.注解本身并不能影响代码逻辑，需要配合AOP使用。  
+3.一般而言项目开发中基本没有自定义注解的需求，常用的注解是Spring自带的各类注解。  
