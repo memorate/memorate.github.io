@@ -128,6 +128,9 @@ public class CommonPointcut {         //切点类
 @Aspect
 @Component
 public class ResultRecorderAspect {    //切面类
+    @Resouce
+    private OpeartionLogMapper mapper;
+    
     @Around("CommonPointcut.resultRecorder()")
     public Object resultRecord(ProceedingJoinPoint joinPoint) {
         SysUser user = SystemUserHolder.getCurrent();   //获取用户信息，需自己实现
@@ -155,12 +158,24 @@ public class ResultRecorderAspect {    //切面类
             log.setMessage(throwable.getMessage());
             throw throwable;                           //异常要抛出给下一流程
         } finally {
-            System.out.println(log);
+            mapper.save(log);                          //入库
+            System.out.println(log);                   //打印入库的数据
         }
     }
 }
 ```
 #### 3.结果
+```java
+@ResultRecorder("公共资源")
+@RestController
+@RequestMapping("/common")
+public class CommonController {
+    @GetMapping
+    public void annotationTest(){
+        System.out.println("Executing annotationTest()...");
+    }
+}
+```
 ## 五、总结
 1.注解(@interface)由元注解和注解参数构成，使用注解时若某个参数无默认值，则必须给它赋值。  
 2.注解本身并不能影响代码逻辑，需要配合AOP使用。  
