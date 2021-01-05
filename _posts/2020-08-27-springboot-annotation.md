@@ -23,14 +23,14 @@ description: Java - Annotation
 自定义注解一般配合AOP使用。注解给被标注对象打一个标记，AOP根据这个标记找到需要切入的点，然后实现自定义的业务逻辑。
 ```
 #### 3.注解的定义
-使用@interface自定义注解。  
+使用**@interface**自定义注解。  
 ```java
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Test {
     String value() default "hello";
 }
 ```
-Test是此注解的名称，@Retention是修饰注解的元注解，value是注解的参数(默认值是hello)。
+Test是此注解的名称，@Retention是修饰注解的**元注解**，value是注解的**参数**(**默认值**是hello)。
 ## 二、元注解
 **Java中定义了四个元注解，用来修饰其他注解。**
 #### 1.@Retention
@@ -43,8 +43,8 @@ public enum RetentionPolicy {
 }
 ```
 #### 2.@Target
-指明此注解可以作用于哪些对象，可填单个值或数组。有十种可选，可选值在枚举类**ElementType**中。  
-`PS:`不使用@Target时默认注解可作用于任何地方。  
+指明注解可以作用于哪些对象。其参数可填单个值或数组，有十种可选，可选值在枚举类**ElementType**中。  
+`PS:`**不使用**@Target时**默认**注解可作用于任何地方。  
 ```java
 public enum ElementType {
     TYPE,                //类、接口、注解、枚举类
@@ -60,10 +60,10 @@ public enum ElementType {
 }
 ```
 #### 3.@Inherited
-指明注解所标注类的子类也会被此注解标注(**此注解可以继承给子类**)，接口不受影响(实现接口的类也不会受此注解影响)。
+指明某注解A所标注类的子类也会被A注解标注(**换而言之注解可以继承给子类**)。接口不受影响(实现接口的类也不会受此注解影响)。
 #### 4.@Documented
 指明生成Javadoc时是此注解否会被记录，没有实际作用。  
-#### 4.内置注解
+#### 5.内置注解
 Java中除了元注解，还自带了以下几个内置的注解，可直接使用：  
 - @Override，检查该方法是否是重写方法。如果发现其父类，或者是引用的接口中并没有该方法时，会报编译错误。  
 - @Deprecated，标记过时方法。如果使用该方法，会报编译警告。  
@@ -72,11 +72,10 @@ Java中除了元注解，还自带了以下几个内置的注解，可直接使�
 - @FunctionalInterface，Java8开始支持，标识一个匿名函数或函数式接口。  
 - @Repeatable，Java8开始支持，标识某注解可以在同一个声明上使用多次。
 ## 三、参数
-在注解中可以定义参数及其默认值，参数类型可以是以下六种。  
+在注解中可以定义参数及其默认值，参数类型可以是以下六种：
 ```text
-1.所有基本类型        4.Class
-2.String             5.annotation
-3.enum               6.以上五种类型的数组
+1.所有基本类型       2.String             3.enum
+4.Class             5.annotation         6.以上五种类型的数组
 ```
 ```java
 @Retention(RetentionPolicy.RUNTIME)
@@ -85,7 +84,7 @@ public @interface Test {
     String value();                                       //String
     Class classValue() default Object.class;              //class
     ElementType element_type() default ElementType.TYPE;  //enum
-    Target target();                                      //annotation
+    Retention target();                                   //annotation
     long[] array() default {1L, 2L};                      //数组
 }
 ```
@@ -110,11 +109,11 @@ public @interface ResultRecorder {
 public class OperationLog {          //操作日志entity
     private String uid;
     private String uname;
-    private String resource;         //注解@ResultRecorder中的参数值
-    private String method;           //方法名，例：xxxController.xxxMethod()
-    private Integer code;            //方法返回状态码
-    private String message;          //方法返回的信息
-    private LocalDateTime time;      //请求开始时间
+    private String resource;           //注解@ResultRecorder中的参数值
+    private String method;             //方法名，例：xxxController.xxxMethod()
+    private Integer code;              //方法返回状态码
+    private String message;            //方法返回的信息
+    private LocalDateTime time;        //请求开始时间
 }
 ```
 ```java
@@ -124,7 +123,6 @@ public class CommonPointcut {         //切点类
 }
 ```
 ```java
-@Slf4j
 @Aspect
 @Component
 public class ResultRecorderAspect {    //切面类
@@ -133,50 +131,56 @@ public class ResultRecorderAspect {    //切面类
     
     @Around("CommonPointcut.resultRecorder()")
     public Object resultRecord(ProceedingJoinPoint joinPoint) {
-        SysUser user = SystemUserHolder.getCurrent();   //获取用户信息，需自己实现
-        OperationLog log = new OperationLog()
-                .setTime(LocalDateTime.now())
+        SysUser user = SystemUserHolder.getCurrent();       //获取用户信息，需自己实现
+        OperationLog operation = new OperationLog()
+                .setTime(LocalDateTime.now())               //记录请求进入的时间
                 .setUid(user.getId)
                 .setUname(user.getName);
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();    //获取方法签名
-        log.setMethod(signature.toShortString());       //shortString格式为：xxxController.xxxMethod(..)
+        operation.setMethod(signature.toShortString());     //shortString格式为：xxxController.xxxMethod(..)
         ResultRecorder annotation = joinPoint.getTarget().getClass().getAnnotation(ResultRecorder.class);  //获取注解
-        log.setResource(annotation.value());            //获取注解中参数value的值
+        operation.setResource(annotation.value());          //获取注解中参数value的值
         try {
-            Object result = joinPoint.proceed();        //执行Aspect之后的流程
-            if (result instanceof BaseResponse) {       //项目所有Controller中方法的返回值都是之前定义的统一返回类
+            Object result = joinPoint.proceed();            //执行Aspect之后的流程
+            if (result instanceof BaseResponse) {           //项目所有Controller中方法的返回值都是之前定义的统一返回类
                 BaseResponse response = (BaseResponse) result;
-                log.setCode(response.getCode().code());
-                log.setMessage(response.getMessage());
+                operation.setCode(response.getCode().code()); //提取BaseResponse中的code、message
+                operation.setMessage(response.getMessage());
             } else {
-                log.setCode(500);
-                log.setMessage("Can't recognize the method's response.");
+                operation.setCode(500);
+                operation.setMessage("Can't recognize the method's response.");
             }
             return result;
         } catch (Throwable throwable) {   
-            log.setCode(500);
-            log.setMessage(throwable.getMessage());
-            throw throwable;                           //异常要抛出给下一流程
+            operation.setCode(500);
+            operation.setMessage(throwable.getMessage());
+            throw throwable;                                 //异常要抛出给下一流程
         } finally {
-            mapper.save(log);                          //入库
-            System.out.println(log);                   //打印入库的数据
+            mapper.save(operation);                          //入库
+            System.out.println(operation);                   //打印入库的数据
         }
     }
 }
 ```
+`PS:`实际项目中请勿用System.out.println来打印数据！
 #### 3.结果
+在CommonController类上做实验：
 ```java
-@ResultRecorder("公共资源")
+@ResultRecorder("公共资源")           //自定义注解
 @RestController
 @RequestMapping("/common")
 public class CommonController {
     @GetMapping
-    public void annotationTest(){
+    public BaseResponse<Boolean> annotationTest(){
         System.out.println("Executing annotationTest()...");
+        return new BaseResponse<>(true);
     }
 }
 ```
+`PS:`实际项目中请勿用System.out.println来打印数据！  
+**实验结果：**
+![]({{ "/assets/img/20200827/20200827001.png"}})
 ## 五、总结
 1.注解(@interface)由元注解和注解参数构成，使用注解时若某个参数无默认值，则必须给它赋值。  
 2.注解本身并不能影响代码逻辑，需要配合AOP使用。  
-3.一般而言项目开发中基本没有自定义注解的需求，常用的注解是Spring自带的各类注解。  
+3.一般而言项目开发中基本没有自定义注解的需求，常用的注解是Spring自带的各类注解。
