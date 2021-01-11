@@ -56,7 +56,7 @@ public class VillaRentService implements Rent {            //出租别墅的服�
 ```java
 public class RentProxy implements Rent{                    //代理类
 
-    private Rent rent;                                     //被代理类/服务类
+    private Rent rent;                                     //被代理类(服务类)
 
     public RentProxy(Rent rent) {                          //利用构造方法传入被代理的类
         this.rent = rent;
@@ -124,7 +124,7 @@ public class VillaRentService implements Rent {
 }
 ```
 ```java
-public class RentProxy implements Rent{             //AnotherRentProxy类与RentProxy类相似，此处省略定义代码
+public class RentProxy implements Rent{             //AnotherRentProxy类与RentProxy类相似，此处省略其定义代码
 
     private Rent rent; 
 
